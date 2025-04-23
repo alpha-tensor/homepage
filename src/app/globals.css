@@ -23,6 +23,7 @@
 body {
     background-color: white;
     color: black;
+    font-family: var(--font-mono);
 }
 
 /* 3. Apply base styles using @layer base */
