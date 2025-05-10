@@ -1,325 +1,819 @@
-import Link from "next/link"
-import { ArrowRight, FileText, BarChart3, Database, FolderTree, FileSearch, Shield } from "lucide-react"
-import FeatureCard from "@/components/feature-card"
-import DataVisual from "@/components/data-visual"
-import HeroSignup from "@/components/hero-signup"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Terminal,
+  Grid,
+  Users,
+  Database,
+  Github,
+  ArrowRight,
+  Check,
+  Star,
+  GitFork,
+} from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      {/* Header */}
-      <header className="border-b border-gray-200 sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
-            <div className="text-2xl font-bold">
-              <span className="text-gray-900">Alpha</span>
-              <span className="text-[#fb5028]">Tensor</span>
-            </div>
-
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Features
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      {/* Navigation Header (Keeping Alpha Tensor Logo) */}
+      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between">
+          {/* Alpha Tensor Logo */}
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xl font-bold tracking-tight text-primary">
+              α
+            </span>
+            <span className="font-sans text-xl font-bold tracking-tight text-foreground">
+              Alpha Tensor
+            </span>{" "}
+            {/* Ensure text-foreground */}
+          </div>
+          {/* Right side links and menu */}
+          <div className="flex items-center space-x-6">
+            {/* Hamburger Icon - Show on small, hide on medium+ */}
+            <button className="flex flex-col space-y-1 md:hidden">
+              <span className="h-0.5 w-6 bg-foreground"></span>
+              <span className="h-0.5 w-6 bg-foreground"></span>
+            </button>
+            {/* Navigation links for larger screens */}
+            <nav className="hidden md:flex items-center gap-6 mr-4">
+              {" "}
+              {/* Added mr-4 */}
+              <Link
+                href="#products"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Products
               </Link>
-              <Link href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link
+                href="#how-it-works"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
                 How It Works
-              </Link>
-              <Link href="#signup" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Contact
               </Link>
             </nav>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-10">
-          <DataVisual />
-        </div>
-        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-block px-3 py-1 mb-6 border border-[#fb5028] rounded-full">
-                <span className="text-[#fb5028] text-sm font-mono">BETA RELEASE</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-                <span className="text-gray-900">Financial statements,</span>
-                <span className="text-[#fb5028]"> automated.</span>
-              </h1>
-              <p className="text-gray-600 text-lg mb-8">
-                Our AI-powered platform processes, integrates, and extracts data from financial statements,
-                automatically categorizing information into accounting buckets.
-              </p>
-              <div className="flex flex-wrap gap-4 mb-8">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-[#fb5028] flex items-center justify-center">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M5 12L10 17L20 7"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Document parsing</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-[#fb5028] flex items-center justify-center">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M5 12L10 17L20 7"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Data extraction</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-[#fb5028] flex items-center justify-center">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M5 12L10 17L20 7"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Automated categorization</span>
-                </div>
-              </div>
-            </div>
+      {/* Main Content Area */}
+      <main className="flex-1">
+        {/* Hero Section (Keeping original layout and blob) */}
+        {/* Used original Hero section padding and container */}
+        <section className="py-20 md:py-28 relative overflow-hidden">
+          {" "}
+          {/* Added relative and overflow-hidden for blob */}
+          <div className="container px-4 md:px-6">
+            <div
+              className="absolute right-0 top-0 h-[300px] w-[300px] animate-pulse rounded-full bg-gradient-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
+              aria-hidden="true"
+            />
 
-            <div>
-              <HeroSignup />
+            {/* Hero Content Wrapper */}
+            <div className="relative">
+              {" "}
+              {/* Positioning context */}
+              {/* Original Headline - Ensure text-foreground */}
+              <h1 className="max-w-3xl text-6xl font-light leading-tight tracking-tight text-foreground">
+                {" "}
+                {/* Added text-foreground */}
+                We Build Powerful,
+                <br />
+                Open Source Alternatives.
+              </h1>
+              <div className="mt-24 flex flex-col sm:flex-row justify-between gap-6">
+                {" "}
+                {/* Use flex-col on small, flex-row on medium+, add gap */}
+                <div className="max-w-md flex-grow">
+                  {/* Button - Use primary color for border and text */}
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-2 px-8 text-primary border-primary hover:bg-primary/10 h-auto py-3 relative overflow-hidden"
+                  >
+                    {" "}
+                    {/* Updated classes */}
+                    <span className="relative z-10">
+                      {" "}
+                      {/* z-10 to keep text above spinning border */}
+                      Talk to Us {/* Kept original button text */}
+                    </span>
+                    {/* Spinning Border - Use primary color */}
+                    {/* Position absolutely within the relative button */}
+                    <div className="absolute inset-0 animate-spin-slow rounded-full border border-primary opacity-50"></div>{" "}
+                    {/* Use border-primary */}
+                  </Button>
+                  {/* First Paragraph below button - Use muted-foreground */}
+                  <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
+                    {" "}
+                    {/* Use text-muted-foreground */}
+                    Open infrastructure for modern teams. AI-native, open-source
+                    tools that help you move faster, stay in control, and break
+                    free from legacy SaaS.
+                  </p>
+                </div>
+                {/* "WHO WE ARE" text and line - Use theme colors */}
+                <div className="flex items-end">
+                  {" "}
+                  {/* Container for the text and line */}
+                  <div className="flex items-center space-x-2 text-foreground">
+                    {" "}
+                    {/* Added text-foreground */}
+                    <span className="text-sm">WHO WE ARE</span>{" "}
+                    {/* Uses text-foreground */}
+                    <span className="h-px w-12 bg-border"></span>{" "}
+                    {/* Use bg-border */}
+                  </div>
+                </div>
+              </div>
+              {/* Second Paragraph below button - Adjusted copy, use muted-foreground */}
+              <p className="mt-24 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                {" "}
+                {/* Use text-muted-foreground */}
+                We build transparent, community-backed alternatives to closed
+                platforms — whether you're managing data, leads, workflows, or
+                knowledge.
+              </p>
             </div>
           </div>
+        </section>
 
-          <div className="mt-16 relative">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#fb5028]/30 to-purple-500/30 rounded-lg blur opacity-30"></div>
-            <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200 p-1 rounded-lg overflow-hidden shadow-lg">
-              <div className="h-[300px] md:h-[400px] w-full bg-gray-50 rounded-lg relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-full h-full bg-[url('/placeholder.svg?height=800&width=1200')] bg-cover bg-center opacity-40"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent"></div>
-                  <div className="absolute bottom-8 left-8 right-8">
-                    <div className="text-[#fb5028] font-mono text-sm mb-2">// SYSTEM.PARSE(financial_statement)</div>
-                    <div className="text-2xl font-bold mb-2">Intelligent Document Processing</div>
-                    <div className="text-gray-600">
-                      Automatically extract and categorize financial data from any document format
+        {/* Products Section - Styling corrections */}
+        <section id="products" className="py-20 bg-gray-50 border-y">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center text-center space-y-6 mb-16">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
+                Our Products
+              </h2>
+              <p className="text-muted-foreground md:text-lg max-w-[800px]">
+                Open-source alternatives to popular enterprise SaaS tools, built
+                for developers and businesses.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Product 1 (Velar - Light Card) */}
+              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
+                    <Terminal className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-gray-400">Velar</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Open-source alternative to Palantir
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-gray-400">
+                    A unified data analytics platform for complex organizations.
+                    Ingest, link, visualize, and act — all in one place.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href="#"
+                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+                  >
+                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardFooter>
+              </Card>
+
+              {/* Product 2 (Gridform - Dark Card) */}
+              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
+                    <Grid className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-gray-400">Gridform</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Open-source alternative to Airtable
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-gray-400">
+                    A spreadsheet-style database built for teams. Automate,
+                    query, and collect data with built-in AI and APIs — no
+                    lock-in.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href="#"
+                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+                  >
+                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardFooter>
+              </Card>
+
+              {/* Product 3 (Leadpoint - Dark Card) */}
+              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-gray-400">Leadpoint</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Open-source alternative to Salesforce
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-gray-400">
+                    A CRM that works the way you do. Track leads, run pipelines,
+                    and scale your business — without paying by the seat.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href="#"
+                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+                  >
+                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardFooter>
+              </Card>
+
+              {/* Product 4 (Memex - Dark Card) */}
+              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
+                    <Database className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle className="text-gray-400">Memex</CardTitle>
+                  <CardDescription className="text-gray-300">
+                    Open-source alternative to Notion
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="text-gray-400">
+                    Organize your knowledge, wikis, and docs — together in one
+                    collaborative workspace, fully self-hostable.
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href="#"
+                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+                  >
+                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardFooter>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing" className="py-20 bg-gray-50 border-y">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center space-x-2 mb-4">
+                <h5 className="font-bold text-lg">Header</h5>
+              </div>
+              <p className="text-base text-gray-800">
+                Description text here...
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section - Styling corrections */}
+        <section id="how-it-works" className="py-24 bg-background">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center text-center space-y-6 mb-16">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
+                How It Works
+              </h2>
+              <p className="text-muted-foreground md:text-lg max-w-[800px]">
+                We fund open-source development by offering simple, flat-rate
+                hosting. No per-user fees. No vendor traps.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Step 1, 2, 3 - Dark Cards */}
+              <div className="flex flex-col items-center text-center space-y-6 p-6 rounded-lg border shadow-sm bg-gray-900 text-gray-100">
+                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+                  <span className="text-xl font-bold text-primary-foreground">
+                    1
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Open-Source Development
+                </h3>
+                <p className="text-gray-300">
+                  We create and maintain Apache 2.0-licensed alternatives to
+                  popular enterprise SaaS tools, making them freely available to
+                  everyone.
+                </p>
+              </div>
+
+              {/* Step 2 - Dark Card */}
+              <div className="flex flex-col items-center text-center space-y-6 p-6 rounded-lg border shadow-sm bg-gray-900 text-gray-100">
+                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+                  <span className="text-xl font-bold text-primary-foreground">
+                    2
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Flat-Rate Hosting
+                </h3>
+                <p className="text-gray-300">
+                  We offer simple, predictable pricing for hosted versions of
+                  our tools, with no per-user fees or hidden costs.
+                </p>
+              </div>
+
+              {/* Step 3 - Dark Card */}
+              <div className="flex flex-col items-center text-center space-y-6 p-6 rounded-lg border shadow-sm bg-gray-900 text-gray-100">
+                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+                  <span className="text-xl font-bold text-primary-foreground">
+                    3
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Sustainable Ecosystem
+                </h3>
+                <p className="text-gray-300">
+                  Hosting revenue funds continued open-source development,
+                  creating a sustainable ecosystem that benefits everyone.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section - Styling corrections */}
+        <section id="pricing" className="py-20 bg-gray-50 border-y">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center text-center space-y-6 mb-16">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
+                Flat Pricing
+              </h2>
+              <p className="text-muted-foreground md:text-lg max-w-[800px]">
+                Simple, predictable pricing with no per-user fees. Pay for
+                resources, not seats.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Hobby Tier - Dark Card */}
+              <Card className="flex flex-col h-full bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <CardTitle className="text-white">Hobby</CardTitle>
+                  <div className="mt-4 flex items-baseline text-5xl font-extrabold">
+                    <span className="text-primary">$19</span>
+                    <span className="ml-1 text-xl font-medium text-gray-400">
+                      /month
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <ul className="space-y-3 text-gray-300">
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>1 GB storage</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>100K API requests/month</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Community support</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Unlimited users</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full">Get Started</Button>
+                </CardFooter>
+              </Card>
+
+              {/* Pro Tier - Dark Card */}
+              <Card className="flex flex-col h-full bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <CardTitle className="text-white">Pro</CardTitle>
+                  <div className="mt-4 flex items-baseline text-5xl font-extrabold">
+                    <span className="text-primary">$49</span>
+                    <span className="ml-1 text-xl font-medium text-gray-400">
+                      /month
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <ul className="space-y-3 text-gray-300">
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>10 GB storage</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>500K API requests/month</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Email support</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Unlimited users</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full">Get Started</Button>
+                </CardFooter>
+              </Card>
+
+              {/* Scale Tier - Dark Card with Border */}
+              <Card className="flex flex-col h-full border-primary shadow-md relative before:absolute before:inset-0 before:border-2 before:border-primary before:rounded-lg before:pointer-events-none bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <div className="py-1 px-3 text-xs font-medium bg-primary text-primary-foreground rounded-full w-fit mb-2">
+                    Popular
+                  </div>
+                  <CardTitle className="text-white">Scale</CardTitle>
+                  <div className="mt-4 flex items-baseline text-5xl font-extrabold">
+                    <span className="text-primary">$149</span>
+                    <span className="ml-1 text-xl font-medium text-gray-400">
+                      /month
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <ul className="space-y-3 text-gray-300">
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>50 GB storage</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>2M API requests/month</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Priority support</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Unlimited users</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full">Get Started</Button>
+                </CardFooter>
+              </Card>
+
+              {/* Enterprise Tier - Dark Card */}
+              <Card className="flex flex-col h-full bg-gray-900 text-gray-100">
+                <CardHeader>
+                  <CardTitle className="text-white">Enterprise</CardTitle>
+                  <div className="mt-4 flex items-baseline text-5xl font-extrabold">
+                    <span className="text-primary">$499</span>
+                    <span className="ml-1 text-xl font-medium text-gray-400">
+                      /month
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <ul className="space-y-3 text-gray-300">
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>250 GB storage</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>10M API requests/month</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>24/7 dedicated support</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="mr-2 h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>Unlimited users</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full">Get Started</Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Open Source Commitment Section - Styling corrections */}
+        <section id="open-source" className="py-24 bg-gray-900 text-white">
+          <div className="container px-4 md:px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl mb-6 text-white">
+                  Our Open Source Commitment
+                </h2>
+                <p className="text-gray-300 mb-6">
+                  All Alpha Tensor products are released under the Apache 2.0
+                  license, giving you the freedom to:
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start">
+                    <Check className="mr-3 h-6 w-6 text-primary flex-shrink-0" />
+                    <div>
+                      <h3 className="font-medium text-white">
+                        Use Commercially
+                      </h3>
+                      <p className="text-gray-300">
+                        Deploy our software for commercial purposes without
+                        licensing fees.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="mr-3 h-6 w-6 text-primary flex-shrink-0" />
+                    <div>
+                      <h3 className="font-medium text-white">
+                        Modify the Code
+                      </h3>
+                      <p className="text-gray-300">
+                        Customize and extend our software to meet your specific
+                        needs.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="mr-3 h-6 w-6 text-primary flex-shrink-0" />
+                    <div>
+                      <h3 className="font-medium text-white">Self-Host</h3>
+                      <p className="text-gray-300">
+                        Run the software on your own infrastructure with
+                        complete control.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="mr-3 h-6 w-6 text-primary flex-shrink-0" />
+                    <div>
+                      <h3 className="font-medium text-white">
+                        Contribute Back
+                      </h3>
+                      <p className="text-gray-300">
+                        Join our community and help improve the software for
+                        everyone.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              {/* GitHub Activity Card - Dark background, light text */}
+              <div className="bg-gray-800 p-8 rounded-lg border border-gray-700 shadow-sm text-gray-100">
+                <div className="flex items-center mb-6">
+                  <Github className="h-8 w-8 mr-3 text-white" />
+                  <h3 className="text-xl font-bold text-white">
+                    GitHub Activity
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  {/* GitHub Repo List */}
+                  <div className="flex justify-between items-center pb-2 border-b border-gray-700">
+                    <span className="font-mono text-white">
+                      alphatensor/velar
+                    </span>
+                    <div className="flex items-center text-sm">
+                      <span className="mr-4 text-primary font-semibold">
+                        ⭐ 2.4k
+                      </span>
+                      <span className="text-primary font-semibold">🍴 342</span>
+                    </div>
+                  </div>
+                  {/* Repeat for other repos */}
+                  <div className="flex justify-between items-center pb-2 border-b border-gray-700">
+                    <span className="font-mono text-white">
+                      alphatensor/gridform
+                    </span>
+                    <div className="flex items-center text-sm">
+                      <span className="mr-4 text-primary font-semibold">
+                        ⭐ 1.8k
+                      </span>
+                      <span className="text-primary font-semibold">🍴 276</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b border-gray-700">
+                    <span className="font-mono text-white">
+                      alphatensor/leadpoint
+                    </span>
+                    <div className="flex items-center text-sm">
+                      <span className="mr-4 text-primary font-semibold">
+                        ⭐ 1.2k
+                      </span>
+                      <span className="text-primary font-semibold">🍴 198</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b border-gray-700">
+                    <span className="font-mono text-white">
+                      alphatensor/memex
+                    </span>
+                    <div className="flex items-center text-sm">
+                      <span className="mr-4 text-primary font-semibold">
+                        ⭐ 3.1k
+                      </span>
+                      <span className="text-primary font-semibold">🍴 487</span>
                     </div>
                   </div>
                 </div>
+                <div className="mt-6">
+                  {/* Button - Outline white on dark background */}
+                  <Button
+                    variant="outline"
+                    className="w-full bg-transparent border-gray-600 text-white hover:bg-gray-700"
+                  >
+                    <Github className="mr-2 h-4 w-4" /> View Our GitHub
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 py-24 bg-gray-50">
-        <div className="max-w-4xl mx-auto mb-16 text-center">
-          <h2 className="text-4xl font-bold mb-6">Financial Statement Processing</h2>
-          <p className="text-gray-600 text-lg">
-            Our platform uses AI to automate the entire financial statement workflow, from document upload to
-            categorized data.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <FeatureCard
-            icon={<FileText className="text-[#fb5028]" size={24} />}
-            title="Document Processing"
-            description="Upload financial statements in any format (PDF, images, Excel) and our AI extracts the data automatically."
-          />
-          <FeatureCard
-            icon={<FileSearch className="text-[#fb5028]" size={24} />}
-            title="Data Extraction"
-            description="Our AI identifies and extracts key financial data points with high accuracy, even from unstructured documents."
-          />
-          <FeatureCard
-            icon={<FolderTree className="text-[#fb5028]" size={24} />}
-            title="Automated Categorization"
-            description="Financial data is automatically categorized into accounting buckets based on industry standards."
-          />
-          <FeatureCard
-            icon={<Database className="text-[#fb5028]" size={24} />}
-            title="Centralized Storage"
-            description="Store all your financial documents and extracted data in one secure, searchable repository."
-          />
-          <FeatureCard
-            icon={<BarChart3 className="text-[#fb5028]" size={24} />}
-            title="Financial Insights"
-            description="Generate reports and visualizations from your processed financial data for better decision-making."
-          />
-          <FeatureCard
-            icon={<Shield className="text-[#fb5028]" size={24} />}
-            title="Enterprise Security"
-            description="Bank-level encryption and security protocols protect your sensitive financial information."
-          />
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="how-it-works" className="bg-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto mb-16 text-center">
-            <h2 className="text-4xl font-bold mb-6">How It Works</h2>
-            <p className="text-gray-600 text-lg">
-              Our platform simplifies financial statement processing in three easy steps.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white shadow-md border border-gray-200 p-8 rounded-lg relative">
-              <div className="text-[#fb5028] font-mono mb-4">01</div>
-              <h3 className="text-xl font-bold mb-3">Upload Documents</h3>
-              <p className="text-gray-600">
-                Upload financial statements in any format through our intuitive interface.
-              </p>
-            </div>
-            <div className="bg-white shadow-md border border-gray-200 p-8 rounded-lg relative">
-              <div className="text-[#fb5028] font-mono mb-4">02</div>
-              <h3 className="text-xl font-bold mb-3">AI Processing</h3>
-              <p className="text-gray-600">Our AI extracts and categorizes financial data with high accuracy.</p>
-            </div>
-            <div className="bg-white shadow-md border border-gray-200 p-8 rounded-lg relative">
-              <div className="text-[#fb5028] font-mono mb-4">03</div>
-              <h3 className="text-xl font-bold mb-3">Review & Export</h3>
-              <p className="text-gray-600">Review categorized data and export to your accounting system.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases */}
-      <section className="container mx-auto px-4 py-24 bg-gray-50">
-        <div className="max-w-4xl mx-auto mb-16 text-center">
-          <h2 className="text-4xl font-bold mb-6">Use Cases</h2>
-          <p className="text-gray-600 text-lg">
-            See how AlphaTensor transforms financial document processing across different scenarios.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <div className="bg-white shadow-md border border-gray-200 p-8 rounded-lg">
-            <h3 className="text-xl font-bold mb-4">Accounting Firms</h3>
-            <p className="text-gray-600 mb-4">
-              Automate the processing of client financial statements, reducing manual data entry by up to 90% and
-              improving accuracy.
-            </p>
-            <ul className="space-y-2">
-              <li className="flex items-start gap-2">
-                <div className="text-[#fb5028] mt-1">•</div>
-                <span className="text-gray-600">Process hundreds of statements in minutes, not hours</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="text-[#fb5028] mt-1">•</div>
-                <span className="text-gray-600">Standardize data across different client formats</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="text-[#fb5028] mt-1">•</div>
-                <span className="text-gray-600">Integrate with existing accounting software</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="bg-white shadow-md border border-gray-200 p-8 rounded-lg">
-            <h3 className="text-xl font-bold mb-4">Financial Departments</h3>
-            <p className="text-gray-600 mb-4">
-              Streamline month-end closing by automatically processing and categorizing invoices, receipts, and
-              statements.
-            </p>
-            <ul className="space-y-2">
-              <li className="flex items-start gap-2">
-                <div className="text-[#fb5028] mt-1">•</div>
-                <span className="text-gray-600">Reduce manual data entry and human error</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="text-[#fb5028] mt-1">•</div>
-                <span className="text-gray-600">Accelerate financial reporting cycles</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="text-[#fb5028] mt-1">•</div>
-                <span className="text-gray-600">Maintain audit trails and document history</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section id="signup" className="container mx-auto px-4 py-24 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white shadow-lg border border-gray-200 rounded-xl p-8 md:p-12 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-1/2 h-full opacity-10">
-              <DataVisual />
-            </div>
-
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Ready to transform your financial document processing?
+        {/* CTA Section - Styling corrections */}
+        <section className="py-24 bg-primary text-primary-foreground">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center text-center space-y-6">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-primary-foreground">
+                Build smarter. Own your stack.
               </h2>
-              <p className="text-gray-600 text-lg mb-8 max-w-2xl">
-                Join our alpha program or schedule a demo to see how AlphaTensor can automate your financial statement
-                workflow.
+              <p className="text-primary-foreground/80 md:text-lg max-w-[800px]">
+                Join thousands of teams using Alpha Tensor to stay lean, fast,
+                and free — with flat pricing and full control.
               </p>
-
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="#features"
-                  className="bg-[#fb5028] hover:bg-[#e04520] text-white font-medium px-8 py-3 rounded-md flex items-center justify-center gap-2 transition-all"
+                {/* "Get Started" Button - White with primary text */}
+                <Button
+                  size="lg"
+                  className="font-medium bg-white text-primary hover:bg-white/90"
                 >
-                  Request Alpha Access <ArrowRight size={18} />
-                </Link>
-                <Link
-                  href="#how-it-works"
-                  className="border border-gray-300 hover:border-[#fb5028] text-gray-900 px-8 py-3 rounded-md flex items-center justify-center transition-all"
+                  Get Started
+                </Button>
+                {/* "Schedule a Demo" Button - Outline white on primary background */}
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-transparent border-white text-white hover:bg-white/20 font-medium"
                 >
-                  Schedule Demo
-                </Link>
-              </div>
-
-              <div className="mt-8 flex items-center gap-2 text-gray-500 text-sm">
-                <Shield size={16} />
-                <span>Your information is secure and will never be shared.</span>
+                  Schedule a Demo
+                </Button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-6 md:mb-0">
-              <div className="text-2xl font-bold">
-                <span className="text-gray-900">Alpha</span>
-                <span className="text-[#fb5028]">Tensor</span>
+      {/* Footer - Styling corrections */}
+      <footer className="border-t py-12 md:py-16 bg-background text-foreground">
+        <div className="container px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="col-span-2 md:col-span-1">
+              {/* Logo */}
+              <div className="flex items-center gap-2 mb-4">
+                <span className="font-mono text-xl font-bold tracking-tight text-primary">
+                  α
+                </span>
+                <span className="font-sans text-xl font-bold tracking-tight text-foreground">
+                  Alpha Tensor
+                </span>
               </div>
-              <div className="text-gray-500 mt-2">© 2025 AlphaTensor. All rights reserved.</div>
+              {/* Description */}
+              <p className="text-muted-foreground text-sm mb-4">
+                Open-source alternatives to enterprise SaaS with flat,
+                predictable pricing.
+              </p>
+              {/* Social Icons (SVGs omitted for brevity but should be there) */}
+              <div className="flex space-x-4 text-muted-foreground">
+                {" "}
+                {/* Applied text-muted-foreground here */}
+                <Link href="#" className="hover:text-foreground">
+                  <span className="sr-only">Twitter</span>
+                  {/* SVG */}
+                </Link>
+                <Link href="#" className="hover:text-foreground">
+                  <span className="sr-only">GitHub</span>
+                  {/* SVG */}
+                </Link>
+                <Link href="#" className="hover:text-foreground">
+                  <span className="sr-only">LinkedIn</span>
+                  {/* SVG */}
+                </Link>
+              </div>
             </div>
-            <div className="flex gap-8">
-              <Link href="#" className="text-gray-600 hover:text-[#fb5028] transition-colors">
-                Privacy
-              </Link>
-              <Link href="#" className="text-gray-600 hover:text-[#fb5028] transition-colors">
+            {/* Navigation Links */}
+            <div>
+              <h3 className="text-sm font-medium mb-4 text-foreground">
+                Products
+              </h3>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Velar
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Gridform
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Leadpoint
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Memex
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium mb-4 text-foreground">
+                Resources
+              </h3>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    API Reference
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    GitHub
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Community
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium mb-4 text-foreground">
+                Company
+              </h3>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          {/* Copyright and Legal Links */}
+          <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center">
+            <p className="text-sm text-muted-foreground mb-4 md:mb-0">
+              © 2025 Alpha Tensor. All rights reserved.
+            </p>
+            <div className="flex space-x-6 text-sm text-muted-foreground">
+              <Link href="#" className="hover:text-foreground">
                 Terms
               </Link>
-              <Link href="#" className="text-gray-600 hover:text-[#fb5028] transition-colors">
-                Contact
+              <Link href="#" className="hover:text-foreground">
+                Privacy
+              </Link>
+              <Link href="#" className="hover:text-foreground">
+                Cookies
               </Link>
             </div>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
