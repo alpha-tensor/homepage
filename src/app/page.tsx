@@ -19,6 +19,14 @@ import {
   Star,
   GitFork,
 } from "lucide-react";
+import HighlightSection from "@/components/page/HighlightSection";
+
+import OurProductsSection from "@/components/page/OurProductsSection";
+import HowItWorksSection from "@/components/page/HowItWorksSection";
+import PricingSection from "@/components/page/PricingSection";
+import Footer from "@/components/page/Footer";
+import HeroSection from "@/components/page/HeroSection";
+import PitchSection from "@/components/page/PitchSection";
 
 export default function Home() {
   return (
@@ -31,9 +39,9 @@ export default function Home() {
             <span className="font-mono text-xl font-bold tracking-tight text-primary">
               α
             </span>
-            <span className="font-sans text-xl font-bold tracking-tight text-foreground">
-              Alpha Tensor
-            </span>{" "}
+            <span className="font-sans text-xl font-300 tracking-tight text-foreground">
+              <span className="font-700">Alpha</span>Tensor
+            </span>
             {/* Ensure text-foreground */}
           </div>
           {/* Right side links and menu */}
@@ -68,219 +76,16 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section (Keeping original layout and blob) */}
         {/* Used original Hero section padding and container */}
-        <section className="py-20 md:py-28 relative overflow-hidden">
-          {" "}
-          {/* Added relative and overflow-hidden for blob */}
-          <div className="container px-4 md:px-6">
-            <div
-              className="absolute right-0 top-0 h-[300px] w-[300px] animate-pulse rounded-full bg-gradient-to-br from-pink-400 via-orange-300 to-yellow-200 opacity-70 blur-3xl"
-              aria-hidden="true"
-            />
 
-            {/* Hero Content Wrapper */}
-            <div className="relative">
-              {" "}
-              {/* Positioning context */}
-              {/* Original Headline - Ensure text-foreground */}
-              <h1 className="max-w-3xl text-6xl font-light leading-tight tracking-tight text-foreground">
-                {" "}
-                {/* Added text-foreground */}
-                We Build Powerful,
-                <br />
-                Open Source Alternatives.
-              </h1>
-              <div className="mt-24 flex flex-col sm:flex-row justify-between gap-6">
-                {" "}
-                {/* Use flex-col on small, flex-row on medium+, add gap */}
-                <div className="max-w-md flex-grow">
-                  {/* Button - Use primary color for border and text */}
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-2 px-8 text-primary border-primary hover:bg-primary/10 h-auto py-3 relative overflow-hidden"
-                  >
-                    {" "}
-                    {/* Updated classes */}
-                    <span className="relative z-10">
-                      {" "}
-                      {/* z-10 to keep text above spinning border */}
-                      Talk to Us {/* Kept original button text */}
-                    </span>
-                    {/* Spinning Border - Use primary color */}
-                    {/* Position absolutely within the relative button */}
-                    <div className="absolute inset-0 animate-spin-slow rounded-full border border-primary opacity-50"></div>{" "}
-                    {/* Use border-primary */}
-                  </Button>
-                  {/* First Paragraph below button - Use muted-foreground */}
-                  <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
-                    {" "}
-                    {/* Use text-muted-foreground */}
-                    Open infrastructure for modern teams. AI-native, open-source
-                    tools that help you move faster, stay in control, and break
-                    free from legacy SaaS.
-                  </p>
-                </div>
-                {/* "WHO WE ARE" text and line - Use theme colors */}
-                <div className="flex items-end">
-                  {" "}
-                  {/* Container for the text and line */}
-                  <div className="flex items-center space-x-2 text-foreground">
-                    {" "}
-                    {/* Added text-foreground */}
-                    <span className="text-sm">WHO WE ARE</span>{" "}
-                    {/* Uses text-foreground */}
-                    <span className="h-px w-12 bg-border"></span>{" "}
-                    {/* Use bg-border */}
-                  </div>
-                </div>
-              </div>
-              {/* Second Paragraph below button - Adjusted copy, use muted-foreground */}
-              <p className="mt-24 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                {" "}
-                {/* Use text-muted-foreground */}
-                We build transparent, community-backed alternatives to closed
-                platforms — whether you're managing data, leads, workflows, or
-                knowledge.
-              </p>
-            </div>
-          </div>
+        <HeroSection />
+
+        <section>
+          <HighlightSection />
         </section>
 
         {/* Products Section - Styling corrections */}
-        <section id="products" className="py-20 bg-gray-50 border-y">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center text-center space-y-6 mb-16">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-foreground">
-                Our Products
-              </h2>
-              <p className="text-muted-foreground md:text-lg max-w-[800px]">
-                Open-source alternatives to popular enterprise SaaS tools, built
-                for developers and businesses.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Product 1 (Velar - Light Card) */}
-              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
-                    <Terminal className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-gray-400">Velar</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Open-source alternative to Palantir
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-gray-400">
-                    A unified data analytics platform for complex organizations.
-                    Ingest, link, visualize, and act — all in one place.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                  >
-                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
-
-              {/* Product 2 (Gridform - Dark Card) */}
-              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
-                    <Grid className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-gray-400">Gridform</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Open-source alternative to Airtable
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-gray-400">
-                    A spreadsheet-style database built for teams. Automate,
-                    query, and collect data with built-in AI and APIs — no
-                    lock-in.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                  >
-                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
-
-              {/* Product 3 (Leadpoint - Dark Card) */}
-              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
-                    <Users className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-gray-400">Leadpoint</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Open-source alternative to Salesforce
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-gray-400">
-                    A CRM that works the way you do. Track leads, run pipelines,
-                    and scale your business — without paying by the seat.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                  >
-                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
-
-              {/* Product 4 (Memex - Dark Card) */}
-              <Card className="flex flex-col h-full border shadow-sm card-hover-effect bg-gray-900 text-gray-100">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
-                    <Database className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-gray-400">Memex</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Open-source alternative to Notion
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="text-gray-400">
-                    Organize your knowledge, wikis, and docs — together in one
-                    collaborative workspace, fully self-hostable.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="#"
-                    className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                  >
-                    Learn more <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        <section id="pricing" className="py-20 bg-gray-50 border-y">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <h5 className="font-bold text-lg">Header</h5>
-              </div>
-              <p className="text-base text-gray-800">
-                Description text here...
-              </p>
-            </div>
-          </div>
+        <section id="products" className=" bg-gray-50 border-y">
+          <OurProductsSection />
         </section>
 
         {/* How It Works Section - Styling corrections */}
@@ -297,51 +102,50 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1, 2, 3 - Dark Cards */}
-              <div className="flex flex-col items-center text-center space-y-6 p-6 rounded-lg border shadow-sm bg-gray-900 text-gray-100">
+              <div className="flex flex-col items-center text-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
                   <span className="text-xl font-bold text-primary-foreground">
                     1
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-gray-700">
                   Open-Source Development
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-base text-gray-600">
                   We create and maintain Apache 2.0-licensed alternatives to
-                  popular enterprise SaaS tools, making them freely available to
-                  everyone.
+                  popular enterprise SaaS products.
                 </p>
               </div>
 
               {/* Step 2 - Dark Card */}
-              <div className="flex flex-col items-center text-center space-y-6 p-6 rounded-lg border shadow-sm bg-gray-900 text-gray-100">
+              <div className="flex flex-col items-center text-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
                   <span className="text-xl font-bold text-primary-foreground">
                     2
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-gray-700">
                   Flat-Rate Hosting
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-base text-gray-600">
                   We offer simple, predictable pricing for hosted versions of
-                  our tools, with no per-user fees or hidden costs.
+                  our open-source software.
                 </p>
               </div>
 
               {/* Step 3 - Dark Card */}
-              <div className="flex flex-col items-center text-center space-y-6 p-6 rounded-lg border shadow-sm bg-gray-900 text-gray-100">
+              <div className="flex flex-col items-center text-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
                   <span className="text-xl font-bold text-primary-foreground">
                     3
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-gray-700">
                   Sustainable Ecosystem
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-base text-gray-600">
                   Hosting revenue funds continued open-source development,
-                  creating a sustainable ecosystem that benefits everyone.
+                  creating a virtuous cycle.
                 </p>
               </div>
             </div>

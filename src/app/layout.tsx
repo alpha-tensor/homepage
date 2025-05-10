@@ -4,6 +4,10 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -21,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={ibmPlexMono.className}>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <body className={inter.variable}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
