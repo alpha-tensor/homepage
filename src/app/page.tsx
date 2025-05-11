@@ -28,50 +28,12 @@ import Footer from "@/components/page/Footer";
 import HeroSection from "@/components/page/HeroSection";
 import PitchSection from "@/components/page/PitchSection";
 
+import Header from "@/components/Header";
+
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      {/* Navigation Header (Keeping Alpha Tensor Logo) */}
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          {/* Alpha Tensor Logo */}
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xl font-bold tracking-tight text-primary">
-              α
-            </span>
-            <span className="font-sans text-xl font-300 tracking-tight text-foreground">
-              <span className="font-700">Alpha</span>Tensor
-            </span>
-            {/* Ensure text-foreground */}
-          </div>
-          {/* Right side links and menu */}
-          <div className="flex items-center space-x-6">
-            {/* Hamburger Icon - Show on small, hide on medium+ */}
-            <button className="flex flex-col space-y-1 md:hidden">
-              <span className="h-0.5 w-6 bg-foreground"></span>
-              <span className="h-0.5 w-6 bg-foreground"></span>
-            </button>
-            {/* Navigation links for larger screens */}
-            <nav className="hidden md:flex items-center gap-6 mr-4">
-              {" "}
-              {/* Added mr-4 */}
-              <Link
-                href="#products"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Products
-              </Link>
-              <Link
-                href="#how-it-works"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                How It Works
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       {/* Main Content Area */}
       <main className="flex-1">
         {/* Hero Section (Keeping original layout and blob) */}
