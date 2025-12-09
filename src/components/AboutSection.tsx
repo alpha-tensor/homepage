@@ -29,11 +29,7 @@ export const AboutSection = (): React.JSX.Element => {
 							and healthcare.
 						</li>
 						<li className={styles.bulletItem}>
-							Direct experience automating hundreds of thousands of claims and
-							packets.
-						</li>
-						<li className={styles.bulletItem}>
-							Able to work both with operations leads and technical teams.
+							Automated hundreds of thousands of claims style packets.
 						</li>
 					</ul>
 				</div>

@@ -26,7 +26,7 @@
 
 @media (min-width: 968px) {
   .grid {
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.1fr 0.9fr;
   }
 }
 
@@ -98,10 +98,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-width: 520px;      /* was 420 */
+  max-width: 500px;
   margin-left: auto;
 }
-
 
 @media (max-width: 967px) {
   .panel {
@@ -174,17 +173,7 @@
   color: #ffffff;
 }
 
-/* visual frame */
-
-.visualFrame {
-    background-color: var(--color-bg);
-    border-radius: var(--radius-lg);
-    margin-bottom: 0.5rem;
-    border: 1px solid var(--color-border);
-    padding: 0.85rem 1rem;
-}
-
-/* single row pipeline */
+/* Visual frame */
 
 
 .visualFrame {
@@ -194,6 +183,7 @@
   border: 1px solid var(--color-border);
   padding: 0.85rem 1rem;
 }
+
 
 /* vertical 2-column flow */
 
@@ -249,7 +239,8 @@
     row-gap: 0.1rem;
   }
 }
-/* json preview slimmer */
+
+/* JSON preview slimmer */
 
 .jsonPreview {
   margin-top: 0.35rem;

@@ -10,19 +10,19 @@ export const UseCasesGrid = (): React.JSX.Element => {
 	const useCases: UseCase[] = [
 		{
 			title: "Immigration and legal packets",
-			text: "Turn large client packets into structured cases. Autofill government forms, track every version, and surface edge cases to humans.",
+			text: "Turn long client packets into structured cases you can route and audit.",
 		},
 		{
 			title: "Claims and benefits",
-			text: "Normalize different submission formats into a single schema. Apply complex eligibility logic automatically with full audit trails.",
+			text: "Normalize messy submissions into a single schema. Automate eligibility with full audit trails.",
 		},
 		{
 			title: "Onboarding and compliance",
-			text: "Collect documents one time and reuse across forms and systems. Keep a living record of what was accepted and when it was accepted.",
+			text: "Collect documents once and reuse them everywhere. Track exactly what was accepted and when.",
 		},
 		{
 			title: "Internal knowledge operations",
-			text: "Attach policies and standard operating procedures directly to decisions so staff always see the reason behind an outcome.",
+			text: "Link policies directly to automated decisions. Show staff the exact reason behind every outcome.",
 		},
 	];
 

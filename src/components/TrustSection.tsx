@@ -12,23 +12,22 @@ export const TrustSection = (): React.JSX.Element => {
 					<div className={styles.block}>
 						<h3 className={styles.blockHeading}>Deployment</h3>
 						<p className={styles.blockText}>
-							Run fully managed or in your own cloud environment. Private data
-							is not used to train foundation models.
+							Runs in your cloud, no training on your data. Private instances
+							available for strict data sovereignty requirements.
 						</p>
 					</div>
 					<div className={styles.block}>
 						<h3 className={styles.blockHeading}>Security</h3>
 						<p className={styles.blockText}>
-							Encryption in transit and at rest. Role based access and clear
-							separation between environments.
+							Role based access and clear separation between environments.
+							Enterprise grade security defaults at every layer.
 						</p>
 					</div>
 					<div className={styles.block}>
 						<h3 className={styles.blockHeading}>Explainability</h3>
 						<p className={styles.blockText}>
-							Every automated action links back to original documents and
-							explicit rules. No decisions that rely on the model alone
-							without a clear record.
+							Every automated action links back to original pages. No black box
+							decisions, only verifiable audit trails.
 						</p>
 					</div>
 				</div>

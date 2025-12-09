@@ -10,15 +10,14 @@ interface HeroProps {
 const SCENARIOS = {
   immigration: {
     name: "Immigration packet",
-    packet: "I 130 packet",
+    packet: "I-130 client packet",
     schema: "Immigration intake v4",
     rules: ["Income check", "Household size", "Country caps"],
     outcome: "USCIS forms ready",
     json: `{
   "case_id": "IMM-2024-0318-42",
-  "template": "I130_Intake_v4",
   "status": "ready_for_review",
-  "rules_passed": 12,
+  "manual_minutes_saved": 45,
   "rules_flagged": 1
 }`,
   },
@@ -27,25 +26,25 @@ const SCENARIOS = {
     packet: "New hire packet",
     schema: "Onboarding flow v2",
     rules: ["Work eligibility", "Role risk tier"],
-    outcome: "HRIS and payroll prefilled",
+    outcome: "HRIS prefilled",
     json: `{
   "case_id": "HR-2024-1027-09",
-  "template": "Onboarding_v2",
   "status": "auto_approved",
-  "systems_synced": ["HRIS", "Payroll"]
+  "manual_minutes_saved": 20,
+  "systems_synced": ["HRIS"]
 }`,
   },
   compliance: {
     name: "Compliance review",
     packet: "Vendor due diligence",
     schema: "Vendor risk v3",
-    rules: ["Sanctions check", "Document completeness"],
-    outcome: "Risk report and tasks created",
+    rules: ["Sanctions check", "Completeness"],
+    outcome: "Risk report created",
     json: `{
   "case_id": "COMP-2024-0711-03",
-  "template": "Vendor_Risk_v3",
   "status": "needs_review",
-  "rules_flagged": 3
+  "manual_minutes_saved": 60,
+  "risk_score": "medium"
 }`,
   },
 } as const;
@@ -76,20 +75,25 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
               Document intelligence for serious workflows.
             </h1>
             <p className={styles.subhead}>
-              AlphaTensor ingests your PDFs, forms, and policies, learns the
-              structure, and ships automation that survives production.
-              Versioned templates, autofill, and rules based decisions built on
-              LLMs, not run by them.
+              <strong style={{ color: "#ffffff", fontWeight: 600 }}>
+                For legal, compliance, and operations teams that live in PDFs.
+              </strong>
+              <br />
+              AlphaTensor takes your PDFs, forms, and policies and turns them
+              into versioned templates, autofill, and rules driven decisions you
+              can audit.
             </p>
             <ul className={styles.bullets}>
               <li className={styles.bullet}>
-                From unstructured PDFs to typed schemas in days.
+                Cut manual packet review time by 50 percent within the first
+                workflow.
               </li>
               <li className={styles.bullet}>
-                Proven on real immigration claims and agency workflows.
+                Pre-built for immigration and claims style packets, no blank
+                slate setup.
               </li>
               <li className={styles.bullet}>
-                Designed for auditors, not only for demos.
+                Every decision is traceable for auditors, not just for demos.
               </li>
             </ul>
           </motion.div>
@@ -102,7 +106,9 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             <div className={styles.panelHeader}>
-              <span className={styles.panelLabel}>Working session</span>
+              <span className={styles.panelLabel}>
+                Working session, not a pitch
+              </span>
               <div className={styles.scenarioChips}>
                 {(Object.keys(SCENARIOS) as ScenarioKey[]).map((key) => (
                   <button
@@ -152,7 +158,6 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
                 </div>
               </motion.div>
             </div>
-
 
             <pre className={styles.jsonPreview}>{scenario.json}</pre>
 

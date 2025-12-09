@@ -22,10 +22,11 @@ export const SystemView = (): React.JSX.Element => {
 							One engine for documents, knowledge, and decisions.
 						</h2>
 						<p className={styles.body}>
-							AlphaTensor builds a typed representation of your forms and
-							documents. Every field rule and version is tracked. LLMs call into
-							this layer instead of guessing structure. Inputs stay predictable
-							and outputs stay reviewable.
+							Under the hood AlphaTensor is a single model of your forms,
+							fields, and rules. AlphaTensor builds a typed representation of
+							your forms and documents. Every field rule and version is tracked.
+							LLMs call into this layer instead of guessing structure. Inputs
+							stay predictable and outputs stay reviewable.
 						</p>
 						<ul className={styles.featureList}>
 							{features.map((feature) => (

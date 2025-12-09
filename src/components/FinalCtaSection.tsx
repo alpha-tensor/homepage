@@ -23,8 +23,8 @@ export const FinalCtaSection = ({
 					Bring one messy workflow and map it in thirty minutes.
 				</h2>
 				<p className={styles.subline}>
-					Book a working session. Bring a real packet or process. See exactly
-					how AlphaTensor would structure and automate it.
+					Book a working session. Walk away with a concrete workflow map and
+					an implementation plan.
 				</p>
 				<button
 					type="button"
