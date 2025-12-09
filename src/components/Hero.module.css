@@ -9,6 +9,25 @@
   display: flex;
   align-items: center;
   position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  right: 8%;
+  top: 18%;
+  width: 480px;
+  height: 320px;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0H0v40' fill='none' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+@media (max-width: 967px) {
+  .hero::before {
+    display: none;
+  }
 }
 
 .container {
