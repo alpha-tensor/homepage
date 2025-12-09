@@ -10,10 +10,10 @@ interface HeroProps {
 const SCENARIOS = {
   immigration: {
     name: "Immigration packet",
-    packet: "I-130 client packet.pdf",
-    schema: "Immigration_Intake_v4",
+    packet: "I 130 packet",
+    schema: "Immigration intake v4",
     rules: ["Income check", "Household size", "Country caps"],
-    outcome: "USCIS forms ready for review",
+    outcome: "USCIS forms ready",
     json: `{
   "case_id": "IMM-2024-0318-42",
   "template": "I130_Intake_v4",
@@ -24,8 +24,8 @@ const SCENARIOS = {
   },
   hr: {
     name: "HR onboarding",
-    packet: "New hire packet.zip",
-    schema: "Employee_Onboarding_v2",
+    packet: "New hire packet",
+    schema: "Onboarding flow v2",
     rules: ["Work eligibility", "Role risk tier"],
     outcome: "HRIS and payroll prefilled",
     json: `{
@@ -37,8 +37,8 @@ const SCENARIOS = {
   },
   compliance: {
     name: "Compliance review",
-    packet: "Vendor due diligence.pdf",
-    schema: "Vendor_Risk_v3",
+    packet: "Vendor due diligence",
+    schema: "Vendor risk v3",
     rules: ["Sanctions check", "Document completeness"],
     outcome: "Risk report and tasks created",
     json: `{
@@ -123,32 +123,36 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
             <div className={styles.visualFrame}>
               <motion.div
                 key={scenarioKey}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className={styles.flow}
+                className={styles.flowList}
               >
-                <div className={styles.flowColumn}>
+                <div className={styles.flowRow}>
                   <span className={styles.flowLabel}>Packet in</span>
                   <span className={styles.flowValue}>{scenario.packet}</span>
                 </div>
-                <div className={styles.flowColumn}>
-                  <span className={styles.flowLabel}>Schema and rules</span>
+                <div className={styles.flowRow}>
+                  <span className={styles.flowLabel}>Schema</span>
                   <span className={styles.flowValue}>{scenario.schema}</span>
-                  <div className={styles.flowTags}>
+                </div>
+                <div className={styles.flowRow}>
+                  <span className={styles.flowLabel}>Rules</span>
+                  <div className={styles.flowRules}>
                     {scenario.rules.map((rule) => (
-                      <span key={rule} className={styles.flowTag}>
+                      <span key={rule} className={styles.flowRuleChip}>
                         {rule}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div className={styles.flowColumn}>
+                <div className={styles.flowRow}>
                   <span className={styles.flowLabel}>Output</span>
                   <span className={styles.flowValue}>{scenario.outcome}</span>
                 </div>
               </motion.div>
             </div>
+
 
             <pre className={styles.jsonPreview}>{scenario.json}</pre>
 
