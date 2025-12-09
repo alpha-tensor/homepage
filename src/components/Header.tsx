@@ -11,32 +11,6 @@ export function Header() {
           <AlphaTensorLogo className="w-[140px] hidden md:flex" />
           <AlphaMark className="w-8 h-8 md:hidden" />
         </div>
-
-        {/* Right side links and menu */}
-        <div className="flex items-center space-x-6">
-          {/* Hamburger Icon - Show on small, hide on medium+ */}
-          <button className="flex flex-col space-y-1 md:hidden">
-            <span className="h-0.5 w-6 bg-foreground"></span>
-            <span className="h-0.5 w-6 bg-foreground"></span>
-          </button>
-          {/* Navigation links for larger screens */}
-          <nav className="hidden md:flex items-center gap-6 mr-4">
-            {" "}
-            {/* Added mr-4 */}
-            <Link
-              href="#products"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Products
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              How It Works
-            </Link>
-          </nav>
-        </div>
       </div>
     </header>
   );

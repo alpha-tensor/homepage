@@ -16,10 +16,14 @@ const HeroSection: React.FC = () => {
           {/* Original Headline - Ensure text-foreground */}
           <h1 className="max-w-3xl text-6xl font-light leading-tight tracking-tight text-foreground">
             {/* Added text-foreground */}
-            We Build for the community.
+            Alpha Sentinel
             <br />
-            Building Tools to Solve Problems, Not Just for Profit.
           </h1>
+          <p>
+            offline AI copilot for cyber incidents. It ingests logs and
+            evidence, maps attacks to MITRE ATT&CK, and generates timelines,
+            playbooks, and reports — all locally, with no cloud required.
+          </p>
           <div className="mt-24 flex flex-col sm:flex-row justify-between gap-6">
             {/* Use flex-col on small, flex-row on medium+, add gap */}
             <div className="max-w-md flex-grow">
@@ -56,7 +60,7 @@ const HeroSection: React.FC = () => {
           <p className="mt-24 max-w-xl text-sm leading-relaxed text-muted-foreground">
             {/* Use text-muted-foreground */}
             We build transparent, community-backed alternatives to closed
-            platforms — whether you're managing data, leads, workflows, or
+            platforms — whether you&apos;re managing data, leads, workflows, or
             knowledge.
           </p>
         </div>

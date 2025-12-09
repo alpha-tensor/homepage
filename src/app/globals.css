@@ -2,166 +2,173 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 14 96% 57%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 40%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 14 96% 57%;
-    --radius: 0.5rem;
-  }
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 10% 3.9%;
+        --primary: 14 96% 57%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 240 4.8% 95.9%;
+        --secondary-foreground: 240 5.9% 10%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 40%;
+        --accent: 240 4.8% 95.9%;
+        --accent-foreground: 240 5.9% 10%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 5.9% 90%;
+        --input: 240 5.9% 90%;
+        --ring: 14 96% 57%;
+        --radius: 0.5rem;
+    }
 
-  .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 0 0% 98%;
-    --card: 24 9.8% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 14 96% 57%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 240 5% 75%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 14 96% 57%;
-  }
+    .dark {
+        --background: 20 14.3% 4.1%;
+        --foreground: 0 0% 98%;
+        --card: 24 9.8% 10%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 14 96% 57%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 15%;
+        --muted-foreground: 240 5% 75%;
+        --accent: 12 6.5% 15.1%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 85.7% 97.3%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 14 96% 57%;
+    }
 
-  * {
-    @apply border-border;
-  }
+    * {
+        @apply border-border;
+    }
 
-  body {
-    @apply bg-background text-foreground;
-    /* Font family is managed by Next.js font setup (e.g., ibmPlexMono.className in layout.tsx)
+    body {
+        @apply bg-background text-foreground;
+        /* Font family is managed by Next.js font setup (e.g., ibmPlexMono.className in layout.tsx)
        and Tailwind's font utility classes (e.g., font-sans, font-mono) */
-  }
+    }
 
-  html {
-    scroll-behavior: smooth;
-  }
+    html {
+        scroll-behavior: smooth;
+    }
 
-  /* Improved Typography */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    letter-spacing: -0.025em;
-  }
+    /* Improved Typography */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        letter-spacing: -0.025em;
+    }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
 }
 
 /* Custom Component Styles & Overrides */
 
 /* Enhance the card-hover-effect class to make it more noticeable */
 .card-hover-effect {
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .card-hover-effect:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.05);
-  border-color: hsl(var(--primary) / 0.5);
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 30px -10px rgba(0, 0, 0, 0.1),
+        0 10px 20px -5px rgba(0, 0, 0, 0.05);
+    border-color: hsl(var(--primary) / 0.5);
 }
 
 /* Dark mode improvements for card hover */
 .dark .card-hover-effect:hover {
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.3), 0 10px 20px -5px rgba(0, 0, 0, 0.2);
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: hsl(var(--primary) / 0.5);
+    box-shadow:
+        0 12px 30px -10px rgba(0, 0, 0, 0.3),
+        0 10px 20px -5px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: hsl(var(--primary) / 0.5);
 }
 
 /* Dark mode specific text color overrides (consider using semantic CSS variables if these become numerous) */
 .dark .text-gray-700 {
-  color: rgb(209 213 219); /* Equivalent to Tailwind's gray-300 */
+    color: rgb(209 213 219); /* Equivalent to Tailwind's gray-300 */
 }
 
 .dark .text-gray-600 {
-  color: rgb(156 163 175); /* Equivalent to Tailwind's gray-400 */
+    color: rgb(156 163 175); /* Equivalent to Tailwind's gray-400 */
 }
 
 /* Improved code block styling */
 pre {
-  overflow-x: auto;
-  padding: 1rem;
-  border-radius: 0.5rem; /* Or var(--radius) */
+    overflow-x: auto;
+    padding: 1rem;
+    border-radius: 0.5rem; /* Or var(--radius) */
 }
 
 .dark pre {
-  background-color: rgb(17 24 39); /* Equivalent to Tailwind's gray-900 */
-  color: rgb(229 231 235); /* Equivalent to Tailwind's gray-200 */
+    background-color: rgb(17 24 39); /* Equivalent to Tailwind's gray-900 */
+    color: rgb(229 231 235); /* Equivalent to Tailwind's gray-200 */
 }
 
 /* Improved button contrast example */
 .btn-dark {
-  background-color: rgb(17 24 39);
-  color: rgb(243 244 246);
-  border-color: rgb(31 41 55);
+    background-color: rgb(17 24 39);
+    color: rgb(243 244 246);
+    border-color: rgb(31 41 55);
 }
 
 .btn-dark:hover {
-  background-color: rgb(31 41 55);
+    background-color: rgb(31 41 55);
 }
 
 .dark .btn-dark {
-  background-color: rgb(31 41 55);
-  color: rgb(243 244 246);
-  border-color: rgb(55 65 81);
+    background-color: rgb(31 41 55);
+    color: rgb(243 244 246);
+    border-color: rgb(55 65 81);
 }
 
 .dark .btn-dark:hover {
-  background-color: rgb(55 65 81);
+    background-color: rgb(55 65 81);
 }
 
 /* Styles for GitHub stats example */
 .github-stats {
-  font-weight: 600;
-  color: hsl(var(--primary));
+    font-weight: 600;
+    color: hsl(var(--primary));
 }
 
 .github-repo {
-  color: white; /* Consider using a semantic variable like hsl(var(--primary-foreground)) for better theme consistency */
-  font-weight: 500;
+    color: white; /* Consider using a semantic variable like hsl(var(--primary-foreground)) for better theme consistency */
+    font-weight: 500;
 }
 
 /* Improve dark section text contrast */
 .dark-section {
-  background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
 }
 
 .dark-section h2,
 .dark-section h3 {
-  color: white; /* Consider using hsl(var(--card-foreground)) or a more specific variable for better theme consistency */
+    color: white; /* Consider using hsl(var(--card-foreground)) or a more specific variable for better theme consistency */
 }
 
 .dark-section p {
-  color: hsl(var(--muted-foreground));
+    color: hsl(var(--muted-foreground));
 }
