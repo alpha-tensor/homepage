@@ -82,7 +82,9 @@ Color tokens live in `src/index.css` (`--bg`, `--surface-card`, `--surface-stron
 | Case journey, classification   | Dots align into classified rows with one orange exception   |
 | Case journey, extraction       | Registration marks and mono coordinates on the source paper |
 | Case journey, review sheet     | Confidence block; orange bracket on the low value           |
-| Page background, journey stage | Very faint dot raster at low opacity (texture only)         |
+| Case journey, stage background | Very faint dot raster at low opacity (texture only)         |
+| Proof band                     | Faint dot raster plus an aligned matrix with one exception  |
+| Platform and trust headers     | Recurring aligned matrix with one exception (ink / on-dark) |
 | Header / footer / favicon      | Existing mark retained (2026-09-07)                         |
 
 Explicitly not used: decorative dot sections, particles replacing product UI, and ornament on marketing paragraphs.

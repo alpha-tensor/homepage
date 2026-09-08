@@ -4,9 +4,21 @@
 }
 
 .documentContainer {
+    position: relative;
     max-width: var(--container-width);
     margin: 0 auto;
     padding: 0 var(--space-6);
+}
+
+/* Recurring matrix: aligned grid with one exception, anchored to the header. */
+.sectionGrid {
+    position: absolute;
+    top: 14px;
+    right: 0;
+    --mx-size: 5px;
+    --mx-gap: 7px;
+    --mx-off: 2px;
+    opacity: 0.8;
 }
 
 .header {
@@ -109,5 +121,11 @@
 
     .rowNum {
         font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 980px) {
+    .sectionGrid {
+        display: none;
     }
 }

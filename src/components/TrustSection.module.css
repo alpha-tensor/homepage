@@ -5,9 +5,21 @@
 }
 
 .documentContainer {
+    position: relative;
     max-width: var(--container-width);
     margin: 0 auto;
     padding: 0 var(--space-6);
+}
+
+/* Recurring matrix on dark: aligned grid with one bright exception. */
+.sectionGrid {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    --mx-size: 5px;
+    --mx-gap: 7px;
+    --mx-off: 2px;
+    opacity: 0.85;
 }
 
 .header {
@@ -247,6 +259,10 @@
 @media (max-width: 1080px) {
     .grid {
         grid-template-columns: 1fr;
+    }
+
+    .sectionGrid {
+        display: none;
     }
 }
 

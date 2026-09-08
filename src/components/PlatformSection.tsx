@@ -1,5 +1,6 @@
 import React from "react";
 import { landingPageContent } from "../content/landingPage";
+import { MatrixGrid } from "./ui/MatrixGrid";
 import styles from "./PlatformSection.module.css";
 
 /**
@@ -15,6 +16,13 @@ export const PlatformSection = (): React.JSX.Element => {
   return (
     <section className={styles.section} aria-labelledby="platform-title">
       <div className={styles.documentContainer}>
+        <MatrixGrid
+          rows={3}
+          cols={7}
+          exception={20}
+          tone="ink"
+          className={styles.sectionGrid}
+        />
         <header className={styles.header}>
           <span className={styles.kicker}>{platform.kicker}</span>
           <h2 id="platform-title" className={styles.headline}>

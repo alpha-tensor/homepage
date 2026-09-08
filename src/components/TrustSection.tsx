@@ -1,5 +1,6 @@
 import React from "react";
 import { landingPageContent } from "../content/landingPage";
+import { MatrixGrid } from "./ui/MatrixGrid";
 import styles from "./TrustSection.module.css";
 
 /**
@@ -82,6 +83,13 @@ export const TrustSection = (): React.JSX.Element => {
       aria-labelledby="trust-title"
     >
       <div className={styles.documentContainer}>
+        <MatrixGrid
+          rows={3}
+          cols={7}
+          exception={20}
+          tone="onDark"
+          className={styles.sectionGrid}
+        />
         <div className={styles.header}>
           <span className={styles.kicker}>{trust.kicker}</span>
           <h2 id="trust-title" className={styles.headline}>

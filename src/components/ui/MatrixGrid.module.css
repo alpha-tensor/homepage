@@ -1,0 +1,33 @@
+.matrix {
+    --mx-size: 4px;
+    --mx-gap: 5px;
+    --mx-off: 1px;
+    --mx-dot: rgba(16, 21, 34, 0.45);
+    --mx-exc: var(--accent);
+
+    display: grid;
+    grid-auto-flow: row;
+    column-gap: var(--mx-gap);
+    row-gap: var(--mx-gap);
+    width: max-content;
+    pointer-events: none;
+}
+
+.matrix > span {
+    display: block;
+    width: var(--mx-size);
+    height: var(--mx-size);
+    border-radius: 50%;
+    background: var(--mx-dot);
+}
+
+/* One deliberately offset point: the exception Alpha Tensor flags. */
+.matrix > .exc {
+    background: var(--mx-exc);
+    transform: translate(var(--mx-off), var(--mx-off));
+}
+
+.onDark {
+    --mx-dot: rgba(255, 255, 255, 0.5);
+    --mx-exc: var(--accent-bright);
+}

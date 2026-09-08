@@ -1,5 +1,6 @@
 import React from "react";
 import { landingPageContent } from "../content/landingPage";
+import { MatrixGrid } from "./ui/MatrixGrid";
 import styles from "./ProofStrip.module.css";
 
 export const ProofStrip = (): React.JSX.Element => {
@@ -15,6 +16,15 @@ export const ProofStrip = (): React.JSX.Element => {
           <div className={styles.textBlock}>
             <p className={styles.statement}>{proof.statement}</p>
             <p className={styles.caption}>{proof.caption}</p>
+          </div>
+          <div className={styles.matrixBox}>
+            <MatrixGrid
+              rows={4}
+              cols={6}
+              exception={21}
+              tone="onDark"
+              className={styles.stripGrid}
+            />
           </div>
         </div>
       </div>
