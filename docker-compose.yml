@@ -1,17 +1,11 @@
-version: '3.8'
 services:
-  web:
+  alphatensor_www:
     build:
       context: .
       dockerfile: Dockerfile
-    image: nextjs-app:latest
+    container_name: alphatensor_www
+    env_file:
+      - .env
+    restart: unless-stopped
     ports:
       - "3000:3000"
-    environment:
-      NODE_ENV: production
-    restart: unless-stopped
-    # Uncomment the following lines for development
-    # volumes:
-    #   - .:/app:delegated
-    #   - /app/node_modules
-    # command: npm run dev

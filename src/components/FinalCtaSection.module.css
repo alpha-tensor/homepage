@@ -1,66 +1,82 @@
-.section {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  padding: var(--spacing-xl) 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.ctaSection {
+    padding: var(--space-11) 0;
+    background-color: var(--bg);
 }
 
-.container {
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-sm);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.documentContainer {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.kicker {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    padding: 6px 12px;
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-strong);
 }
 
 .title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: var(--spacing-md);
-  max-width: 25ch;
-  color: white;
-  text-wrap: balance;
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: var(--space-5);
+    max-width: 22ch;
+    text-align: center;
 }
 
 .subline {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  margin-bottom: var(--spacing-lg);
-  max-width: 65ch;
-  opacity: 0.95;
-  color: white;
-  text-wrap: pretty;
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin: 0 0 var(--space-7) 0;
 }
 
-.ctaButton {
-  background-color: #ffffff;
-  color: var(--color-primary);
-  font-size: 1.125rem;
-  padding: 1rem 2.5rem;
-  border: 2px solid transparent;
-  margin-bottom: var(--spacing-sm);
-  height: 60px;
+.actionRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
 }
 
-.ctaButton:hover {
-  background-color: #000000;
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+.primaryButton {
+    height: 56px;
+    padding: 0 var(--space-7);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(199, 90, 27, 0.35);
+}
+
+.secondaryButton {
+    height: 56px;
+    padding: 0 var(--space-7);
+    font-size: 1.0625rem;
 }
 
 .microCopy {
-  font-size: 0.875rem;
-  opacity: 0.9;
-  color: white;
-  margin-top: var(--spacing-sm);
-  font-weight: 500;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    color: var(--text-soft);
+    margin: 0;
 }

@@ -1,53 +1,77 @@
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--header-height);
-  z-index: 50;
-  display: flex;
-  align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--bg);
+    border-bottom: 1px solid var(--border);
 }
 
 .container {
-  width: 100%;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-sm);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
 }
 
-.logoLink {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  color: white;
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: -0.02em;
-  transition: opacity 0.2s ease;
-}
-
-.logoLink:hover {
-  opacity: 0.9;
+.logoRow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
 }
 
 .logoIcon {
-  height: 32px;
-  width: 32px;
-  color: white;
+    height: 22px;
+    width: 22px;
+    color: var(--accent);
 }
 
 .companyName {
-  display: none;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
 }
 
-@media (min-width: 480px) {
-  .companyName {
-    display: block;
-  }
+.nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-left: auto;
+}
+
+.navLink {
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+}
+
+.navLink:hover {
+    color: var(--text);
+}
+
+.demoButton {
+    height: 40px;
+    font-size: var(--text-small);
+    white-space: nowrap;
+    margin-left: var(--space-3);
+}
+
+@media (max-width: 720px) {
+    .nav {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .demoButton {
+        padding: 0 var(--space-4);
+    }
 }

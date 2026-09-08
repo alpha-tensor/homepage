@@ -1,0 +1,230 @@
+.section {
+    padding: var(--space-10) 0;
+    background-color: var(--bg-neutral);
+}
+
+.documentContainer {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.textBlock {
+    max-width: 720px;
+    margin-bottom: var(--space-8);
+}
+
+.kicker {
+    display: block;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+.headline {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-4);
+    max-width: 24ch;
+}
+
+.body {
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 56ch;
+    margin-bottom: 0;
+}
+
+/* One continuous strip. */
+
+/* The environment strip is a raised white surface on the neutral band, kept
+ * together by its internal connector rules rather than an outline. */
+.stripWrap {
+    background: var(--surface-card);
+    box-shadow: 0 14px 34px rgba(16, 21, 34, 0.08);
+    padding: var(--space-5);
+}
+
+.stripLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.strip {
+    display: flex;
+    align-items: stretch;
+    padding-top: var(--space-4);
+}
+
+.stripStep {
+    flex: 1;
+    min-width: 0;
+    padding: 0 var(--space-3);
+    border-left: 1px solid var(--border);
+}
+
+.stripStep:first-child {
+    padding-left: 0;
+    border-left: none;
+}
+
+.stripStepLabel {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: var(--space-2);
+}
+
+/* Alpha Tensor is the processing layer: mark it with the orange square. */
+.stripStepEngine .stripStepLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--accent-strong);
+}
+
+.stripStepEngine .stripStepLabel::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.stripStepText {
+    font-size: var(--text-small);
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0;
+    max-width: none;
+}
+
+.stripArrow {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0 var(--space-2);
+}
+
+.disclaimer {
+    margin: var(--space-4) 0 0 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-small);
+    color: var(--text-soft);
+    max-width: 72ch;
+}
+
+/* --- One-pass activation ---
+ * When the strip enters the viewport the steps brighten in sequence, then
+ * stop. The base rules above are the settled state, so nothing depends on the
+ * animation having run (no-JS and reduced motion both end fully visible). */
+
+.activated .stripStep {
+    animation: stripStepIn 0.45s ease-out both;
+}
+
+.activated .stripStep:nth-of-type(1) {
+    animation-delay: 0s;
+}
+
+.activated .stripStep:nth-of-type(2) {
+    animation-delay: 0.18s;
+}
+
+.activated .stripStep:nth-of-type(3) {
+    animation-delay: 0.36s;
+}
+
+.activated .stripStep:nth-of-type(4) {
+    animation-delay: 0.54s;
+}
+
+.activated .stripStep:nth-of-type(5) {
+    animation-delay: 0.72s;
+}
+
+.activated .stripStepEngine .stripStepLabel::before {
+    animation: enginePop 0.35s ease-out 0.6s both;
+}
+
+@keyframes stripStepIn {
+    from {
+        opacity: 0.35;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes enginePop {
+    from {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 1080px) {
+    .strip {
+        flex-wrap: wrap;
+    }
+
+    .stripStep {
+        flex-basis: calc(50% - 40px);
+        flex-grow: 1;
+        border-left: none;
+        padding: var(--space-3) 0;
+    }
+
+    .stripStep:first-child {
+        padding-left: 0;
+    }
+
+    .stripArrow {
+        transform: rotate(90deg);
+        padding: var(--space-1) 0;
+    }
+}
+
+@media (max-width: 560px) {
+    .strip {
+        flex-direction: column;
+    }
+
+    .stripStep {
+        flex-basis: auto;
+    }
+
+    .stripArrow {
+        transform: rotate(90deg);
+        align-self: flex-start;
+        padding: 0;
+        margin: 0 0 0 var(--space-1);
+    }
+}

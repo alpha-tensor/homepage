@@ -1,22 +1,12 @@
-# Multi-stage Dockerfile for Next.js application
-FROM node:18-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts --prefer-offline
+# Production image: install, build (including the static prerender), and serve
+# the built assets with vite preview. The dev-only `npm run dev` mode is not
+# used in production.
+FROM node:20-alpine
 
-
-FROM node:18-alpine AS builder
+COPY . /app/
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+RUN npm ci
 RUN npm run build
 
-FROM node:18-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "3000", "--strictPort"]

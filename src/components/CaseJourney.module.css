@@ -1,0 +1,1265 @@
+.section {
+    background-color: var(--bg);
+    padding: var(--space-11) 0 var(--space-12) 0;
+}
+
+.documentContainer {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.header {
+    max-width: 760px;
+    margin-bottom: var(--space-9);
+}
+
+.kicker {
+    display: block;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+.headline {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-4);
+    max-width: 24ch;
+}
+
+.body {
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin-bottom: 0;
+}
+
+/* --- Layout: text steps left, pinned stage right --- */
+
+.journey {
+    display: grid;
+    grid-template-areas: "steps stage";
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-9);
+    align-items: start;
+}
+
+.stageWrap {
+    grid-area: stage;
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+    z-index: 2;
+}
+
+.stepList {
+    grid-area: steps;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Stage chrome and canvas --- */
+
+.stageTop {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-bottom: var(--space-3);
+}
+
+.stageTopMark {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.stageTopLabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.stage {
+    position: relative;
+    height: clamp(440px, 38vw, 580px);
+    background-color: var(--bg-soft);
+    /* Faint dot raster: unstructured information as texture only. */
+    background-image: radial-gradient(
+        circle at 1px 1px,
+        rgba(16, 21, 34, 0.055) 1px,
+        transparent 1.7px
+    );
+    background-size: 18px 18px;
+    overflow: hidden;
+}
+
+.layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px) scale(0.995);
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease,
+        visibility 0s linear 0.45s;
+}
+
+.layerActive {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease;
+}
+
+.caseRef {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+/* Shared reveal state for staged elements (review sheet build sequence). */
+.isShown {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+/* --- Phase 1: documents arrive --- */
+
+.layerInner {
+    position: absolute;
+    inset: 0;
+}
+
+.stageNote {
+    position: absolute;
+    top: var(--space-5);
+    left: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.docSlip {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 200px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 10px 26px rgba(16, 21, 34, 0.14);
+    padding: 12px 14px;
+}
+
+.docA {
+    top: 20%;
+    left: 12%;
+    transform: rotate(-7deg);
+}
+
+.docB {
+    top: 8%;
+    right: 10%;
+    transform: rotate(4deg);
+}
+
+.docC {
+    bottom: 14%;
+    left: 24%;
+    transform: rotate(-3deg);
+}
+
+.docD {
+    right: 14%;
+    bottom: 6%;
+    transform: rotate(6deg);
+}
+
+.docName {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+}
+
+.docSub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.docLines {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.docLines span {
+    display: block;
+    height: 5px;
+    background: var(--border);
+}
+
+.docLines span:first-child {
+    width: 86%;
+}
+
+.docLines span:last-child {
+    width: 62%;
+}
+
+/* One-pass arrival: slips enter the frame, then everything settles. */
+.stage[data-active="0"] .docSlip {
+    animation: slipIn 0.55s ease-out both;
+}
+
+.stage[data-active="0"] .docA {
+    animation-delay: 0.1s;
+}
+
+.stage[data-active="0"] .docB {
+    animation-delay: 0.28s;
+}
+
+.stage[data-active="0"] .docC {
+    animation-delay: 0.46s;
+}
+
+.stage[data-active="0"] .docD {
+    animation-delay: 0.64s;
+}
+
+@keyframes slipIn {
+    from {
+        opacity: 0;
+        transform: translateY(26px);
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* --- Phase 2: classification --- */
+
+.classifiedCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(470px, 92%);
+    background: var(--surface-card);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+}
+
+.classifiedHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.classifiedRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.classifiedRow:last-of-type {
+    border-bottom: none;
+}
+
+.classifiedName {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text);
+    font-weight: 600;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.classifiedDest {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
+
+.classifiedArrow {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.classifiedCase {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.classifiedFoot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    margin-top: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.footMark {
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.stage[data-active="1"] .classifiedRow {
+    animation: rowIn 0.4s ease-out both;
+}
+
+.stage[data-active="1"] .classifiedFoot {
+    animation: rowIn 0.4s ease-out 0.7s both;
+}
+
+@keyframes rowIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* --- Phase 2 motif: dots select, align, and leave one exception --- */
+
+.alignMotif {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 156px;
+    height: 112px;
+    pointer-events: none;
+}
+
+.alignRail {
+    position: absolute;
+    left: 1px;
+    top: 22px;
+    bottom: 18px;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.35s ease 0.05s;
+}
+
+.alignDot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(16, 21, 34, 0.28);
+    transform: translate(-50%, -50%);
+    left: var(--sx);
+    top: var(--sy);
+}
+
+.alignKeep {
+    background: rgba(16, 21, 34, 0.15);
+}
+
+.alignExc {
+    background: var(--accent);
+}
+
+.alignSel {
+    transition:
+        left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.3s ease;
+    transition-delay: 0s, 0s, 0s;
+}
+
+/* Selected points travel into their structured rows and darken to ink;
+ * the offset exception stays orange; unselected points recede. */
+.stage[data-active="1"] .alignRail {
+    opacity: 1;
+}
+
+.stage[data-active="1"] .alignSel {
+    left: var(--fx);
+    top: var(--fy);
+    background: var(--text);
+    transition-delay: var(--d), var(--d), 0s;
+}
+
+.stage[data-active="1"] .alignKeep {
+    opacity: 0.55;
+}
+
+.stage[data-active="1"] .alignExc {
+    box-shadow: 0 0 0 3px rgba(199, 90, 27, 0.12);
+    transition: box-shadow 0.3s ease 0.55s;
+}
+
+/* --- Phase 3: values move from source document into the record --- */
+
+.structStage {
+    position: absolute;
+    inset: 0;
+}
+
+.sourcePaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 46%;
+    background: var(--surface-card);
+    border: 1px solid var(--border-strong);
+    border-right: 3px solid var(--border-strong);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+}
+
+.sourceHead {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.sourceField {
+    position: absolute;
+    left: 10%;
+    width: 76%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.sourceLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.sourceValue {
+    font-size: var(--text-small);
+    font-weight: 700;
+    color: var(--text);
+}
+
+.sourceHighlight {
+    background: var(--accent-soft);
+    padding: 2px 5px;
+    box-decoration-break: clone;
+}
+
+.sourceMark {
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--accent);
+    background: var(--surface-card);
+    color: var(--accent-strong);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+}
+
+.structLeader {
+    position: absolute;
+    left: 46%;
+    width: 20%;
+    height: 1px;
+    background: rgba(199, 90, 27, 0.65);
+    transform: translateY(-50%);
+}
+
+.structCol {
+    position: absolute;
+    top: 0;
+    right: 4%;
+    bottom: 0;
+    width: 34%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.structRow {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.structNum {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-strong);
+    flex-shrink: 0;
+}
+
+.structText {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.structLabel {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.structValue {
+    font-size: var(--text-small);
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.structFoot {
+    position: absolute;
+    right: 4%;
+    bottom: 4%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+/* Registration marks frame the source document as the subject of capture. */
+.regTick {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border: 0 solid var(--accent);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.regTl {
+    top: 10px;
+    left: 10px;
+    border-top-width: 1.5px;
+    border-left-width: 1.5px;
+}
+
+.regTr {
+    top: 10px;
+    left: calc(46% - 17px);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+}
+
+.regBl {
+    bottom: 10px;
+    left: 10px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+}
+
+.regBr {
+    bottom: 10px;
+    left: calc(46% - 17px);
+    border-bottom-width: 1.5px;
+    border-right-width: 1.5px;
+}
+
+/* Addressability note under the source document. Coordinates are
+ * illustrative document-space references, not product telemetry. */
+.scanMeta {
+    position: absolute;
+    bottom: 12px;
+    left: 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.stage[data-active="2"] .sourcePaper {
+    animation: fadeIn 0.5s ease-out both;
+}
+
+.stage[data-active="2"] .structLeader {
+    animation: leaderIn 0.5s ease-out both;
+}
+
+.stage[data-active="2"] .structLeader:nth-of-type(1) {
+    animation-delay: 0.55s;
+}
+
+.stage[data-active="2"] .structLeader:nth-of-type(2) {
+    animation-delay: 1.05s;
+}
+
+.stage[data-active="2"] .structRow {
+    animation: rowIn 0.4s ease-out both;
+}
+
+.stage[data-active="2"] .structRow:nth-of-type(1) {
+    animation-delay: 0.7s;
+}
+
+.stage[data-active="2"] .structRow:nth-of-type(2) {
+    animation-delay: 1.2s;
+}
+
+.stage[data-active="2"] .structFoot {
+    animation: rowIn 0.4s ease-out 1.8s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes leaderIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) scaleX(0);
+        transform-origin: left center;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) scaleX(1);
+        transform-origin: left center;
+    }
+}
+
+/* --- Phase 4: the case review sheet (JS-driven build sequence) --- */
+
+.sheetCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(480px, 92%);
+    background: var(--surface-card);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+}
+
+.sheetHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.sheetHead > span:first-child {
+    font-size: var(--text-small);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+
+.sheetLabel {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+}
+
+.sheetRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.3s ease;
+}
+
+.sheetRow:last-of-type {
+    border-bottom: none;
+}
+
+.sheetRowLabel {
+    font-size: var(--text-small);
+    color: var(--text-muted);
+}
+
+.sheetRowState {
+    display: inline-flex;
+    align-items: center;
+}
+
+.sheetRowFlag {
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent);
+    padding-left: var(--space-3);
+}
+
+.sheetDateRow {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) 0 var(--space-2) 0;
+}
+
+.sheetDateLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.sheetDateValue {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.06em;
+}
+
+.dateCircle {
+    position: absolute;
+    top: -7px;
+    right: -12px;
+    bottom: -7px;
+    left: -12px;
+    border: 1.5px dashed var(--accent);
+    border-radius: 999px;
+    transform: rotate(-1.5deg) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+.marginNote {
+    margin-left: auto;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--accent-strong);
+    transform: rotate(-1deg);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.confRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+}
+
+.confLabel {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.confSegs {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.confSeg {
+    width: 8px;
+    height: 12px;
+    background: var(--surface-strong);
+}
+
+.confSegEmpty {
+    background: var(--border);
+}
+
+/* The low value is bracketed in orange when the sheet resolves. The segment
+ * strip shows six of ten filled, consistent with the 0.61 value. */
+.confBracket {
+    position: relative;
+    margin-left: auto;
+    padding: 2px 9px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-soft);
+    opacity: 0.55;
+    transition:
+        color 0.3s ease,
+        opacity 0.3s ease;
+}
+
+.confBracket::before,
+.confBracket::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 16px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.confBracket::before {
+    left: 0;
+}
+
+.confBracket::after {
+    right: 0;
+}
+
+.confBracketOn {
+    color: var(--accent-strong);
+    opacity: 1;
+}
+
+.confBracketOn::before,
+.confBracketOn::after {
+    opacity: 0.9;
+}
+
+.sheetAction {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    margin-top: var(--space-4);
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        visibility 0s linear 0.35s;
+}
+
+.sheetAction.isShown {
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.sheetActionText {
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text);
+    text-align: right;
+}
+
+/* --- Phase 5: next action --- */
+
+.nextCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(440px, 92%);
+    background: var(--surface-card);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+}
+
+.nextMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border);
+}
+
+.nextMetaName {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+
+.nextAction {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    background: var(--accent);
+    color: var(--white);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-5);
+    animation: actionIn 0.45s ease-out 0.1s both;
+}
+
+.nextActionLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.nextActionText {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.nextRows {
+    display: flex;
+    flex-direction: column;
+}
+
+.nextRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.nextRow:last-of-type {
+    border-bottom: none;
+}
+
+.nextRowLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.nextRowValue {
+    font-size: var(--text-small);
+    color: var(--text);
+    font-weight: 600;
+    text-align: right;
+}
+
+.nextFoot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    font-size: var(--text-small);
+    color: var(--text-muted);
+}
+
+@keyframes actionIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.99);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* --- Step list: numbered rail with active state --- */
+
+.step {
+    display: grid;
+    grid-template-columns: 22px 44px minmax(0, 1fr) auto;
+    gap: var(--space-2) var(--space-3);
+    align-items: start;
+    padding: var(--space-5) 0;
+    opacity: 0.55;
+    transition: opacity 0.35s ease;
+}
+
+.stepActive {
+    opacity: 1;
+}
+
+.stepRail {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    width: 2px;
+    background: var(--border);
+    align-self: stretch;
+    justify-self: center;
+}
+
+.stepDot {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--border-strong);
+    background: var(--bg);
+    border-radius: 50%;
+    transition:
+        border-color 0.3s ease,
+        background-color 0.3s ease;
+}
+
+.stepActive .stepDot {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.stepIndex {
+    grid-column: 2;
+    grid-row: 1;
+    padding-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-soft);
+    transition: color 0.3s ease;
+}
+
+.stepActive .stepIndex {
+    color: var(--accent-strong);
+}
+
+.stepCopy {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+.stepTitle {
+    font-size: 1.1875rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.stepText {
+    font-size: var(--text-small);
+    color: var(--text-muted);
+    line-height: 1.55;
+    max-width: 44ch;
+}
+
+.stepTag {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: end;
+    padding-top: 2px;
+}
+
+.humanNoteRow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-2) 0 0 66px;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-small);
+    color: var(--text);
+    font-weight: 600;
+    list-style: none;
+}
+
+.humanMark {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 1080px) {
+    .stage {
+        height: clamp(380px, 46vw, 500px);
+    }
+
+    .step {
+        grid-template-columns: 22px 40px minmax(0, 1fr);
+    }
+
+    .stepTag {
+        grid-column: 3;
+        grid-row: 3;
+        justify-self: start;
+        margin-top: var(--space-2);
+    }
+}
+
+@media (max-width: 860px) {
+    .journey {
+        grid-template-areas:
+            "stage"
+            "steps";
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+
+    .stageWrap {
+        position: sticky;
+        top: calc(var(--header-height) + var(--space-3));
+        background: var(--bg);
+        z-index: 3;
+    }
+
+    .stage {
+        height: clamp(320px, 66vw, 420px);
+    }
+
+    .section {
+        padding: var(--space-9) 0;
+    }
+}
+
+@media (max-width: 1100px) {
+    .alignMotif {
+        display: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .docSlip {
+        width: 150px;
+        padding: 10px 12px;
+    }
+
+    .docB {
+        right: 2%;
+    }
+
+    .docD {
+        right: 4%;
+    }
+
+    .sourcePaper {
+        width: 58%;
+        padding: var(--space-3);
+    }
+
+    .regTr,
+    .regBr {
+        left: calc(58% - 17px);
+    }
+
+    .sourceField {
+        left: 8%;
+        width: 86%;
+    }
+
+    .structCol {
+        right: 2%;
+        width: 36%;
+    }
+
+    .classifiedName {
+        max-width: 130px;
+    }
+}

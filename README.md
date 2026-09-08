@@ -1,4 +1,22 @@
-# React + TypeScript + Vite
+# Alpha Tensor Website
+
+Marketing website source and release tooling for alphatensor.com.
+
+---
+
+## Active identity implementation plan
+
+The canonical implementation and release plan is maintained in the parent Padilla repository at [Information to Structure Identity and Release Plan](../../planning/design/02_ALPHATENSOR_INFORMATION_TO_STRUCTURE_PLAN.md).
+
+That link requires the parent checkout. This website is a separate Git repository. The plan calls for a self-contained brand specification and release runbook here during implementation.
+
+The plan covers baseline preservation, logo approval, reusable motif primitives, case journey reliability, accessibility, validation, scoped commits, push verification, deployment safety, and rollback. Creating the plan does not implement or deploy it.
+
+Important. The current Makefile defaults to production deployment. Do not run bare `make` in this directory as a discovery command. Inspect the Makefile and use an explicit target. Making help the safe default is part of the release plan.
+
+---
+
+## Original starter documentation
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -17,29 +35,29 @@ If you are developing a production application, we recommend updating the config
 
 ```js
 export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+    globalIgnores(["dist"]),
+    {
+        files: ["**/*.{ts,tsx}"],
+        extends: [
+            // Other configs...
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+            // Remove tseslint.configs.recommended and replace with this
+            tseslint.configs.recommendedTypeChecked,
+            // Alternatively, use this for stricter rules
+            tseslint.configs.strictTypeChecked,
+            // Optionally, add this for stylistic rules
+            tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
+            // Other configs...
+        ],
+        languageOptions: {
+            parserOptions: {
+                project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+                tsconfigRootDir: import.meta.dirname,
+            },
+            // other options...
+        },
     },
-  },
 ]);
 ```
 
@@ -51,23 +69,23 @@ import reactX from "eslint-plugin-react-x";
 import reactDom from "eslint-plugin-react-dom";
 
 export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
+    globalIgnores(["dist"]),
+    {
+        files: ["**/*.{ts,tsx}"],
+        extends: [
+            // Other configs...
+            // Enable lint rules for React
+            reactX.configs["recommended-typescript"],
+            // Enable lint rules for React DOM
+            reactDom.configs.recommended,
+        ],
+        languageOptions: {
+            parserOptions: {
+                project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+                tsconfigRootDir: import.meta.dirname,
+            },
+            // other options...
+        },
     },
-  },
 ]);
 ```

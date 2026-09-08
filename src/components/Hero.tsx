@@ -1,177 +1,221 @@
-// Hero.tsx
-import { motion } from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { trackEvent } from "../content/analytics";
+import { DEMO_URL, landingPageContent } from "../content/landingPage";
+import { StatusChip, type StatusTone } from "./ui/StatusChip";
 import styles from "./Hero.module.css";
 
 interface HeroProps {
   onCtaClick?: () => void;
 }
 
-const SCENARIOS = {
-  immigration: {
-    name: "Immigration packet",
-    packet: "I-130 client packet",
-    schema: "Immigration intake v4",
-    rules: ["Income check", "Household size", "Country caps"],
-    outcome: "USCIS forms ready",
-    json: `{
-  "case_id": "IMM-2024-0318-42",
-  "status": "ready_for_review",
-  "manual_minutes_saved": 45,
-  "rules_flagged": 1
-}`,
-  },
-  hr: {
-    name: "HR onboarding",
-    packet: "New hire packet",
-    schema: "Onboarding flow v2",
-    rules: ["Work eligibility", "Role risk tier"],
-    outcome: "HRIS prefilled",
-    json: `{
-  "case_id": "HR-2024-1027-09",
-  "status": "auto_approved",
-  "manual_minutes_saved": 20,
-  "systems_synced": ["HRIS"]
-}`,
-  },
-  compliance: {
-    name: "Compliance review",
-    packet: "Vendor due diligence",
-    schema: "Vendor risk v3",
-    rules: ["Sanctions check", "Completeness"],
-    outcome: "Risk report created",
-    json: `{
-  "case_id": "COMP-2024-0711-03",
-  "status": "needs_review",
-  "manual_minutes_saved": 60,
-  "risk_score": "medium"
-}`,
-  },
-} as const;
+const HERO_CASE = {
+  client: "Maria Lopez",
+  caseType: "Adjustment of Status",
+  caseId: "PAD-0427",
+  status: "Ready for Review",
+  documents: [
+    { name: "Passport", outcome: "Classified" },
+    { name: "Birth certificate", outcome: "Classified" },
+    { name: "Tax return", outcome: "Data captured" },
+    {
+      name: "Sponsor income letter",
+      outcome: "Missing evidence",
+      missing: true,
+    },
+  ] as Array<{ name: string; outcome: string; missing?: boolean }>,
+  flag: "Missing sponsor income document",
+  nextAction: "Request missing evidence",
+};
 
-type ScenarioKey = keyof typeof SCENARIOS;
+/** Map a document outcome to the shared status grammar. */
+const outcomeTone = (doc: {
+  outcome: string;
+  missing?: boolean;
+}): StatusTone => {
+  if (doc.missing || doc.outcome === "Missing evidence") return "review";
+  if (doc.outcome === "Data captured") return "done";
+  return "neutral";
+};
+
+const CASE_QUEUE = [
+  {
+    id: "PAD-0427",
+    client: "Maria Lopez",
+    state: "Ready for Review",
+    next: "Request missing evidence",
+    urgent: true,
+  },
+  {
+    id: "PAD-0411",
+    client: "Amara Okafor",
+    state: "Needs Attorney Review",
+    next: "Review affidavit",
+    urgent: false,
+  },
+  {
+    id: "PAD-0398",
+    client: "Daniel Reyes",
+    state: "In Review",
+    next: "Verify tax transcript",
+    urgent: false,
+  },
+] as const;
 
 export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
-  const [scenarioKey, setScenarioKey] = React.useState<ScenarioKey>("immigration");
-  const scenario = SCENARIOS[scenarioKey];
+  const [played, setPlayed] = useState(false);
 
-  const handleCtaClick = () => {
+  useEffect(() => {
+    const timer = window.setTimeout(() => setPlayed(true), 150);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const handlePrimaryClick = () => {
+    trackEvent(
+      "demo_cta_clicked",
+      "hero_primary",
+      landingPageContent.hero.primaryCta,
+    );
     if (onCtaClick) onCtaClick();
-    else window.open("https://cal.com/", "_blank");
+    else window.open(DEMO_URL, "_blank", "noreferrer");
+  };
+
+  const handleSecondaryClick = () => {
+    trackEvent(
+      "workflow_viewed",
+      "hero_secondary",
+      landingPageContent.hero.secondaryCta,
+    );
   };
 
   return (
-    <section className={styles.hero}>
-      <div className={styles.container}>
+    <section id="hero" className={styles.hero} aria-labelledby="hero-headline">
+      <div className={styles.documentContainer}>
         <div className={styles.grid}>
-          {/* Left content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <p className={styles.eyebrow}>DOCUMENT SYSTEMS STUDIO</p>
-            <h1 className={styles.headline}>
-              Document intelligence for serious workflows.
+          <div className={styles.copyColumn}>
+            <span className={styles.eyebrow}>
+              {landingPageContent.hero.eyebrow}
+            </span>
+            <h1 id="hero-headline" className={styles.headline}>
+              {landingPageContent.hero.headline}
             </h1>
-            <p className={styles.subhead}>
-              <strong style={{ color: "#ffffff", fontWeight: 600 }}>
-                For legal, compliance, and operations teams that live in PDFs.
-              </strong>
-              <br />
-              AlphaTensor takes your PDFs, forms, and policies and turns them
-              into versioned templates, autofill, and rules driven decisions you
-              can audit.
-            </p>
-            <ul className={styles.bullets}>
-              <li className={styles.bullet}>
-                Cut manual packet review time by 50 percent within the first
-                workflow.
-              </li>
-              <li className={styles.bullet}>
-                Pre-built for immigration and claims style packets, no blank
-                slate setup.
-              </li>
-              <li className={styles.bullet}>
-                Every decision is traceable for auditors, not just for demos.
-              </li>
-            </ul>
-          </motion.div>
+            <p className={styles.body}>{landingPageContent.hero.body}</p>
 
-          {/* Right panel */}
-          <motion.aside
-            className={styles.panel}
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handlePrimaryClick}
+              >
+                {landingPageContent.hero.primaryCta}
+              </button>
+              <a
+                className="btn btn-outline"
+                href="#how-it-works"
+                onClick={handleSecondaryClick}
+              >
+                {landingPageContent.hero.secondaryCta}
+              </a>
+            </div>
+
+            <p className={styles.proof}>
+              <span className={styles.proofMark} aria-hidden="true" />
+              {landingPageContent.hero.proof}
+            </p>
+          </div>
+
+          <div
+            className={`${styles.visualColumn} ${played ? styles.play : ""}`}
+            aria-hidden="true"
           >
-            <div className={styles.panelHeader}>
-              <span className={styles.panelLabel}>
-                Working session, not a pitch
+            <div className={styles.evidenceDocRight}>
+              <span className={styles.evidenceKicker}>USCIS Notice</span>
+              <span className={styles.evidenceMeta}>
+                I-797C · Receipt notice
               </span>
-              <div className={styles.scenarioChips}>
-                {(Object.keys(SCENARIOS) as ScenarioKey[]).map((key) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={`${styles.scenarioChip} ${
-                      scenarioKey === key ? styles.scenarioChipActive : ""
-                    }`}
-                    onClick={() => setScenarioKey(key)}
-                    aria-pressed={scenarioKey === key}
-                  >
-                    {SCENARIOS[key].name}
-                  </button>
-                ))}
-              </div>
+              <span className={styles.evidenceLine} />
+              <span className={styles.evidenceLine} />
+            </div>
+            <div className={styles.evidenceDocLeft}>
+              <span className={styles.evidenceKicker}>Tax Return</span>
+              <span className={styles.evidenceMeta}>2024 · Form 1040</span>
+              <span className={styles.evidenceLine} />
+              <span className={styles.evidenceLine} />
+              <span className={styles.evidenceLine} />
+            </div>
+            <div className={styles.evidenceDocPassport}>
+              <span className={styles.evidenceKicker}>Passport</span>
+              <span className={styles.evidenceMeta}>Biodata page</span>
+              <span className={styles.evidenceLine} />
             </div>
 
             <div className={styles.visualFrame}>
-              <motion.div
-                key={scenarioKey}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className={styles.flowList}
-              >
-                <div className={styles.flowRow}>
-                  <span className={styles.flowLabel}>Packet in</span>
-                  <span className={styles.flowValue}>{scenario.packet}</span>
-                </div>
-                <div className={styles.flowRow}>
-                  <span className={styles.flowLabel}>Schema</span>
-                  <span className={styles.flowValue}>{scenario.schema}</span>
-                </div>
-                <div className={styles.flowRow}>
-                  <span className={styles.flowLabel}>Rules</span>
-                  <div className={styles.flowRules}>
-                    {scenario.rules.map((rule) => (
-                      <span key={rule} className={styles.flowRuleChip}>
-                        {rule}
-                      </span>
-                    ))}
+              <div className={styles.frameTopRow}>
+                <span className={styles.frameKicker}>CASE SNAPSHOT</span>
+                <StatusChip tone="done">{HERO_CASE.status}</StatusChip>
+              </div>
+
+              <div className={styles.clientRow}>
+                <div>
+                  <div className={styles.clientName}>{HERO_CASE.client}</div>
+                  <div className={styles.caseMeta}>
+                    {HERO_CASE.caseType} · {HERO_CASE.caseId}
                   </div>
                 </div>
-                <div className={styles.flowRow}>
-                  <span className={styles.flowLabel}>Output</span>
-                  <span className={styles.flowValue}>{scenario.outcome}</span>
-                </div>
-              </motion.div>
+              </div>
+
+              <div className={styles.documentBlock}>
+                <div className={styles.blockLabel}>Documents</div>
+                <ul className={styles.documentList}>
+                  {HERO_CASE.documents.map((doc) => (
+                    <li key={doc.name} className={styles.documentRow}>
+                      <span className={styles.documentName}>{doc.name}</span>
+                      <StatusChip tone={outcomeTone(doc)}>
+                        {doc.outcome}
+                      </StatusChip>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={styles.flagBlock}>
+                <div className={styles.flagLabel}>Flag</div>
+                <div className={styles.flagText}>{HERO_CASE.flag}</div>
+              </div>
+
+              <div className={styles.nextActionRow}>
+                <span className={styles.nextActionLabel}>Next step</span>
+                <span className={styles.nextActionValue}>
+                  {HERO_CASE.nextAction}
+                </span>
+              </div>
             </div>
 
-            <pre className={styles.jsonPreview}>{scenario.json}</pre>
+            <div className={styles.queueStub}>
+              <div className={styles.queueStubLabel}>Operations queue</div>
+              <ul className={styles.queueList}>
+                {CASE_QUEUE.map((row) => (
+                  <li key={row.id} className={styles.queueRow}>
+                    <span className={styles.queueName}>{row.client}</span>
+                    <span
+                      className={`${styles.queueState} ${row.urgent ? styles.queueStateUrgent : ""}`}
+                    >
+                      {row.state}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            <button
-              type="button"
-              className={`btn ${styles.ctaButton}`}
-              onClick={handleCtaClick}
-            >
-              Book a working session
-            </button>
-            <p className={styles.microCopy}>
-              Bring a real packet. We map the schemas, rules, and versions live.
-            </p>
-          </motion.aside>
+            <div className={styles.evidenceDocBelow}>
+              <span className={styles.evidenceKicker}>Birth Certificate</span>
+              <span className={styles.evidenceMeta}>Apostille · 2019</span>
+            </div>
+            <div className={styles.evidenceDocIntake}>
+              <span className={styles.evidenceKicker}>Intake Packet</span>
+              <span className={styles.evidenceMeta}>Case questionnaire</span>
+              <span className={styles.evidenceLine} />
+            </div>
+          </div>
         </div>
       </div>
     </section>

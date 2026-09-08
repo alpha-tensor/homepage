@@ -1,42 +1,60 @@
 import React from "react";
+import { trackEvent } from "../content/analytics";
+import { DEMO_URL, landingPageContent } from "../content/landingPage";
 import styles from "./FinalCtaSection.module.css";
 
 interface FinalCtaSectionProps {
-	onCtaClick?: () => void;
+  onCtaClick?: () => void;
 }
 
 export const FinalCtaSection = ({
-	onCtaClick,
+  onCtaClick,
 }: FinalCtaSectionProps): React.JSX.Element => {
-	const handleCtaClick = () => {
-		if (onCtaClick) {
-			onCtaClick();
-		} else {
-			window.open("https://cal.com/", "_blank");
-		}
-	};
+  const content = landingPageContent.finalCta;
 
-	return (
-		<section className={styles.section}>
-			<div className={styles.container}>
-				<h2 className={styles.title}>
-					Bring one messy workflow and map it in thirty minutes.
-				</h2>
-				<p className={styles.subline}>
-					Book a working session. Walk away with a concrete workflow map and
-					an implementation plan.
-				</p>
-				<button
-					type="button"
-					className={`btn ${styles.ctaButton}`}
-					onClick={handleCtaClick}
-				>
-					Schedule a working session
-				</button>
-				<p className={styles.microCopy}>
-					No sales theater. Live architecture and honest feasibility.
-				</p>
-			</div>
-		</section>
-	);
+  const handlePrimaryClick = () => {
+    trackEvent("demo_cta_clicked", "final_cta_primary", content.primaryCta);
+    if (onCtaClick) {
+      onCtaClick();
+    } else {
+      window.open(DEMO_URL, "_blank", "noreferrer");
+    }
+  };
+
+  const handleSecondaryClick = () => {
+    trackEvent("workflow_viewed", "final_cta_secondary", content.secondaryCta);
+  };
+
+  return (
+    <section id="cta" className={styles.ctaSection} aria-labelledby="cta-title">
+      <div className={styles.documentContainer}>
+        <div className={styles.content}>
+          <span className={styles.kicker}>See it on your case flow</span>
+          <h2 id="cta-title" className={styles.title}>
+            {content.headline}
+          </h2>
+          <p className={styles.subline}>{content.body}</p>
+
+          <div className={styles.actionRow}>
+            <button
+              type="button"
+              className={`btn btn-primary ${styles.primaryButton}`}
+              onClick={handlePrimaryClick}
+            >
+              {content.primaryCta}
+            </button>
+            <a
+              className={`btn btn-outline ${styles.secondaryButton}`}
+              href={content.secondaryHref}
+              onClick={handleSecondaryClick}
+            >
+              {content.secondaryCta}
+            </a>
+          </div>
+
+          <p className={styles.microCopy}>{content.micro}</p>
+        </div>
+      </div>
+    </section>
+  );
 };

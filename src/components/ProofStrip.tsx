@@ -1,25 +1,23 @@
 import React from "react";
+import { landingPageContent } from "../content/landingPage";
 import styles from "./ProofStrip.module.css";
 
 export const ProofStrip = (): React.JSX.Element => {
-	const proofs = [
-		"Federal claims workflows",
-		"Immigration case automation",
-		"Internal knowledge tools for consulting teams",
-	];
+  const proof = landingPageContent.proofStrip;
 
-	return (
-		<section className={styles.section}>
-			<div className={styles.container}>
-				<span className={styles.label}>PREVIOUSLY DEPLOYED IN</span>
-				<ul className={styles.list}>
-					{proofs.map((proof) => (
-						<li key={proof} className={styles.pill}>
-							{proof}
-						</li>
-					))}
-				</ul>
-			</div>
-		</section>
-	);
+  return (
+    <section className={styles.strip} aria-label="Proof">
+      <div className={styles.documentContainer}>
+        <div className={styles.inner}>
+          <div className={styles.numberBlock}>
+            <span className={styles.number}>{proof.number}</span>
+          </div>
+          <div className={styles.textBlock}>
+            <p className={styles.statement}>{proof.statement}</p>
+            <p className={styles.caption}>{proof.caption}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };

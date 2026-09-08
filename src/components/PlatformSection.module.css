@@ -1,0 +1,113 @@
+.section {
+    padding: var(--space-11) 0;
+    background-color: var(--bg-soft);
+}
+
+.documentContainer {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.header {
+    max-width: 760px;
+    margin-bottom: var(--space-9);
+}
+
+.kicker {
+    display: block;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+.headline {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-4);
+    max-width: 20ch;
+}
+
+.body {
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin-bottom: 0;
+}
+
+/* Ruled index: one continuous record, not four feature boxes. */
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.rowNum {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--accent);
+    padding-top: 2px;
+}
+
+.rowText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 64ch;
+}
+
+.rowLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.rowTitle {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+}
+
+.rowBody {
+    font-size: var(--text-body);
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .row {
+        grid-template-columns: 56px minmax(0, 1fr);
+        gap: var(--space-4);
+    }
+
+    .rowNum {
+        font-size: 1.75rem;
+    }
+}

@@ -1,0 +1,362 @@
+.section {
+    padding: var(--space-10) 0;
+    background-color: var(--bg);
+}
+
+.documentContainer {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.header {
+    max-width: 720px;
+    margin-bottom: var(--space-9);
+}
+
+.kicker {
+    display: block;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+.headline {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-4);
+}
+
+.body {
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin-bottom: 0;
+}
+
+/* Fragment layout alternates copy and visual */
+.fragment {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--space-9);
+    align-items: center;
+    padding: var(--space-8) 0;
+}
+
+.fragmentCopy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.fragmentLabel {
+    display: inline-flex;
+    align-items: center;
+    padding-left: var(--space-2);
+    border-left: 3px solid var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: var(--space-4);
+}
+
+.fragmentHeadline {
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-4);
+    max-width: 20ch;
+}
+
+.fragmentBody {
+    font-size: var(--text-body);
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 44ch;
+    margin-bottom: 0;
+}
+
+/* Shared UI card styling */
+/* White raised surface on the soft band: product evidence reads as artifacts,
+ * not as outlined boxes. Internal hairline dividers stay where they describe
+ * row structure. */
+.uiCard {
+    background: var(--surface-card);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+}
+
+.uiCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+}
+
+.uiCardKicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.uiCardCount {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* Fragment 1: case status */
+/* Case rows read as a review queue list: transparent rows with one hairline
+ * above the next action. The urgent row keeps the orange left mark and wash. */
+.caseRow {
+    padding: var(--space-4) 0;
+    background: transparent;
+}
+
+.caseRow + .caseRow {
+    border-top: 1px solid var(--border);
+}
+
+.caseRowUrgent {
+    border-left: 3px solid var(--accent);
+    padding-left: var(--space-4);
+    background: var(--accent-wash);
+}
+
+.caseRowTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: 4px;
+}
+
+.caseRowClient {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.caseRowMeta {
+    font-size: var(--text-small);
+    color: var(--text-soft);
+    margin-bottom: var(--space-3);
+}
+
+.caseRowAction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+}
+
+.actionLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.actionValue {
+    font-size: var(--text-small);
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+/* Fragment 2: document processing */
+.processGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.sideLabel {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+}
+
+.fileThumb {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.fileName {
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text);
+}
+
+.fileLines {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fileLines span {
+    display: block;
+    height: 6px;
+    background: var(--border);
+}
+
+.fileLines span:nth-child(1) {
+    width: 72%;
+}
+
+.fileLines span:nth-child(2) {
+    width: 92%;
+}
+
+.fileLines span:nth-child(3) {
+    width: 58%;
+}
+
+.fileLines span:nth-child(4) {
+    width: 82%;
+}
+
+.classifiedRow {
+    font-size: var(--text-small);
+    color: var(--text-muted);
+}
+
+.classifiedRow strong {
+    color: var(--text);
+}
+
+.fieldsSide {
+    border-left: 1px solid var(--border);
+    padding-left: var(--space-4);
+}
+
+.fieldsList {
+    list-style: none;
+    margin-bottom: var(--space-3);
+}
+
+.fieldRow {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-small);
+}
+
+.fieldRow:last-child {
+    border-bottom: none;
+}
+
+.fieldLabel {
+    color: var(--text-soft);
+}
+
+.fieldValue {
+    color: var(--text);
+    font-weight: 600;
+    text-align: right;
+}
+
+.caseAssoc {
+    font-size: var(--text-small);
+    color: var(--accent-strong);
+    font-weight: 600;
+}
+
+/* Fragment 3: exceptions. Orange marks attention; severity is shown by fill
+ * (urgent rows get the accent wash), never by a second hue. */
+.exceptionList {
+    list-style: none;
+}
+
+/* Flag rows: orange left mark carries the meaning; rows separate on hairlines. */
+.exceptionRow {
+    padding: var(--space-4) 0 var(--space-4) var(--space-4);
+    border-left: 3px solid var(--accent);
+    background: transparent;
+}
+
+.exceptionRow + .exceptionRow {
+    border-top: 1px solid var(--border);
+}
+
+.exceptionRowUrgent {
+    background: var(--accent-wash);
+}
+
+.exceptionTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: 4px;
+}
+
+.exceptionFlag {
+    font-size: var(--text-small);
+    font-weight: 700;
+    color: var(--text);
+}
+
+.exceptionCase {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    white-space: nowrap;
+}
+
+.exceptionDetail {
+    font-size: var(--text-small);
+    color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+    .fragment {
+        grid-template-columns: 1fr;
+        gap: var(--space-5);
+    }
+
+    .processGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .fieldsSide {
+        border-left: none;
+        padding-left: 0;
+    }
+}

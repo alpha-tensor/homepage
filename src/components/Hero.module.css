@@ -1,277 +1,490 @@
-/* Hero.module.css */
-
 .hero {
-  background: radial-gradient(circle at top left, #f97316 0, #e65100 45%, #c2410c 100%);
-  color: #ffffff;
-  padding-top: calc(var(--header-height) + var(--spacing-lg));
-  padding-bottom: calc(var(--spacing-xl) * 1.5);
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
+    padding: var(--space-9) 0 var(--space-10) 0;
+    background-color: var(--bg);
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  right: 8%;
-  top: 18%;
-  width: 480px;
-  height: 320px;
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0H0v40' fill='none' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E");
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-@media (max-width: 967px) {
-  .hero::before {
-    display: none;
-  }
-}
-
-.container {
-  width: 100%;
-  max-width: var(--container-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-sm);
+.documentContainer {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
 }
 
 .grid {
-  display: grid;
-  gap: var(--spacing-xl);
-  align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-9);
+    align-items: center;
 }
 
-@media (min-width: 968px) {
-  .grid {
-    grid-template-columns: 1.1fr 0.9fr;
-  }
+.copyColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
-
-/* Typography left side */
 
 .eyebrow {
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.8;
-  font-weight: 700;
-  margin-bottom: var(--spacing-xs);
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    margin-bottom: var(--space-5);
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--accent-strong);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .headline {
-  font-family: var(--font-display);
-  font-size: clamp(3.25rem, 6vw, 4.75rem);
-  line-height: 1.02;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  margin-bottom: var(--spacing-md);
-  color: #ffffff;
-  max-width: 12ch;
+    font-size: clamp(2.5rem, 4.8vw, 3.9rem);
+    line-height: 1.03;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.04em;
+    margin: 0 0 var(--space-5) 0;
+    max-width: 16ch;
 }
 
-.subhead {
-  font-size: 1.15rem;
-  line-height: 1.7;
-  margin-bottom: var(--spacing-md);
-  opacity: 0.95;
-  max-width: 38ch;
-  color: #ffffff;
+.body {
+    font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin-bottom: var(--space-6);
 }
 
-.bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
 }
 
-.bullet {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
-  font-size: 0.92rem;
-  opacity: 0.8;
+.proof {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
 }
 
-.bullet::before {
-  content: "—";
-  font-weight: 600;
-  line-height: 1;
-  margin-top: 0.05em;
+.proofMark {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    flex-shrink: 0;
 }
 
-/* Right panel */
+/* Curated product composition */
 
-.panel {
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  padding: var(--spacing-lg);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 20px 40px rgb(0 0 0 / 0.22);
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  max-width: 500px;
-  margin-left: auto;
+.visualColumn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
 }
 
-@media (max-width: 967px) {
-  .panel {
-    margin: var(--spacing-md) auto 0;
-    max-width: 100%;
-  }
+/* Physical evidence layer: source documents peek out from behind the case
+ * panel so the composition reads as raw material feeding a structured record. */
+.evidenceDocRight,
+.evidenceDocLeft,
+.evidenceDocBelow,
+.evidenceDocPassport,
+.evidenceDocIntake {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 10px 26px rgba(16, 21, 34, 0.14);
+    padding: 10px 12px;
 }
 
-.ctaButton {
-  width: 100%;
-  background-color: var(--color-primary);
-  color: #ffffff;
-  justify-content: center;
-  margin-bottom: var(--spacing-xs);
-  height: 52px;
-  font-size: 1.05rem;
-  border-radius: var(--radius-md);
+.evidenceDocRight {
+    top: -70px;
+    right: -6px;
+    width: 200px;
+    transform: rotate(3deg);
 }
 
-.ctaButton:hover {
-  background-color: var(--color-primary-dark);
-  transform: translateY(-1px);
+.evidenceDocLeft {
+    top: 170px;
+    left: -92px;
+    width: 190px;
+    transform: rotate(-7deg);
 }
 
-.microCopy {
-  font-size: 0.82rem;
-  color: var(--color-text-muted);
-  text-align: center;
-  margin-top: var(--spacing-xs);
+.evidenceDocPassport {
+    top: -58px;
+    left: 22px;
+    width: 158px;
+    transform: rotate(-4deg);
 }
 
-/* Panel header and chips */
-
-.panelHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
+.evidenceDocBelow {
+    bottom: -48px;
+    left: 6px;
+    width: 172px;
+    transform: rotate(2deg);
 }
 
-.panelLabel {
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--color-text-muted);
-  opacity: 0.7;
-  font-weight: 700;
+.evidenceDocIntake {
+    bottom: -56px;
+    right: -6px;
+    width: 166px;
+    transform: rotate(-6deg);
 }
 
-.scenarioChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.evidenceKicker {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
 }
 
-.scenarioChip {
-  border: 0;
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  background: var(--color-bg);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+.evidenceMeta {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
 }
 
-.scenarioChipActive {
-  background: #111827;
-  color: #ffffff;
+.evidenceLine {
+    display: block;
+    height: 4px;
+    background: var(--border);
 }
 
-/* Visual frame */
+.evidenceLine:nth-of-type(1) {
+    width: 88%;
+}
 
+.evidenceLine:nth-of-type(2) {
+    width: 70%;
+}
+
+.evidenceLine:nth-of-type(3) {
+    width: 80%;
+}
 
 .visualFrame {
-  background-color: var(--color-bg);
-  border-radius: var(--radius-lg);
-  margin-bottom: 0.5rem;
-  border: 1px solid var(--color-border);
-  padding: 0.85rem 1rem;
+    position: relative;
+    z-index: 2;
+    background: var(--surface-card);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
 }
 
-
-/* vertical 2-column flow */
-
-.flowList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
+.frameTopRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border);
 }
 
-.flowRow {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  column-gap: 0.75rem;
-  align-items: baseline;
+.frameKicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
 }
 
-.flowLabel {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-text-muted);
+.clientRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
 }
 
-.flowValue {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.3;
-  word-break: break-word;
+.clientName {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
 }
 
-/* rules row */
-
-.flowRules {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
+.caseMeta {
+    font-size: var(--text-small);
+    color: var(--text-soft);
+    margin-top: 2px;
 }
 
-.flowRuleChip {
-  font-size: 0.7rem;
-  padding: 0.12rem 0.45rem;
-  border-radius: 999px;
-  background: #f3f4f6;
-  color: var(--color-text-muted);
+.documentBlock {
+    margin-bottom: var(--space-4);
 }
 
-/* mobile: stack label and value */
-
-@media (max-width: 640px) {
-  .flowRow {
-    grid-template-columns: 1fr;
-    row-gap: 0.1rem;
-  }
+.blockLabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin-bottom: var(--space-3);
 }
 
-/* JSON preview slimmer */
+.documentList {
+    list-style: none;
+}
 
-.jsonPreview {
-  margin-top: 0.35rem;
-  margin-bottom: 0.65rem;
-  background: #020617;
-  color: #e5e7eb;
-  border-radius: 10px;
-  padding: 0.6rem 0.85rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  max-height: 160px;
-  overflow: hidden;
-  white-space: pre;
-  box-shadow: 0 10px 26px rgb(15 23 42 / 0.55);
+.documentRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-small);
+}
+
+.documentRow:last-child {
+    border-bottom: none;
+}
+
+.documentName {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.flagBlock {
+    margin-bottom: var(--space-4);
+    padding: var(--space-4);
+    border-left: 3px solid var(--accent);
+    background: var(--accent-wash);
+}
+
+.flagLabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-strong);
+    margin-bottom: 4px;
+}
+
+.flagText {
+    font-size: var(--text-small);
+    color: var(--text);
+    font-weight: 600;
+}
+
+.nextActionRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+}
+
+.nextActionLabel {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+}
+
+.nextActionValue {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--accent);
+    color: var(--white);
+    font-size: var(--text-small);
+    font-weight: 600;
+}
+
+.queueStub {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-soft);
+    padding: var(--space-4);
+}
+
+.queueStubLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin-bottom: var(--space-3);
+}
+
+.queueList {
+    list-style: none;
+}
+
+.queueRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-small);
+}
+
+.queueRow:last-child {
+    border-bottom: none;
+}
+
+.queueName {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.queueState {
+    color: var(--text-soft);
+    font-size: 12px;
+}
+
+.queueStateUrgent {
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+@media (max-width: 960px) {
+    .grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-7);
+    }
+
+    .headline {
+        max-width: 20ch;
+    }
+
+    .evidenceDocRight,
+    .evidenceDocLeft,
+    .evidenceDocBelow,
+    .evidenceDocPassport,
+    .evidenceDocIntake {
+        display: none;
+    }
+}
+
+/* --- One-pass arrival sequence ---
+ * Documents arrive, the panel populates, one flag appears, then everything
+ * settles. Runs once after mount; never loops. The reduced-motion override in
+ * index.css collapses the durations, and the base styles below are the final
+ * state, so nothing depends on the animation having run. */
+
+.play .visualFrame {
+    animation: heroFadeIn 0.4s ease-out both;
+}
+
+.play .evidenceDocRight,
+.play .evidenceDocLeft,
+.play .evidenceDocPassport,
+.play .evidenceDocBelow,
+.play .evidenceDocIntake {
+    animation: heroFadeIn 0.45s ease-out both;
+}
+
+.play .evidenceDocRight {
+    animation-delay: 0.2s;
+}
+
+.play .evidenceDocPassport {
+    animation-delay: 0.35s;
+}
+
+.play .evidenceDocLeft {
+    animation-delay: 0.5s;
+}
+
+.play .evidenceDocIntake {
+    animation-delay: 0.65s;
+}
+
+.play .evidenceDocBelow {
+    animation-delay: 0.8s;
+}
+
+.play .documentRow {
+    animation: heroRowIn 0.35s ease-out both;
+}
+
+.play .documentRow:nth-child(1) {
+    animation-delay: 1.3s;
+}
+
+.play .documentRow:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+.play .documentRow:nth-child(3) {
+    animation-delay: 1.7s;
+}
+
+.play .documentRow:nth-child(4) {
+    animation-delay: 1.9s;
+}
+
+.play .flagBlock {
+    animation: heroFadeIn 0.35s ease-out 2.5s both;
+}
+
+.play .nextActionRow {
+    animation: heroFadeIn 0.35s ease-out 2.9s both;
+}
+
+.play .queueStub {
+    animation: heroFadeIn 0.4s ease-out 3.4s both;
+}
+
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes heroRowIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .documentRow,
+    .nextActionRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .queueRow {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+    }
 }

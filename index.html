@@ -2,17 +2,174 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    "gtm.start": new Date().getTime(),
+                    event: "gtm.js",
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s),
+                    dl = l != "dataLayer" ? "&l=" + l : "";
+                j.async = true;
+                j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, "script", "dataLayer", "GTM-PFLPC88K");
+        </script>
+        <!-- End Google Tag Manager -->
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-94HFF53B4R"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-94HFF53B4R");
+        </script>
+        <!-- End Google tag (gtag.js) -->
+        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>AlphaTensor - Document intelligence for serious workflows</title>
+        <meta
+            name="description"
+            content="Alpha Tensor helps immigration firms handle more cases without adding staff by removing repetitive document sorting, data capture, and routine case review."
+        />
+        <meta name="theme-color" content="#c75a1b" />
+        <title>
+            AlphaTensor. Operational Automation for Immigration Law Firms.
+        </title>
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:title"
+            content="AlphaTensor. Operational Automation for Immigration Law Firms."
+        />
+        <meta
+            property="og:description"
+            content="Handle more immigration cases without adding staff. AlphaTensor removes repetitive document sorting, data capture, and routine case review."
+        />
+        <meta property="og:url" content="https://alphatensor.com/" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
         />
+        <style>
+            #boot-screen {
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                display: grid;
+                place-items: center;
+                background: #f4f0e8;
+                color: #101522;
+            }
+
+            .boot-card {
+                width: min(90vw, 420px);
+                padding: 24px 28px;
+                border: 1px solid #d9d1c6;
+                background: #f8f5f0;
+                box-shadow: 0 18px 40px rgba(16, 21, 34, 0.12);
+            }
+
+            .boot-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 12px;
+                font-family:
+                    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+                    Consolas, monospace;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+
+            .boot-mark {
+                width: 12px;
+                height: 12px;
+                background: #c75a1b;
+                flex-shrink: 0;
+            }
+
+            .boot-copy {
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+                font-size: 15px;
+                line-height: 1.5;
+                color: #5a6270;
+            }
+
+            .boot-line {
+                height: 2px;
+                width: 100%;
+                margin-top: 18px;
+                background: linear-gradient(
+                    90deg,
+                    rgba(201, 209, 198, 0.3),
+                    #c75a1b,
+                    rgba(201, 209, 198, 0.3)
+                );
+                transform-origin: left center;
+                animation: bootPulse 1.4s ease-in-out infinite;
+            }
+
+            @keyframes bootPulse {
+                0%,
+                100% {
+                    opacity: 0.55;
+                    transform: scaleX(0.85);
+                }
+
+                50% {
+                    opacity: 1;
+                    transform: scaleX(1);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .boot-line {
+                    animation: none;
+                }
+            }
+        </style>
     </head>
     <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript
+            ><iframe
+                src="https://www.googletagmanager.com/ns.html?id=GTM-PFLPC88K"
+                height="0"
+                width="0"
+                style="display: none; visibility: hidden"
+            ></iframe
+        ></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        <div id="boot-screen" role="status" aria-live="polite">
+            <div class="boot-card">
+                <div class="boot-row">
+                    <span class="boot-mark"></span>
+                    <span>AlphaTensor</span>
+                </div>
+                <div class="boot-copy">
+                    Operational automation for immigration law firms.
+                </div>
+                <div class="boot-line"></div>
+            </div>
+        </div>
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
     </body>
