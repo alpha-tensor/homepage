@@ -93,13 +93,11 @@
     min-width: 0;
 }
 
-/* Physical evidence layer: source documents peek out from behind the case
- * panel so the composition reads as raw material feeding a structured record. */
+/* Physical evidence layer: two source documents peek out from behind the
+ * case panel so the composition reads as raw material feeding a structured
+ * record, without competing with the panel or the CTA row. */
 .evidenceDocRight,
-.evidenceDocLeft,
-.evidenceDocBelow,
-.evidenceDocPassport,
-.evidenceDocIntake {
+.evidenceDocLeft {
     position: absolute;
     z-index: 1;
     display: flex;
@@ -123,27 +121,6 @@
     left: -92px;
     width: 190px;
     transform: rotate(-7deg);
-}
-
-.evidenceDocPassport {
-    top: -58px;
-    left: 22px;
-    width: 158px;
-    transform: rotate(-4deg);
-}
-
-.evidenceDocBelow {
-    bottom: -48px;
-    left: 6px;
-    width: 172px;
-    transform: rotate(2deg);
-}
-
-.evidenceDocIntake {
-    bottom: -56px;
-    right: -6px;
-    width: 166px;
-    transform: rotate(-6deg);
 }
 
 .evidenceKicker {
@@ -376,10 +353,7 @@
     }
 
     .evidenceDocRight,
-    .evidenceDocLeft,
-    .evidenceDocBelow,
-    .evidenceDocPassport,
-    .evidenceDocIntake {
+    .evidenceDocLeft {
         display: none;
     }
 }
@@ -395,10 +369,7 @@
 }
 
 .play .evidenceDocRight,
-.play .evidenceDocLeft,
-.play .evidenceDocPassport,
-.play .evidenceDocBelow,
-.play .evidenceDocIntake {
+.play .evidenceDocLeft {
     animation: heroFadeIn 0.45s ease-out both;
 }
 
@@ -406,20 +377,8 @@
     animation-delay: 0.2s;
 }
 
-.play .evidenceDocPassport {
-    animation-delay: 0.35s;
-}
-
 .play .evidenceDocLeft {
     animation-delay: 0.5s;
-}
-
-.play .evidenceDocIntake {
-    animation-delay: 0.65s;
-}
-
-.play .evidenceDocBelow {
-    animation-delay: 0.8s;
 }
 
 .play .documentRow {

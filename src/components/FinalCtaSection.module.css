@@ -56,7 +56,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--space-3);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
 }
 
 .primaryButton {
@@ -67,10 +67,25 @@
     box-shadow: 0 10px 24px rgba(199, 90, 27, 0.35);
 }
 
-.secondaryButton {
-    height: 56px;
-    padding: 0 var(--space-7);
-    font-size: 1.0625rem;
+/* The lower-commitment route is a quiet text link, not a second button: the
+ * hero already offered a paired outline button, and by this point in the page
+ * the primary action should carry the weight. */
+.secondaryLink {
+    display: inline-block;
+    margin-bottom: var(--space-5);
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--border-strong);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--text-muted);
+    transition:
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.secondaryLink:hover {
+    color: var(--accent-strong);
+    border-color: var(--accent-strong);
 }
 
 .microCopy {

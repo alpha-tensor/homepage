@@ -61,7 +61,7 @@
     font-size: var(--text-micro);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-on-dark-muted);
     margin: 0;
 }
 

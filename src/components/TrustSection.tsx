@@ -25,7 +25,7 @@ const LEDGER_ROWS: LedgerRow[] = [
   {
     time: "10:42:01",
     actor: "Alpha Tensor",
-    text: "Document received — Tax Return 2024.pdf",
+    text: "Document received — I-797C Receipt Notice.pdf",
     state: "Document received",
     tone: "neutral",
   },
@@ -101,7 +101,7 @@ export const TrustSection = (): React.JSX.Element => {
         <div className={styles.grid}>
           <div
             className={styles.ledger}
-            aria-label="Operations ledger for case PAD-0427"
+            aria-label="Operations ledger for case PAD-0442"
           >
             <span className={styles.ledgerWord} aria-hidden="true">
               LEDGER
@@ -110,7 +110,7 @@ export const TrustSection = (): React.JSX.Element => {
               <div>
                 <span className={styles.ledgerKicker}>Operations ledger</span>
                 <span className={styles.ledgerCase}>
-                  Case PAD-0427 · Adjustment of Status
+                  Case PAD-0442 · Adjustment of Status
                 </span>
               </div>
               <span className={styles.ledgerStamp}>

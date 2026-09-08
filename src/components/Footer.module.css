@@ -43,7 +43,7 @@
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-on-dark-muted);
     margin: 0;
     text-align: right;
 }
@@ -66,7 +66,7 @@
 
 .link {
     font-size: var(--text-small);
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--text-on-dark-soft);
     transition: color 0.15s ease;
 }
 
@@ -76,7 +76,7 @@
 
 .copyright {
     font-size: var(--text-small);
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-on-dark-muted);
     margin: 0;
 }
 

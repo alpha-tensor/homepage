@@ -37,12 +37,15 @@ const outcomeTone = (doc: {
   return "neutral";
 };
 
+/* Operations queue: the rest of the firm's matters. The snapshot above
+ * (Maria Lopez) is the selected case; the queue shows the others, so the
+ * same client is not listed twice in one module. */
 const CASE_QUEUE = [
   {
-    id: "PAD-0427",
-    client: "Maria Lopez",
-    state: "Ready for Review",
-    next: "Request missing evidence",
+    id: "PAD-0436",
+    client: "Luis Herrera",
+    state: "Needs Attorney Review",
+    next: "Review date discrepancy",
     urgent: true,
   },
   {
@@ -142,11 +145,6 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
               <span className={styles.evidenceLine} />
               <span className={styles.evidenceLine} />
             </div>
-            <div className={styles.evidenceDocPassport}>
-              <span className={styles.evidenceKicker}>Passport</span>
-              <span className={styles.evidenceMeta}>Biodata page</span>
-              <span className={styles.evidenceLine} />
-            </div>
 
             <div className={styles.visualFrame}>
               <div className={styles.frameTopRow}>
@@ -204,16 +202,6 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className={styles.evidenceDocBelow}>
-              <span className={styles.evidenceKicker}>Birth Certificate</span>
-              <span className={styles.evidenceMeta}>Apostille · 2019</span>
-            </div>
-            <div className={styles.evidenceDocIntake}>
-              <span className={styles.evidenceKicker}>Intake Packet</span>
-              <span className={styles.evidenceMeta}>Case questionnaire</span>
-              <span className={styles.evidenceLine} />
             </div>
           </div>
         </div>

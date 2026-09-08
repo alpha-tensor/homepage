@@ -50,7 +50,7 @@
 .body {
     font-size: var(--text-body-lg);
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--text-on-dark-soft);
     max-width: 60ch;
     margin-bottom: 0;
 }
@@ -67,21 +67,28 @@
 .ledger {
     position: relative;
     background: rgba(255, 255, 255, 0.04);
-    padding: var(--space-6);
+    /* Right gutter reserves room for the vertical spine label so the mark
+     * never sits under the ledger rows. */
+    padding: var(--space-6) 56px var(--space-6) var(--space-6);
     overflow: hidden;
 }
 
+/* Case-file spine label: vertical, fully contained, in its own gutter.
+ * Replaces the old bottom-right ghost word, which was cropped by the
+ * container edge and overlapped the row text. Decorative only (aria-hidden). */
 .ledgerWord {
     position: absolute;
-    right: -14px;
-    bottom: -34px;
-    font-family: var(--font-sans);
-    font-size: clamp(4.5rem, 8vw, 7.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+    top: var(--space-6);
+    right: 20px;
+    bottom: var(--space-6);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.44em;
+    text-transform: uppercase;
+    color: var(--text-on-dark-faint);
     pointer-events: none;
     user-select: none;
 }
@@ -111,7 +118,7 @@
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--text-on-dark-muted);
     margin-top: 4px;
 }
 
@@ -149,13 +156,13 @@
     flex-shrink: 0;
     font-family: var(--font-mono);
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--text-on-dark-muted);
 }
 
 .rowText {
     flex: 1;
     font-size: var(--text-small);
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--text-on-dark);
     min-width: 0;
 }
 
@@ -164,7 +171,7 @@
     font-size: 9px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-on-dark-muted);
 }
 
 .rowState {
@@ -178,7 +185,7 @@
 }
 
 .rowStateNeutral {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-on-dark-muted);
 }
 
 .rowStateReview {
@@ -203,7 +210,7 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--text-on-dark-muted);
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -223,7 +230,7 @@
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.35);
+    color: var(--text-on-dark-muted);
     padding-top: 2px;
 }
 
@@ -253,7 +260,7 @@
 .indexBody {
     font-size: var(--text-small);
     line-height: 1.55;
-    color: rgba(255, 255, 255, 0.68);
+    color: var(--text-on-dark-soft);
 }
 
 @media (max-width: 1080px) {
@@ -267,6 +274,15 @@
 }
 
 @media (max-width: 640px) {
+    .ledger {
+        /* Spine label hides on small screens; release its gutter. */
+        padding-right: var(--space-6);
+    }
+
+    .ledgerWord {
+        display: none;
+    }
+
     .ledgerTop {
         flex-direction: column;
         align-items: flex-start;

@@ -224,10 +224,10 @@ export const landingPageContent = {
   },
 
   finalCta: {
-    headline: "See what Alpha Tensor could remove from your firm's workload.",
-    body: "Walk through a real immigration workflow and see where repetitive case processing can be removed without replacing the systems your firm already uses.",
+    headline: "Find the manual steps your firm can stop repeating.",
+    body: "Walk through how document sorting, data capture, and routine review are handled, then map where Alpha Tensor fits the systems your firm already uses.",
     primaryCta: "Book a Demo",
-    secondaryCta: "See the Workflow",
+    secondaryCta: "Review the workflow",
     secondaryHref: "#how-it-works",
     micro: "A working session on your case flow, not a slide deck.",
   },

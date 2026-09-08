@@ -43,14 +43,15 @@ export const FinalCtaSection = ({
             >
               {content.primaryCta}
             </button>
-            <a
-              className={`btn btn-outline ${styles.secondaryButton}`}
-              href={content.secondaryHref}
-              onClick={handleSecondaryClick}
-            >
-              {content.secondaryCta}
-            </a>
           </div>
+
+          <a
+            className={styles.secondaryLink}
+            href={content.secondaryHref}
+            onClick={handleSecondaryClick}
+          >
+            {content.secondaryCta}
+          </a>
 
           <p className={styles.microCopy}>{content.micro}</p>
         </div>

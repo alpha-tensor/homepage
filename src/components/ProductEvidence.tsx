@@ -3,35 +3,37 @@ import { landingPageContent } from "../content/landingPage";
 import { StatusChip } from "./ui/StatusChip";
 import styles from "./ProductEvidence.module.css";
 
-/* Fragment 1 UI data: case status and blockers */
+/* Fragment 1 UI data: case status and blockers. Distinct matters so the
+ * section shows the firm-wide view rather than re-telling the Maria Lopez
+ * story from the hero and journey. */
 const CASE_ROWS = [
   {
-    client: "Maria Lopez",
+    client: "Elena Marchetti",
     caseType: "Adjustment of Status",
     state: "Ready for Review",
-    missing: "Sponsor income letter",
-    next: "Request missing evidence",
+    missing: "Beneficiary birth certificate translation",
+    next: "Request translation",
     urgent: true,
   },
   {
-    client: "Amara Okafor",
+    client: "James Whitfield",
     caseType: "I-130 Petition",
     state: "Missing Evidence",
-    missing: "Beneficiary birth certificate",
-    next: "Obtain birth certificate",
+    missing: "Prior marriage dissolution decree",
+    next: "Request decree",
     urgent: false,
   },
 ] as const;
 
 /* Fragment 2 UI data: document processing */
 const PROCESSED_DOCUMENT = {
-  file: "Tax Return 2024.pdf",
+  file: "Tax Return 2023.pdf",
   classifiedAs: "Tax Return",
-  caseRef: "Maria Lopez · Adjustment of Status",
+  caseRef: "Sofia Ramirez · Adjustment of Status",
   fields: [
-    { label: "Tax year", value: "2024" },
-    { label: "Filing status", value: "Married filing jointly" },
-    { label: "Adjusted gross income", value: "$82,400" },
+    { label: "Tax year", value: "2023" },
+    { label: "Filing status", value: "Single" },
+    { label: "Adjusted gross income", value: "$58,900" },
   ],
   confidence: "High confidence",
 } as const;
@@ -39,20 +41,20 @@ const PROCESSED_DOCUMENT = {
 /* Fragment 3 UI data: review and exceptions */
 const EXCEPTION_ROWS = [
   {
-    flag: "Missing sponsor income document",
-    detail: "Requested 3 days ago · no response",
-    caseRef: "Maria Lopez",
+    flag: "Missing evidence",
+    detail: "Birth certificate translation · requested 3 days ago",
+    caseRef: "Elena Marchetti",
     level: "urgent" as const,
   },
   {
     flag: "Date inconsistency",
-    detail: "Beneficiary DOB differs across two forms",
+    detail: "DOB differs between I-485 and passport",
     caseRef: "Amara Okafor",
     level: "warning" as const,
   },
   {
     flag: "Low-confidence field",
-    detail: "Receipt number on I-765 scan needs confirmation",
+    detail: "Receipt number on I-797C scan needs confirmation",
     caseRef: "Daniel Reyes",
     level: "warning" as const,
   },

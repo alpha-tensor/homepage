@@ -11,7 +11,19 @@
     --text: #101522;
     --text-main: #101522;
     --text-muted: #5a6270;
-    --text-soft: #737b88;
+    /* Secondary metadata (mono labels, timestamps, captions). #5d6675 holds WCAG
+     * AA (4.5:1) small-text on the darkest light surface (--bg-soft #ece6dc);
+     * the previous #737b88 failed at 3.44-4.27:1. Decorative-only fades still
+     * use an explicit lower-alpha treatment, never this token. */
+    --text-soft: #5d6675;
+    /* Dark-surface text scale (used on --surface-dark/--surface-strong bands).
+     * Muted holds AA small-text on the lifted ledger card (~#191b21): >=7.4:1.
+     * Faint is decorative-only (watermarks, ornaments) and must not carry
+     * meaningful copy. */
+    --text-on-dark: rgba(255, 255, 255, 0.86);
+    --text-on-dark-soft: rgba(255, 255, 255, 0.76);
+    --text-on-dark-muted: rgba(255, 255, 255, 0.66);
+    --text-on-dark-faint: rgba(255, 255, 255, 0.45);
     --border: #d9d1c6;
     --border-strong: #bfb6aa;
     --accent: #c75a1b;
