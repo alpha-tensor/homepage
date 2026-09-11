@@ -74,6 +74,21 @@
     color: var(--white);
 }
 
+.linkButton {
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: var(--text-small);
+    color: var(--text-on-dark-soft);
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.linkButton:hover {
+    color: var(--white);
+}
+
 .copyright {
     font-size: var(--text-small);
     color: var(--text-on-dark-muted);

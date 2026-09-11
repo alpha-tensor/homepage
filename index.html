@@ -2,39 +2,169 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <!-- Google Tag Manager -->
+        <!--
+            Privacy and consent bootstrap.
+
+            Runs before any tag. It sets Google Consent Mode v2 to denied, reads
+            the visitor's stored choice, and only injects Google Tag Manager and
+            Google Analytics once analytics or marketing consent is granted. The
+            React banner reads and writes consent through window.__AT_CONSENT.
+            Keep the cookie inventory in src/content/legal.ts in step with this.
+        -->
         <script>
-            (function (w, d, s, l, i) {
-                w[l] = w[l] || [];
-                w[l].push({
-                    "gtm.start": new Date().getTime(),
-                    event: "gtm.js",
+            (function () {
+                "use strict";
+
+                var KEY = "at.consent.v1";
+                var GTM_ID = "GTM-PFLPC88K";
+                var GA_ID = "G-94HFF53B4R";
+                var tagsLoaded = false;
+
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    window.dataLayer.push(arguments);
+                }
+                window.gtag = window.gtag || gtag;
+
+                // Nothing optional is allowed until the visitor chooses. This has
+                // to run before any Google tag so the signal is already in place.
+                gtag("consent", "default", {
+                    ad_storage: "denied",
+                    ad_user_data: "denied",
+                    ad_personalization: "denied",
+                    analytics_storage: "denied",
+                    functionality_storage: "granted",
+                    security_storage: "granted",
+                    wait_for_update: 500,
                 });
-                var f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s),
-                    dl = l != "dataLayer" ? "&l=" + l : "";
-                j.async = true;
-                j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, "script", "dataLayer", "GTM-PFLPC88K");
-        </script>
-        <!-- End Google Tag Manager -->
+                gtag("set", "ads_data_redaction", true);
+                gtag("set", "url_passthrough", true);
 
-        <!-- Google tag (gtag.js) -->
-        <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-94HFF53B4R"
-        ></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
+                function normalize(input) {
+                    return {
+                        necessary: true,
+                        analytics: !!(input && input.analytics),
+                        marketing: !!(input && input.marketing),
+                        version: 1,
+                        updatedAt: new Date().toISOString(),
+                    };
+                }
 
-            gtag("config", "G-94HFF53B4R");
+                function read() {
+                    try {
+                        var raw = window.localStorage.getItem(KEY);
+                        if (!raw) return null;
+                        var parsed = JSON.parse(raw);
+                        if (!parsed || typeof parsed !== "object") return null;
+                        return parsed;
+                    } catch (error) {
+                        return null;
+                    }
+                }
+
+                function persist(state) {
+                    try {
+                        window.localStorage.setItem(KEY, JSON.stringify(state));
+                    } catch (error) {
+                        /* storage unavailable, the choice still applies this page */
+                    }
+                }
+
+                function clearAnalyticsCookies() {
+                    var host = window.location.hostname;
+                    var suffixes = [
+                        "",
+                        "; domain=" + host,
+                        "; domain=." + host,
+                    ];
+                    document.cookie.split(";").forEach(function (entry) {
+                        var name = entry.split("=")[0].trim();
+                        if (!/^_g(a|id|at|cl)/.test(name)) return;
+                        suffixes.forEach(function (suffix) {
+                            document.cookie =
+                                name +
+                                "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" +
+                                suffix;
+                        });
+                    });
+                }
+
+                function apply(state) {
+                    gtag("consent", "update", {
+                        analytics_storage: state.analytics
+                            ? "granted"
+                            : "denied",
+                        ad_storage: state.marketing ? "granted" : "denied",
+                        ad_user_data: state.marketing ? "granted" : "denied",
+                        ad_personalization: state.marketing
+                            ? "granted"
+                            : "denied",
+                        functionality_storage: "granted",
+                        security_storage: "granted",
+                    });
+                    if (!state.analytics && !state.marketing) {
+                        clearAnalyticsCookies();
+                    }
+                }
+
+                function injectScript(src, id) {
+                    if (document.getElementById(id)) return;
+                    var script = document.createElement("script");
+                    script.async = true;
+                    script.id = id;
+                    script.src = src;
+                    document.head.appendChild(script);
+                }
+
+                function loadTags(state) {
+                    if (tagsLoaded) return;
+                    if (!state.analytics && !state.marketing) return;
+                    tagsLoaded = true;
+                    gtag("js", new Date());
+                    injectScript(
+                        "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID,
+                        "at-gtm",
+                    );
+                    if (state.analytics) {
+                        gtag("config", GA_ID);
+                        injectScript(
+                            "https://www.googletagmanager.com/gtag/js?id=" +
+                                GA_ID,
+                            "at-gtag",
+                        );
+                    }
+                }
+
+                window.__AT_CONSENT = {
+                    read: read,
+                    normalize: normalize,
+                    open: function () {
+                        window.dispatchEvent(
+                            new CustomEvent("at:consent-open"),
+                        );
+                    },
+                    set: function (input) {
+                        var state = normalize(input);
+                        persist(state);
+                        apply(state);
+                        loadTags(state);
+                        window.dispatchEvent(
+                            new CustomEvent("at:consent-change", {
+                                detail: state,
+                            }),
+                        );
+                        return state;
+                    },
+                };
+
+                var stored = read();
+                if (stored) {
+                    var restored = normalize(stored);
+                    apply(restored);
+                    loadTags(restored);
+                }
+            })();
         </script>
-        <!-- End Google tag (gtag.js) -->
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
@@ -148,16 +278,6 @@
         </style>
     </head>
     <body>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript
-            ><iframe
-                src="https://www.googletagmanager.com/ns.html?id=GTM-PFLPC88K"
-                height="0"
-                width="0"
-                style="display: none; visibility: hidden"
-            ></iframe
-        ></noscript>
-        <!-- End Google Tag Manager (noscript) -->
         <div id="boot-screen" role="status" aria-live="polite">
             <div class="boot-card">
                 <div class="boot-row">

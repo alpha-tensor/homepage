@@ -2,6 +2,7 @@ import React from "react";
 import AlphaMark from "../AlphaMark";
 import { trackEvent } from "../content/analytics";
 import { landingPageContent } from "../content/landingPage";
+import { openConsentPreferences } from "../consent";
 import styles from "./Footer.module.css";
 
 export const Footer = (): React.JSX.Element => {
@@ -43,6 +44,15 @@ export const Footer = (): React.JSX.Element => {
                 )}
               </li>
             ))}
+            <li>
+              <button
+                type="button"
+                className={styles.linkButton}
+                onClick={openConsentPreferences}
+              >
+                Cookie settings
+              </button>
+            </li>
           </ul>
           <p className={styles.copyright}>
             © {currentYear} {landingPageContent.footer.copyright}. All rights

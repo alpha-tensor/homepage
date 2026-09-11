@@ -1,5 +1,6 @@
 import React, { useEffect, useSyncExternalStore } from "react";
 import { CaseJourney } from "./components/CaseJourney";
+import { ConsentBanner } from "./components/ConsentBanner";
 import { ExistingSystems } from "./components/ExistingSystems";
 import { FinalCtaSection } from "./components/FinalCtaSection";
 import { Footer } from "./components/Footer";
@@ -8,6 +9,7 @@ import { Hero } from "./components/Hero";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { PlatformSection } from "./components/PlatformSection";
 import { PositioningBridge } from "./components/PositioningBridge";
+import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { ProductEvidence } from "./components/ProductEvidence";
 import { ProofStrip } from "./components/ProofStrip";
 import { TrustSection } from "./components/TrustSection";
@@ -15,6 +17,7 @@ import { DEMO_URL } from "./content/landingPage";
 
 const HOME_TITLE =
   "AlphaTensor. Operational Automation for Immigration Law Firms.";
+const PRIVACY_TITLE = "Privacy and cookie policy. AlphaTensor";
 const NOT_FOUND_TITLE = "404. Page not found. AlphaTensor";
 
 const normalizePathname = (pathname: string): string => {
@@ -50,16 +53,33 @@ function App(): React.JSX.Element {
     getPathnameServerSnapshot,
   );
   const isHomeRoute = pathname === "/" || pathname === "/index.html";
+  const isPrivacyRoute = pathname === "/privacy";
 
   useEffect(() => {
-    document.title = isHomeRoute ? HOME_TITLE : NOT_FOUND_TITLE;
-  }, [isHomeRoute]);
+    document.title = isHomeRoute
+      ? HOME_TITLE
+      : isPrivacyRoute
+        ? PRIVACY_TITLE
+        : NOT_FOUND_TITLE;
+  }, [isHomeRoute, isPrivacyRoute]);
+
+  if (isPrivacyRoute) {
+    return (
+      <main>
+        <Header />
+        <PrivacyPolicy />
+        <Footer />
+        <ConsentBanner />
+      </main>
+    );
+  }
 
   if (!isHomeRoute) {
     return (
       <main>
         <Header />
         <NotFoundPage />
+        <ConsentBanner />
       </main>
     );
   }
@@ -96,6 +116,7 @@ function App(): React.JSX.Element {
       <FinalCtaSection onCtaClick={handleScheduleClick} />
 
       <Footer />
+      <ConsentBanner />
     </main>
   );
 }

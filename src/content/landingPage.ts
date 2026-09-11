@@ -239,7 +239,37 @@ export const landingPageContent = {
       { label: "Product", href: "#product" },
       { label: "How It Works", href: "#how-it-works" },
       { label: "Security", href: "#trust" },
+      { label: "Privacy", href: "/privacy" },
       { label: "Book a Demo", href: DEMO_URL },
     ] as CtaLink[],
+  },
+
+  consent: {
+    label: "Privacy",
+    title: "We use cookies",
+    body: "We use strictly necessary storage to run this site and to remember your choice. Analytics and marketing tags stay off until you allow them. You can change your choice at any time.",
+    acceptAll: "Accept all",
+    rejectAll: "Reject all",
+    manage: "Manage preferences",
+    save: "Save preferences",
+    policyLabel: "Privacy and cookie policy",
+    policyHref: "/privacy",
+    categories: {
+      necessary: {
+        title: "Strictly necessary",
+        description:
+          "Required for the site to work and to remember your privacy choice. Always on.",
+      },
+      analytics: {
+        title: "Analytics",
+        description:
+          "Google Analytics measures how visitors use the site. Off until you allow it.",
+      },
+      marketing: {
+        title: "Marketing",
+        description:
+          "Used to measure advertising and remarketing. No marketing tags run today. Off until you allow it.",
+      },
+    },
   },
 } as const;
