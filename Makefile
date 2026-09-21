@@ -1,28 +1,48 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help deploy docker-up docker-down docker-build docker-logs docker-nuke check
+.PHONY: help check typecheck build dev deploy deploy-dry-run cf-whoami docker-up docker-down docker-build docker-logs docker-nuke
 
 help: ## Show available targets (safe default; never deploys)
 	@echo "AlphaTensor website targets"
 	@echo ""
-	@echo "  make check        lint and type-check the source (no build output)"
-	@echo "  make build        full production build: tsc + vite build + static prerender"
-	@echo "  make deploy       deploy a clean, committed tree to production (explicit, needs approval)"
+	@echo "  make check            lint and type-check the source (no build output)"
+	@echo "  make build            full production build (tsc + vite build + prerender)"
+	@echo "  make dev              run the worker locally with wrangler dev"
+	@echo "  make deploy-dry-run   build and validate the worker bundle (no upload)"
+	@echo "  make deploy           release the worker to production (explicit, needs approval)"
+	@echo "  make cf-whoami        show the Cloudflare account wrangler is using"
 	@echo ""
-	@echo "Docker helpers (used by scripts/deploy.sh on the remote server):"
+	@echo "Legacy container path. This was the origin before the worker and stays"
+	@echo "available as the rollback target until the worker cutover is verified:"
 	@echo "  make docker-up / docker-down / docker-build / docker-logs / docker-nuke"
 
 check:
 	@npm run lint
+	@npm run typecheck
+
+typecheck:
+	@npm run typecheck
 
 build:
 	@npm run build
 
-# Deploy the application to the remote server. Refuses to run on a dirty tree.
+# Faithful local check: serves dist through the worker, so route handling, the
+# 404 document, and the API proxy behave as they will in production.
+dev:
+	@npx wrangler dev
+
+# Validate the release without uploading it.
+deploy-dry-run:
+	@bash scripts/deploy.sh --dry-run
+
+# Release the worker to production. Refuses a dirty tree.
 deploy:
 	@bash scripts/deploy.sh
 
-# Docker helper targets
+cf-whoami:
+	@npx wrangler whoami
+
+# Docker helper targets (legacy container origin)
 docker-up:
 	@bash scripts/docker/up.sh
 

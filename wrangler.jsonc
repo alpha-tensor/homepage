@@ -1,0 +1,33 @@
+{
+  // Deployment config for the marketing site worker.
+  //
+  // `dist` is the full build output, including the per-route documents and
+  // 404.html that scripts/prerender.mjs writes. The SSR bundle it consumes at
+  // build time lives in `dist-ssr`, outside this directory, so it is never
+  // published as an asset.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "alphatensor-www",
+  "main": "src/worker.ts",
+  // Matches the date already proven in this account by the `keck-os` worker.
+  "compatibility_date": "2026-08-28",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Unknown paths get the real 404 document with a 404 status, instead of the
+    // homepage with a 200.
+    "not_found_handling": "404-page",
+    // Only the API prefix runs the script first. Everything else is served
+    // straight from assets, which is the cheapest path for static files.
+    "run_worker_first": ["/api/*"],
+  },
+
+  // Cutover. The route below is deliberately commented out, so a plain deploy
+  // publishes the worker without touching production. Verify it on the
+  // workers.dev URL first, then uncomment and deploy again to move the apex.
+  //
+  // A zone route is used rather than a worker custom domain on purpose: the
+  // existing DNS record for alphatensor.com stays exactly as it is, pointing at
+  // the tunnel, so rollback is deleting the route rather than restoring DNS.
+  //
+  // "routes": [{ "pattern": "alphatensor.com/*", "zone_name": "alphatensor.com" }]
+}

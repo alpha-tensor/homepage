@@ -1,69 +1,104 @@
 #!/bin/bash
 set -euo pipefail
 
-# This script deploys the application to a remote server using rsync.
-# It excludes common development and cache directories.
+# Release the marketing site worker.
+#
+# This replaces the previous Docker path. That one stopped the live service
+# before rebuilding it, had no rollback, and its dirty-tree check ignored
+# untracked files. A release here is traceable to a commit, and a failure leaves
+# the live worker untouched.
+#
+# Usage:
+#   scripts/deploy.sh [--dry-run]
+#
+# Requires CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, from the environment
+# or from .env. Scope the token to Workers Scripts:Edit for this account only.
 
-# --- Load .env ---
+DRY_RUN=0
+for arg in "$@"; do
+	case "$arg" in
+	--dry-run) DRY_RUN=1 ;;
+	*)
+		echo "unknown argument: $arg" >&2
+		exit 2
+		;;
+	esac
+done
+
+# Capture the invoking environment first, so an exported value wins over .env.
+ENV_API_TOKEN="${CLOUDFLARE_API_TOKEN:-}"
+ENV_ACCOUNT_ID="${CLOUDFLARE_ACCOUNT_ID:-}"
+
 if [ -f .env ]; then
-  set -a
-  source .env
-  set +a
-else
-  echo "⚠️  No .env file found. Proceeding with environment variables only."
+	set -a
+	# shellcheck disable=SC1091
+	. ./.env
+	set +a
 fi
 
-echo "--- Deploying to Production ---"
-
-# --- Preflight ---
-# Deployment pushes the working tree to a live server. Refuse to run when the
-# tree is dirty so a release is always traceable to a committed source.
-if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "Refusing to deploy: working tree has uncommitted or staged changes." >&2
-  echo "Commit or stash the changes first, then run make deploy again." >&2
-  exit 1
+if [ -n "$ENV_API_TOKEN" ]; then
+	CLOUDFLARE_API_TOKEN="$ENV_API_TOKEN"
+fi
+if [ -n "$ENV_ACCOUNT_ID" ]; then
+	CLOUDFLARE_ACCOUNT_ID="$ENV_ACCOUNT_ID"
 fi
 
-# --- Configuration ---
-REMOTE_USER="root"
-REMOTE_HOST="100.74.30.1"
-# Destination directory on the remote server.
-# This will be created in the home directory of the REMOTE_USER.
-DEST_DIR="www"
-# Source directory (current directory)
-SOURCE_DIR="."
+if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+	echo "Refusing to release: CLOUDFLARE_API_TOKEN is not set." >&2
+	echo "Export it, or put it in .env. Scope it to Workers Scripts:Edit." >&2
+	exit 1
+fi
 
-# --- Script ---
-# Construct the full remote path
-REMOTE_PATH="/${REMOTE_USER}/${DEST_DIR}"
+if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+	echo "Refusing to release: CLOUDFLARE_ACCOUNT_ID is not set." >&2
+	exit 1
+fi
 
-echo "Deploying website to ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}"
+# Refuse anything that is not exactly a commit. `--untracked-files=all` is the
+# flag the previous script was missing: an untracked file still changes the
+# build, so with one present the release is not traceable to a commit.
+if [ -n "$(git status --porcelain --untracked-files=all)" ]; then
+	echo "Refusing to release: working tree is not clean." >&2
+	git status --short --untracked-files=all >&2
+	echo "Commit or stash the changes first, then run this again." >&2
+	exit 1
+fi
 
-# Create the destination directory on the remote server via SSH.
-# The -p flag ensures it doesn't error if the directory already exists.
-echo "Ensuring destination directory exists on remote server..."
-ssh "${REMOTE_USER}@${REMOTE_HOST}" "mkdir -p ${REMOTE_PATH}"
+SHA="$(git rev-parse --short HEAD)"
+echo "Releasing ${SHA} on $(git rev-parse --abbrev-ref HEAD)"
 
-# Use rsync to synchronize the files.
-# -a: archive mode (preserves permissions, ownership, etc.)
-# -v: verbose (shows which files are being transferred)
-# -z: compresses data to speed up the transfer
-# --delete: deletes files on the remote server that don't exist locally
-echo "Syncing files..."
-rsync -avz --delete --itemize-changes\
-  --exclude=".git" \
-  --exclude="__pycache__" \
-  --exclude="*.pyc" \
-  --exclude=".venv" \
-  --exclude="venv" \
-  --exclude=".env" \
-  --exclude="node_modules" \
-  --exclude=".next" \
-  --exclude="dist" \
-  --exclude="data" \
-  "${SOURCE_DIR}/" "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/"
+echo "Installing dependencies..."
+npm ci
 
-echo "Rebuilding and restarting services on remote server..."
-ssh "${REMOTE_USER}@${REMOTE_HOST}" "cd ${REMOTE_PATH} && make docker-down && make docker-build && make docker-up"
+echo "Building..."
+npm run build
 
-echo "✅ Deployment complete."
+# The build must produce every published document. A missing one would ship a
+# site that 404s its own privacy page, so fail before uploading.
+for artefact in dist/index.html dist/privacy.html dist/404.html dist/assets; do
+	if [ ! -e "$artefact" ]; then
+		echo "Build did not produce ${artefact}; refusing to release." >&2
+		exit 1
+	fi
+done
+
+# The SSR bundle is build-time only. If it lands in the published directory it
+# becomes a public asset, so treat it as a build failure rather than a warning.
+if [ -d dist/ssr ]; then
+	echo "dist/ssr exists; the SSR bundle must not be published as an asset." >&2
+	exit 1
+fi
+
+if [ "$DRY_RUN" -eq 1 ]; then
+	echo "Dry run: validating the worker bundle without uploading."
+	npx wrangler deploy --dry-run --outdir .wrangler-dry-run
+	echo "Dry run complete. The live worker was not touched."
+	exit 0
+fi
+
+npx wrangler deploy
+
+echo "Released ${SHA}."
+echo "Verify the served documents:"
+echo "  curl -s -o /dev/null -w '%{http_code}\\n' https://alphatensor.com/privacy"
+echo "  curl -s -o /dev/null -w '%{http_code}\\n' https://alphatensor.com/zzz  # expect 404"

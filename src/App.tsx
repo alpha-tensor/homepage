@@ -1,4 +1,4 @@
-import React, { useEffect, useSyncExternalStore } from "react";
+import React, { useCallback, useEffect, useSyncExternalStore } from "react";
 import { CaseJourney } from "./components/CaseJourney";
 import { ConsentBanner } from "./components/ConsentBanner";
 import { ExistingSystems } from "./components/ExistingSystems";
@@ -26,9 +26,10 @@ const normalizePathname = (pathname: string): string => {
 };
 
 /* Window.location as an external store so the app can react to route changes
- * without a router. The server snapshot is always "/": the build-time
- * prerender only stamps the home route, and hydration must match it before
- * the client re-evaluates the real path (e.g. for the 404 page). */
+ * without a router. The server snapshot is the route the prerenderer stamped
+ * into this document: the build emits a separate static page per route, so
+ * hydration has to render the same tree the server did or React reports a
+ * mismatch and the visitor sees the wrong page flash before it corrects. */
 const subscribeToPathname = (onChange: () => void): (() => void) => {
   window.addEventListener("popstate", onChange);
   return () => window.removeEventListener("popstate", onChange);
@@ -37,20 +38,41 @@ const subscribeToPathname = (onChange: () => void): (() => void) => {
 const getPathnameSnapshot = (): string =>
   normalizePathname(window.location.pathname);
 
-const getPathnameServerSnapshot = (): string => "/";
+/* The route to render on the server, and during hydration on the client.
+ *
+ * On the server it comes from the prerenderer, which knows which document it is
+ * producing. In the browser it comes from the stamp the prerenderer wrote into
+ * that document. The fallback covers the dev server and the non-prerendered
+ * shell, where the client renders from scratch. */
+const getBootRoute = (initialPath?: string): string => {
+  if (initialPath) return normalizePathname(initialPath);
+  if (typeof window !== "undefined" && window.__AT_BOOT_ROUTE__) {
+    return normalizePathname(window.__AT_BOOT_ROUTE__);
+  }
+  return "/";
+};
 
-function App(): React.JSX.Element {
+interface AppProps {
+  /** Route the prerenderer rendered. Server render only. */
+  initialPath?: string;
+}
+
+function App({ initialPath }: AppProps): React.JSX.Element {
   const handleScheduleClick = () => {
     window.open(DEMO_URL, "_blank", "noreferrer");
   };
 
-  // Reads the real pathname as an external store (SSR-safe: the server
-  // snapshot is "/", matching the prerendered home page). Unknown paths switch
-  // to the 404 page after hydration without a markup mismatch.
+  // Reads the real pathname as an external store. The server snapshot is the
+  // route this document was prerendered for, so hydration matches; unknown paths
+  // switch to the 404 page after hydration without a markup mismatch.
+  const getServerSnapshot = useCallback(
+    () => getBootRoute(initialPath),
+    [initialPath],
+  );
   const pathname = useSyncExternalStore(
     subscribeToPathname,
     getPathnameSnapshot,
-    getPathnameServerSnapshot,
+    getServerSnapshot,
   );
   const isHomeRoute = pathname === "/" || pathname === "/index.html";
   const isPrivacyRoute = pathname === "/privacy";
