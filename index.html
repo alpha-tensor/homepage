@@ -18,7 +18,6 @@
                 var KEY = "at.consent.v1";
                 var GTM_ID = "GTM-PFLPC88K";
                 var GA_ID = "G-94HFF53B4R";
-                var tagsLoaded = false;
 
                 window.dataLayer = window.dataLayer || [];
                 function gtag() {
@@ -117,22 +116,29 @@
                 }
 
                 function loadTags(state) {
-                    if (tagsLoaded) return;
+                    // Tracked per tag through the DOM, not with one shared flag.
+                    // A visitor can grant marketing first and analytics later,
+                    // and the GA script has to still load when they do. The old
+                    // single flag made that permanently impossible, because the
+                    // first grant set it and every later call returned early.
                     if (!state.analytics && !state.marketing) return;
-                    tagsLoaded = true;
-                    gtag("js", new Date());
+                    if (!document.getElementById("at-gtm")) {
+                        gtag("js", new Date());
+                    }
+                    // injectScript is a no-op when the id is already present, so
+                    // this stays idempotent across repeated consent changes.
                     injectScript(
                         "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID,
                         "at-gtm",
                     );
-                    if (state.analytics) {
+                    if (!state.analytics) return;
+                    if (!document.getElementById("at-gtag")) {
                         gtag("config", GA_ID);
-                        injectScript(
-                            "https://www.googletagmanager.com/gtag/js?id=" +
-                                GA_ID,
-                            "at-gtag",
-                        );
                     }
+                    injectScript(
+                        "https://www.googletagmanager.com/gtag/js?id=" + GA_ID,
+                        "at-gtag",
+                    );
                 }
 
                 window.__AT_CONSENT = {

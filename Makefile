@@ -1,11 +1,12 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help check typecheck build dev deploy deploy-dry-run cf-whoami docker-up docker-down docker-build docker-logs docker-nuke
+.PHONY: help check test typecheck build dev deploy deploy-dry-run cf-whoami docker-up docker-down docker-build docker-logs docker-nuke
 
 help: ## Show available targets (safe default; never deploys)
 	@echo "AlphaTensor website targets"
 	@echo ""
-	@echo "  make check            lint and type-check the source (no build output)"
+	@echo "  make check            lint, type-check, and test the source (no build output)"
+	@echo "  make test             run the consent bootstrap tests (no dependencies)"
 	@echo "  make build            full production build (tsc + vite build + prerender)"
 	@echo "  make dev              run the worker locally with wrangler dev"
 	@echo "  make deploy-dry-run   build and validate the worker bundle (no upload)"
@@ -19,6 +20,10 @@ help: ## Show available targets (safe default; never deploys)
 check:
 	@npm run lint
 	@npm run typecheck
+	@npm test
+
+test:
+	@npm test
 
 typecheck:
 	@npm run typecheck
