@@ -17,6 +17,13 @@ dist-ssr
 .wrangler
 .wrangler-dry-run
 
+# Cloudflare credentials used by scripts/deploy.sh. Real values must never be
+# committed, and an untracked file blocks a release, so .env has to stay
+# ignored for the documented credential path to work at all.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
