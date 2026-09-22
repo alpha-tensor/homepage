@@ -1,0 +1,83 @@
+Privacy Policy
+
+Effective date: August 6, 2026
+1. Introduction
+
+AlphaTensor, Inc. ("we", "us", or "our") operates the Pioneer platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+
+Pioneer is built to be privacy-forward by design. In particular:
+
+    We do not sell your personal information, and we do not use your prompts, inputs, or datasets to serve advertising.
+    Your team can enable Zero Data Retention (ZDR) so your inference requests are not stored and, on supported gateways, upstream providers are instructed not to retain your prompts or completions.
+    On eligible plans, you can opt out of having your content used to train our platform-wide models.
+    We minimize what we collect and how long we keep it, and you can request deletion of your data at any time.
+
+2. Information We Collect
+
+We may collect the following types of information:
+
+    Account Information: Name, email address, company name, and authentication credentials when you sign up or join the waitlist.
+    Usage Data: Information about how you interact with our platform, including pages visited, features used, and actions taken.
+    Technical Data: Browser type, operating system, IP address, device information, and cookies.
+    User Content: Datasets, models, and other content you upload or create on the platform.
+
+3. How We Use Your Information
+
+We use collected information to:
+
+    Provide, maintain, and improve the Pioneer platform.
+    Process and manage your account registration and waitlist status.
+    Communicate with you about updates, features, and support.
+    Monitor and analyze usage patterns to improve user experience.
+    Ensure security and prevent fraud or abuse.
+
+4. Data Sharing
+
+We do not sell your personal information, and we do not share it with third parties for their own advertising or marketing. We share information only in these limited circumstances:
+
+    Subprocessors: Service providers that help us operate the platform, such as cloud hosting, model inference gateways and providers, analytics, and email. We share only the information they need to perform their function on our behalf, and we do not authorize them to use it for their own purposes. A current list of our subprocessors is available at docs.pioneer.ai/trust-safety.
+    Inference providers: To generate model outputs, your prompts are routed to upstream inference providers. When Zero Data Retention is enabled for your team, requests sent to supported providers carry a no-retention instruction, so those providers do not store your prompts or completions. See Data Retention below.
+    Legal Requirements: When required by law or to protect our rights and safety.
+    Business Transfers: In connection with a merger, acquisition, or sale of assets.
+
+5. Data Security
+
+We implement industry-standard security measures to protect your data, including encryption in transit and at rest, access controls, and regular security assessments. However, no method of electronic storage is 100% secure.
+6. Data Retention
+
+We keep personal data only for as long as we need it for the purposes described in this policy, and we apply data minimization to each category of data we hold.
+A. Retention by data type
+
+    Account information is retained while your account is active and for a limited period afterward as needed for legal, tax, and security purposes.
+    Inference data (the prompts you send and the completions you receive) is retained in your history to provide the service and is deleted when you delete your account. If Zero Data Retention is enabled, this data is not stored at all (see below).
+    Uploaded datasets and models are retained while your account is active or until you delete them, whichever comes first.
+    Technical and usage logs are retained for a limited period for security, abuse prevention, and billing, then deleted or aggregated.
+
+B. Zero Data Retention (ZDR)
+
+Team owners, admins, and billing managers can enable Zero Data Retention in team settings. When ZDR is enabled, your inference requests are not stored in Pioneer's history, and on supported gateways the upstream provider is instructed not to retain your prompts or completions. ZDR applies to everyone on the team and takes effect prospectively; some models may be unavailable while ZDR is enabled. Because ZDR prevents your inference data from being stored, that data is also never used to train or improve our models.
+C. Training and your data
+
+By default we may use your content to provide and improve the platform, as described in our Terms of Service. Where the feature is available for your plan, you may opt out of having your content used to train our platform-wide models; the account-specific models we train and serve on your behalf are unaffected. See Section 6 of the Terms of Service for details.
+D. Deletion
+
+You can delete your account and associated data at any time using the Delete Account option in your account settings, or by contacting us at support@AlphaTensor.com. When you delete data or your account, we remove it from our production systems. Residual copies in encrypted backups are removed in the ordinary course of our backup rotation.
+7. Your Rights
+
+Depending on your jurisdiction, you may have the right to:
+
+    Access, correct, or delete your personal data.
+    Object to or restrict processing of your data.
+    Data portability.
+    Withdraw consent at any time.
+
+8. Cookies
+
+We use essential cookies to maintain your session and preferences. We do not use third-party advertising cookies. Analytics cookies may be used to understand platform usage patterns.
+9. Changes to This Policy
+
+We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the updated policy on this page with a revised effective date.
+10. Contact Us
+
+If you have questions about this Privacy Policy, contact us at support@AlphaTensor.com.
+© 2026 AlphaTensor, Inc.. All rights reserved.
