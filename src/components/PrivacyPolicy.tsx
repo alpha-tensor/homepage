@@ -2,6 +2,7 @@ import React from "react";
 import { openConsentPreferences } from "../consent";
 import {
   LEGAL_CONTACT_EMAIL,
+  LEGAL_EFFECTIVE_DATE,
   LEGAL_LAST_UPDATED,
   privacyPolicy,
 } from "../content/legal";
@@ -17,7 +18,8 @@ export const PrivacyPolicy = (): React.JSX.Element => {
             {privacyPolicy.title}
           </h1>
           <p className={styles.updated}>
-            Last updated {LEGAL_LAST_UPDATED}
+            Effective date {LEGAL_EFFECTIVE_DATE}. Last updated{" "}
+            {LEGAL_LAST_UPDATED}.
           </p>
         </header>
 
@@ -31,6 +33,17 @@ export const PrivacyPolicy = (): React.JSX.Element => {
                 {paragraph}
               </p>
             ))}
+            {section.links && (
+              <ul className={styles.list}>
+                {section.links.map((link) => (
+                  <li key={link.href}>
+                    <a className={styles.link} href={link.href}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
             {section.list && (
               <ul className={styles.list}>
                 {section.list.map((item) => (
@@ -42,7 +55,9 @@ export const PrivacyPolicy = (): React.JSX.Element => {
         ))}
 
         <article className={styles.block}>
-          <h2 className={styles.heading}>Cookies we use</h2>
+          <h2 className={styles.heading}>
+            Cookies and browser storage inventory
+          </h2>
           <div className={styles.tableWrap}>
             <table className={styles.table}>
               <thead>
@@ -71,7 +86,10 @@ export const PrivacyPolicy = (): React.JSX.Element => {
           <h2 className={styles.heading}>Change your choice</h2>
           <p className={styles.paragraph}>
             You can review or withdraw your consent at any time. Withdrawing
-            turns analytics and marketing off and clears the cookies we set.
+            updates consent signals. Rejecting both optional categories also
+            attempts to clear accessible Google measurement cookies. Reload the
+            page after rejecting both to prevent these tags from loading again.
+            This does not delete information already received by providers.
           </p>
           <button
             type="button"
