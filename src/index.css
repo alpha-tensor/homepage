@@ -163,6 +163,37 @@
      * loops seamlessly, because a module of translation maps the tile onto itself. */
     --paper-drift: 36s;
 
+    /* --- Motif matrix -----------------------------------------------------
+     * The hero's coloured field. The grid above is the structural device, lines
+     * only and neutral. This is the one place the motif carries colour, and the
+     * colour lives in the substrate, not in the dots: broad, heavily blurred
+     * radial fields are painted over the ink, and a single neutral dot screen is
+     * laid over the finished surface as texture.
+     *
+     * That ordering is deliberate and was arrived at by measurement. An earlier
+     * version coloured the dots per region, one dot layer each, which left the
+     * substrate flat near black and made the matrix the subject. Read at a 9px
+     * pitch, that came across as a black grid carrying coloured points. The
+     * dots are now a 6px uniform screen with roughly eleven levels of contrast,
+     * which is under the threshold of a visible grid and contributes about
+     * 0.6 levels of average lift, so the surface colour is effectively pure.
+     *
+     * Palette is derived from the brand orange and capped so orange stays the
+     * anchor: ember and oxblood warm the lower half, violet and plum carry the
+     * middle and upper, navy holds the top. No blue, no cyan, no green beyond
+     * that navy, which is desaturated. The fields that mix them are painted in
+     * `HeroMatrix.module.css` as one background stack under one shared mask.
+     *
+     * The hero's tone values live there as channel triplets rather than here,
+     * because a gradient has to fade to zero alpha of its own hue and `rgba()`
+     * needs a triplet to do that. They move up to this block once the composition
+     * stops moving. Guide: `alpha_tensor_homepage_motif_direction.md` sections
+     * 4, 5 and 20. */
+    --motif-ember: var(--accent-bright);
+    --motif-orange: var(--accent);
+    --motif-oxblood: #7d2d16;
+    --motif-violet: #75608f;
+
     --container-width: 1440px;
     /* Page gutter. Infisical runs 1440 with 72px gutters; the gutter steps down
      * before the container does so narrow viewports keep a sane measure. */

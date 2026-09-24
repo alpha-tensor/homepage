@@ -1,0 +1,173 @@
+/* One composite field, viewed through one dot screen.
+ *
+ * The model matters more than the values. Colour lives in the substrate as
+ * broad, heavily blurred fields, and the dots are a single neutral screen laid
+ * over the top of the finished surface. An earlier pass did the opposite: it put
+ * the colour into the dots themselves, one dot layer per region, which made the
+ * matrix the subject and left the substrate a flat near black. Measured, that
+ * read as a black grid with coloured points. This reverses the hierarchy.
+ * Surface first, matrix second.
+ *
+ * Putting the composite in one element is the point, not a simplification:
+ *   - there is exactly one mask, so the substrate, the colour and the screen
+ *     cannot fade with different shapes and no layer can show its own edge.
+ *   - the screen cannot outlive the colour it sits on, so no dot can read as a
+ *     particle outside the field.
+ *   - the screen is one tile over one background, so a dot's appearance depends
+ *     only on where it falls, never on which region it belongs to. */
+
+.field {
+    position: absolute;
+    top: -150px;
+    bottom: -150px;
+    right: calc(-1 * var(--page-gutter));
+    width: 58vw;
+    z-index: -1;
+    display: block;
+    pointer-events: none;
+
+    /* The screen. Six pixels against a one pixel dot is dense enough that the eye
+     * groups the points into a surface instead of reading rows and columns. */
+    --dot-pitch: 6px;
+    --dot-core: 0.5px;
+    --dot-edge: 0.8px;
+    --screen-rgb: 244, 240, 232;
+    --screen-alpha: 0.06;
+
+    /* The colour, as channel triplets so each field can fade to zero alpha of its
+     * own hue. Fading to `transparent` would interpolate toward black and grey
+     * the midpoint of every field, which is the smudge this pass exists to lose.
+     *
+     * Every field is deliberately far larger than the part of it that can be
+     * seen, so the composition reads as a coloured mass the product happens to
+     * sit on rather than as pools placed to fill the gaps between panels. */
+    --tone-navy: 74, 82, 124;
+    --tone-violet: 117, 96, 143;
+    --tone-plum: 94, 58, 86;
+    --tone-ember: 224, 122, 58;
+    --tone-orange: 199, 90, 27;
+    --tone-oxblood: 125, 45, 22;
+    --tone-calm: 226, 232, 244;
+}
+
+.surface {
+    position: absolute;
+    inset: 0;
+    display: block;
+
+    background-color: var(--surface-strong);
+    background-image:
+        /* The screen, topmost. One colour, one alpha, one pitch, everywhere. */
+        radial-gradient(
+            circle,
+            rgba(var(--screen-rgb), var(--screen-alpha)) var(--dot-core),
+            rgba(var(--screen-rgb), 0) var(--dot-edge)
+        ),
+        /* The calm lift. Listed above every tone so it mutes them rather than the
+         * bare ink, and centred left of the product so the densest colour ends up
+         * to the right of it. This is the vignette: it is what stops the middle
+         * carrying as much colour as the periphery. */
+        radial-gradient(
+                74% 58% at 44% 46%,
+                rgba(var(--tone-calm), 0.04),
+                rgba(var(--tone-calm), 0) 100%
+            ),
+        /* Lower right, the warm end. */
+        radial-gradient(
+                52% 30% at 86% 96%,
+                rgba(var(--tone-orange), 0.13),
+                rgba(var(--tone-orange), 0) 100%
+            ),
+        /* Ember, broad, below and right of the queue. */
+        radial-gradient(
+                78% 46% at 80% 86%,
+                rgba(var(--tone-ember), 0.13),
+                rgba(var(--tone-ember), 0) 100%
+            ),
+        /* Oxblood, lower left, restrained. */
+        radial-gradient(
+                56% 30% at 34% 88%,
+                rgba(var(--tone-oxblood), 0.11),
+                rgba(var(--tone-oxblood), 0) 100%
+            ),
+        /* Violet, upper right. */
+        radial-gradient(
+                84% 52% at 76% 14%,
+                rgba(var(--tone-violet), 0.16),
+                rgba(var(--tone-violet), 0) 100%
+            ),
+        /* Plum, the middle mass. */
+        radial-gradient(
+                92% 54% at 62% 58%,
+                rgba(var(--tone-plum), 0.17),
+                rgba(var(--tone-plum), 0) 100%
+            ),
+        /* Navy, the whole upper half, extremely broad. */
+        radial-gradient(
+                120% 74% at 66% 24%,
+                rgba(var(--tone-navy), 0.17),
+                rgba(var(--tone-navy), 0) 100%
+            );
+    background-size:
+        var(--dot-pitch) var(--dot-pitch),
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%;
+    background-repeat: repeat;
+
+    /* One mask over the finished composite. Two broad ramps, no diagonal and no
+     * per-layer shape, so the field dissolves into cream as a single object.
+     * The left ramp starts under the card's own left edge, which keeps the colour
+     * off the copy column, and the bottom reaches nothing at 95 percent, which
+     * leaves about 60px of clean cream before the statistics band rather than
+     * running the two dark events together. */
+    mask-image:
+        linear-gradient(
+            to right,
+            transparent 24%,
+            #000 50%,
+            #000 92%,
+            transparent 100%
+        ),
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 13%,
+            #000 87%,
+            transparent 95%
+        );
+    mask-composite: intersect;
+}
+
+/* Stacked layouts keep the field below the copy and close to the artifact. */
+@media (max-width: 960px) {
+    .field {
+        top: -32px;
+        bottom: -56px;
+        right: -24px;
+        width: calc(100% + 48px);
+        --screen-alpha: 0.05;
+    }
+
+    .surface {
+        mask-image:
+            linear-gradient(
+                to right,
+                transparent 2%,
+                #000 12%,
+                #000 88%,
+                transparent 100%
+            ),
+            linear-gradient(
+                to bottom,
+                transparent 0%,
+                #000 8%,
+                #000 90%,
+                transparent 100%
+            );
+    }
+}

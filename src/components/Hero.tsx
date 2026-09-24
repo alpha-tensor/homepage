@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { trackEvent } from "../content/analytics";
 import { DEMO_URL, landingPageContent } from "../content/landingPage";
 import { StatusChip, type StatusTone } from "./ui/StatusChip";
+import { HeroMatrix } from "./HeroMatrix";
 import styles from "./Hero.module.css";
 
 interface HeroProps {
@@ -130,7 +131,7 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
             className={`${styles.visualColumn} ${played ? styles.play : ""}`}
             aria-hidden="true"
           >
-            <span className={styles.gridField} />
+            <HeroMatrix />
             <span className={styles.coordMark} />
             <div className={styles.evidenceDocRight}>
               <span className={styles.evidenceKicker}>USCIS Notice</span>
