@@ -1,12 +1,81 @@
 .hero {
-    padding: var(--space-9) 0 var(--space-10) 0;
+    padding: var(--space-11) 0 var(--space-12) 0;
     background-color: var(--bg);
+    /* No band-level grid. The motif is a field attached to the case artwork, so the
+     * hero reads as almost clean warm paper. `isolation` is what keeps the field's
+     * negative z-index inside this section, above the band colour and below the copy. */
+    position: relative;
+    isolation: isolate;
+}
+
+/* The grid field. Attached to the case artwork rather than to the band: it emanates from
+ * the composition and dies before it reaches the copy column. The mask is an off-centre
+ * ellipse, so the field is densest at the artwork's upper left and gone by the column
+ * edges. That is also why the drift needs no bleed and no clipping: the faded edge moves
+ * with the layer, so no hard edge is ever exposed. */
+.gridField {
+    position: absolute;
+    inset: -96px -40px -56px -120px;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--paper-lines-field);
+    background-size: var(--paper-module) var(--paper-module);
+    -webkit-mask-image: radial-gradient(
+        118% 96% at 34% 34%,
+        #000 0%,
+        #000 26%,
+        transparent 74%
+    );
+    mask-image: radial-gradient(
+        118% 96% at 34% 34%,
+        #000 0%,
+        #000 26%,
+        transparent 74%
+    );
+    animation: paper-drift var(--paper-drift) linear infinite;
+}
+
+/* Partial coordinate lines, the page's drafting mark: one horizontal that runs and
+ * stops, one vertical that intersects it, and a single orange tick at the corner. */
+.coordMark {
+    position: absolute;
+    right: 0;
+    bottom: -34px;
+    width: 180px;
+    height: 34px;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--paper-ink-mark), var(--paper-ink-mark)),
+        linear-gradient(var(--paper-ink-mark), var(--paper-ink-mark));
+    background-size:
+        6px 6px,
+        180px 1px,
+        1px 34px;
+    background-position:
+        176px 30px,
+        0 33px,
+        179px 0;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+/* One very slow module of travel. The end state maps the tile onto itself, so the loop
+ * point is invisible. */
+@keyframes paper-drift {
+    from {
+        transform: translate3d(calc(-1 * var(--paper-module)), 0, 0);
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
 }
 
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .grid {
@@ -38,11 +107,11 @@
 }
 
 .headline {
-    font-size: clamp(2.5rem, 4.8vw, 3.9rem);
-    line-height: 1.03;
-    font-weight: 700;
+    font-size: clamp(2.25rem, 3.7vw, 3.5rem);
+    line-height: 1.05;
+    font-weight: 400;
     color: var(--text);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
     margin: 0 0 var(--space-5) 0;
     max-width: 16ch;
 }
@@ -105,7 +174,6 @@
     gap: 6px;
     background: var(--surface-card);
     border: 1px solid var(--border-strong);
-    box-shadow: 0 10px 26px rgba(16, 21, 34, 0.14);
     padding: 10px 12px;
 }
 
@@ -160,8 +228,8 @@
     position: relative;
     z-index: 2;
     background: var(--surface-card);
-    box-shadow: var(--shadow);
-    padding: var(--space-5);
+    border: 1px solid var(--border);
+    padding: var(--space-5) 28px;
 }
 
 .frameTopRow {

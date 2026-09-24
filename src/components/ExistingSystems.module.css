@@ -1,12 +1,44 @@
 .section {
-    padding: var(--space-10) 0;
+    padding: var(--space-11) 0;
     background-color: var(--bg-neutral);
+    /* Clean, apart from one coordinate mark in the top padding. The strip panel below
+     * carries its own white surface, so nothing else here needs the motif. */
+    position: relative;
+}
+
+/* Partial coordinate lines where the narrative turns into a diagram: one run that stops, one
+ * drop that intersects it, and a single orange tick at the crossing. Three background layers
+ * on one element, so the whole mark is one node. */
+.section::before {
+    content: "";
+    position: absolute;
+    left: max(
+        var(--page-gutter),
+        calc((100% - var(--container-width)) / 2 + var(--page-gutter))
+    );
+    top: var(--space-8);
+    width: 250px;
+    height: 74px;
+    pointer-events: none;
+    background-image:
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--paper-ink-mark), var(--paper-ink-mark)),
+        linear-gradient(var(--paper-ink-mark), var(--paper-ink-mark));
+    background-size:
+        6px 6px,
+        250px 1px,
+        1px 74px;
+    background-position:
+        246px 70px,
+        0 73px,
+        249px 0;
+    background-repeat: no-repeat, no-repeat, no-repeat;
 }
 
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .textBlock {
@@ -27,16 +59,16 @@
 
 .headline {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
     max-width: 24ch;
 }
 
 .body {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 56ch;
     margin-bottom: 0;
@@ -48,8 +80,8 @@
  * together by its internal connector rules rather than an outline. */
 .stripWrap {
     background: var(--surface-card);
-    box-shadow: 0 14px 34px rgba(16, 21, 34, 0.08);
-    padding: var(--space-5);
+    border: 1px solid var(--border);
+    padding: var(--space-5) 28px;
 }
 
 .stripLabel {
@@ -64,12 +96,17 @@
 }
 
 .strip {
+    /* The label's line box. Arrows align to this line rather than to the column
+     * centre: centred on a 98px column an arrow lands 49px below the label row
+     * it annotates, in the middle of the body copy. */
+    --strip-label-line: 15px;
     display: flex;
     align-items: stretch;
     padding-top: var(--space-4);
 }
 
 .stripStep {
+    position: relative;
     flex: 1;
     min-width: 0;
     padding: 0 var(--space-3);
@@ -81,10 +118,22 @@
     border-left: none;
 }
 
+/* Mirror the first column so the last one ends flush with the strip as well. */
+.stripStep:last-child {
+    padding-right: 0;
+}
+
 .stripStepLabel {
+    /* Anchor for the engine marker. Keying the marker to the label rather than to
+     * the column keeps it off the text at every breakpoint: the marker hangs in
+     * whatever gutter precedes the label, and that gutter is 12px at desktop but 0
+     * in the two-column grid below, where a column-keyed marker lands on the first
+     * letter. */
+    position: relative;
     display: block;
     font-family: var(--font-mono);
     font-size: 10px;
+    line-height: var(--strip-label-line);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     font-weight: 700;
@@ -92,20 +141,22 @@
     margin-bottom: var(--space-2);
 }
 
-/* Alpha Tensor is the processing layer: mark it with the orange square. */
+/* Alpha Tensor is the processing layer: mark it with the orange square. The
+ * marker hangs 11px into the gutter before the label rather than sitting inline
+ * with it, because an inline marker changes that label's line box and drops the
+ * whole column 7px below the other four. */
 .stripStepEngine .stripStepLabel {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
     color: var(--accent-strong);
 }
 
 .stripStepEngine .stripStepLabel::before {
     content: "";
+    position: absolute;
+    left: -11px;
+    top: 4px;
     width: 7px;
     height: 7px;
     background: var(--accent);
-    flex-shrink: 0;
 }
 
 .stripStepText {
@@ -120,10 +171,14 @@
     display: grid;
     place-items: center;
     flex-shrink: 0;
+    align-self: flex-start;
+    height: var(--strip-label-line);
+    /* Matches the column padding, so the divider has equal air on both sides. */
+    padding: 0 var(--space-3);
     color: var(--accent);
-    font-size: 1rem;
+    font-size: 0.75rem;
+    line-height: 1;
     font-weight: 700;
-    padding: 0 var(--space-2);
 }
 
 .disclaimer {
@@ -190,41 +245,55 @@
     }
 }
 
-@media (max-width: 1080px) {
+/* Five label columns stop fitting below 1240px. "INCOMING CASE MATERIAL" is
+ * 154px at 10px/0.1em and the gutter is 72px down to 1200px, so the five columns
+ * plus four arrow boxes need 1234px of viewport before the longest label wraps to
+ * a second line -- and a wrapped label then pushes two of the five body blocks
+ * 15px out of line with the other three. So the strip becomes a ruled two-column
+ * grid, and the arrows go with the linear reading: a down-arrow between two
+ * columns that sit side by side is a direction this diagram does not take. */
+@media (max-width: 1240px) {
     .strip {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: var(--space-7);
+        row-gap: var(--space-6);
     }
 
     .stripStep {
-        flex-basis: calc(50% - 40px);
-        flex-grow: 1;
-        border-left: none;
-        padding: var(--space-3) 0;
+        flex: none;
+        padding: 0;
     }
 
-    .stripStep:first-child {
-        padding-left: 0;
+    /* The closing line spans the grid, as it does full width above 1240px. */
+    .stripStep:nth-child(9) {
+        grid-column: 1 / -1;
+    }
+
+    /* Rows two and three open with a hairline, continuing the label rule above.
+     * The hidden arrows are children 6 and 8, so a border on them paints nothing. */
+    .strip > *:nth-child(n + 5) {
+        border-top: 1px solid var(--border);
+        padding-top: var(--space-6);
     }
 
     .stripArrow {
-        transform: rotate(90deg);
-        padding: var(--space-1) 0;
+        display: none;
     }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 620px) {
     .strip {
-        flex-direction: column;
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .stripStep {
-        flex-basis: auto;
+    .stripStep:nth-child(9) {
+        grid-column: auto;
     }
 
-    .stripArrow {
-        transform: rotate(90deg);
-        align-self: flex-start;
-        padding: 0;
-        margin: 0 0 0 var(--space-1);
+    /* One column, so every row after the first opens with a rule. */
+    .strip > *:nth-child(n + 3) {
+        border-top: 1px solid var(--border);
+        padding-top: var(--space-6);
     }
 }

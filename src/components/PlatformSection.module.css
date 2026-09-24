@@ -1,13 +1,43 @@
 .section {
-    padding: var(--space-11) 0;
+    padding: var(--space-12) 0;
     background-color: var(--bg-soft);
+    /* The band is clean. The motif is attached to the numbered sequence below. */
+    position: relative;
+    isolation: isolate;
+}
+
+/* The process index: a narrow, tall field behind the numbered column only, so the grid
+ * appears to emanate from the sequence and dies before it reaches the row copy. Second
+ * step of the progression, fragments beginning to align. */
+.list {
+    position: relative;
+}
+
+.list::before {
+    content: "";
+    position: absolute;
+    left: calc(-1 * var(--space-3));
+    top: calc(-1 * var(--space-5));
+    bottom: calc(-1 * var(--space-5));
+    width: 96px;
+    z-index: -1;
+    background-image: var(--paper-lines-field);
+    background-size: var(--paper-module) var(--paper-module);
+    -webkit-mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 40%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(to right, #000 0%, #000 40%, transparent 100%);
+    pointer-events: none;
 }
 
 .documentContainer {
     position: relative;
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 /* Recurring matrix: aligned grid with one exception, anchored to the header. */
@@ -39,16 +69,16 @@
 
 .headline {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
     max-width: 20ch;
 }
 
 .body {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 58ch;
     margin-bottom: 0;
@@ -75,8 +105,7 @@
 }
 
 .rowNum {
-    font-family: var(--font-serif);
-    font-style: italic;
+    font-family: var(--font-mono);
     font-size: 2.25rem;
     line-height: 1;
     color: var(--accent);
@@ -109,7 +138,7 @@
 
 .rowBody {
     font-size: var(--text-body);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
 }
 

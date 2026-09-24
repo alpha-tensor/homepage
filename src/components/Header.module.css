@@ -3,14 +3,17 @@
     top: 0;
     z-index: 50;
     background-color: var(--bg);
-    border-bottom: 1px solid var(--border);
+    /* Drawn inside the box so the rendered height matches --header-height exactly;
+     * a 1px border made the bar 73px against a 72px token and pushed every
+     * scroll-margin-top anchor 1px into it. */
+    box-shadow: inset 0 -1px 0 var(--border);
 }
 
 .container {
     width: 100%;
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
     height: var(--header-height);
     display: flex;
     justify-content: space-between;
@@ -47,8 +50,8 @@
 }
 
 .navLink {
-    font-size: var(--text-small);
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 400;
     color: var(--text-muted);
     transition: color 0.15s ease;
 }

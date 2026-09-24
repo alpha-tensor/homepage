@@ -130,6 +130,8 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
             className={`${styles.visualColumn} ${played ? styles.play : ""}`}
             aria-hidden="true"
           >
+            <span className={styles.gridField} />
+            <span className={styles.coordMark} />
             <div className={styles.evidenceDocRight}>
               <span className={styles.evidenceKicker}>USCIS Notice</span>
               <span className={styles.evidenceMeta}>

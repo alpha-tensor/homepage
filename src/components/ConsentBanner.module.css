@@ -18,7 +18,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
     padding: var(--space-5);
 }
 
@@ -75,7 +75,7 @@
 .rowTitle {
     display: block;
     font-size: var(--text-small);
-    font-weight: 650;
+    font-weight: 600;
     color: var(--text);
     cursor: pointer;
 }

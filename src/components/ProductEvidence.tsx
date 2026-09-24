@@ -88,6 +88,8 @@ export const ProductEvidence = (): React.JSX.Element => {
             <p className={styles.fragmentBody}>{fragments[0].body}</p>
           </div>
           <div className={styles.fragmentVisual}>
+            <span className={styles.gridField} aria-hidden="true" />
+            <span className={styles.gridErasure} aria-hidden="true" />
             <div className={styles.uiCard}>
               <div className={styles.uiCardHeader}>
                 <span className={styles.uiCardKicker}>Case status</span>

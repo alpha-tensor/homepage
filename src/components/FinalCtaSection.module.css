@@ -1,12 +1,27 @@
 .ctaSection {
-    padding: var(--space-11) 0;
+    padding: var(--space-12) 0;
     background-color: var(--bg);
+    /* Quiet, and dissolves here: the structure the page built is behind you by the call to
+     * action. One small cluster in the padding, nothing else. */
+    position: relative;
+}
+
+.ctaSection::before {
+    content: "";
+    position: absolute;
+    right: var(--page-gutter);
+    top: var(--space-7);
+    width: calc(var(--paper-module) * 2);
+    height: calc(var(--paper-module) * 2);
+    background-image: var(--paper-dot-mark);
+    background-size: var(--paper-module) var(--paper-module);
+    pointer-events: none;
 }
 
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .content {
@@ -33,10 +48,10 @@
 }
 
 .title {
-    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
-    font-weight: 700;
+    font-size: clamp(1.75rem, 3.2vw, 2.875rem);
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     line-height: 1.1;
     margin-bottom: var(--space-5);
     max-width: 22ch;
@@ -45,7 +60,7 @@
 
 .subline {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 58ch;
     margin: 0 0 var(--space-7) 0;
@@ -64,7 +79,6 @@
     padding: 0 var(--space-7);
     font-size: 1.0625rem;
     font-weight: 700;
-    box-shadow: 0 10px 24px rgba(199, 90, 27, 0.35);
 }
 
 /* The lower-commitment route is a quiet text link, not a second button: the

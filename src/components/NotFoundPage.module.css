@@ -9,7 +9,7 @@
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
     width: 100%;
 }
 
@@ -47,7 +47,7 @@
     color: var(--text-muted);
     max-width: 52ch;
     margin: 0 0 var(--space-6);
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .actions {

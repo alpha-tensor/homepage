@@ -1,12 +1,12 @@
 .section {
-    padding: var(--space-10) 0;
+    padding: var(--space-11) 0;
     background-color: var(--bg-soft);
 }
 
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .textBlock {
@@ -26,16 +26,16 @@
 
 .headline {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
     max-width: 24ch;
 }
 
 .body {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 56ch;
     margin-bottom: var(--space-5);

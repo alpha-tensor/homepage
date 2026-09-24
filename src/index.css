@@ -33,15 +33,13 @@
     --accent-soft: #f2dfd3;
     --accent-wash: rgba(199, 90, 27, 0.08);
     --white: #ffffff;
-    --shadow: 0 18px 40px rgba(16, 21, 34, 0.12);
 
-    --font-serif: "Georgia", "Times New Roman", Times, serif;
     --font-sans:
-        "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
     --font-mono:
-        "IBM Plex Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
-        Monaco, Consolas, monospace;
+        "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        monospace;
 
     --text-hero: clamp(2.75rem, 5vw, 4.25rem);
     --text-h1: clamp(2rem, 4vw, 3rem);
@@ -70,8 +68,106 @@
     --radius-lg: 12px;
     --radius-xl: 16px;
 
-    --container-width: 1200px;
-    --header-height: 72px;
+    /* --- Grid motif -------------------------------------------------------
+     * Structural decoration, never a page background. The rule is in
+     * `rules/design/design-language.md` under Grid motif, and the measured
+     * coverage of the marketing page against it is in
+     * `research/design/alignment-infisical.md` pass 6.
+     *
+     * One ink per job, and the whole ladder sits well below the reference
+     * raster on purpose: this should be something you notice on the second look.
+     *   faint  the very rare base grid
+     *   field  a local field attached to an object
+     *   dense  the process and output regions, where the system is working
+     *   mark   dots, coordinate marks and ticks, used in clusters only
+     *
+     * Fields are lines only. Tiled dots were removed: at every intersection they
+     * reinforced the same regularity as the lines, so dots now exist only as
+     * clusters. See `--paper-dot-mark`.
+     *
+     * A field's ink is baked into its stack rather than swapped through a local
+     * override, because a `var()` inside a custom property is substituted where
+     * that property is declared: an inherited `--paper-lines-field` arrives with
+     * `:root`'s ink already resolved. */
+    --paper-module: 9px;
+    --paper-ink-faint: rgba(16, 21, 34, 0.015);
+    --paper-ink-field: rgba(16, 21, 34, 0.028);
+    --paper-ink-dense: rgba(16, 21, 34, 0.045);
+    --paper-ink-mark: rgba(16, 21, 34, 0.11);
+    --paper-ink-field-dark: rgba(255, 255, 255, 0.03);
+    --paper-inner: calc(var(--paper-module) / 2 - 0.5px);
+    --paper-outer: calc(var(--paper-module) / 2 + 0.5px);
+    /* Ruled lines only, one stack per ink step. The line is drawn through the tile
+     * centre so a dot cluster placed on the module lands on a crossing. */
+    --paper-lines-faint:
+        repeating-linear-gradient(
+            to right,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-faint) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-faint) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        );
+    --paper-lines-field:
+        repeating-linear-gradient(
+            to right,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-field) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-field) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        );
+    --paper-lines-dense:
+        repeating-linear-gradient(
+            to right,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-dense) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-dense) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        );
+    --paper-lines-field-dark:
+        repeating-linear-gradient(
+            to right,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-field-dark) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0 var(--paper-inner),
+            var(--paper-ink-field-dark) var(--paper-inner) var(--paper-outer),
+            transparent var(--paper-outer) var(--paper-module)
+        );
+    /* Tiled dots, for cluster elements only. A cluster confines the tile by its own
+     * box, so a 27 by 27 box is a three by three matrix and a 36 by 27 box is a
+     * partial one. Most intersections on the page therefore carry no dot. */
+    --paper-dot-mark: radial-gradient(
+        circle,
+        var(--paper-ink-mark) 1px,
+        transparent 1.4px
+    );
+    /* One drift cycle for the hero field: the pattern moves exactly one module and
+     * loops seamlessly, because a module of translation maps the tile onto itself. */
+    --paper-drift: 36s;
+
+    --container-width: 1440px;
+    /* Page gutter. Infisical runs 1440 with 72px gutters; the gutter steps down
+     * before the container does so narrow viewports keep a sane measure. */
+    --page-gutter: 72px;
+    --header-height: 64px;
 }
 
 *,
@@ -118,18 +214,21 @@ h6 {
 
 h1 {
     font-size: var(--text-h1);
-    font-weight: 700;
+    font-weight: 400;
     text-transform: none;
 }
 
 h2 {
     font-size: var(--text-h2);
-    font-weight: 650;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 
 h3 {
     font-size: var(--text-h3);
-    font-weight: 650;
+    font-weight: 500;
+    line-height: 1.1;
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
@@ -140,7 +239,7 @@ p {
     color: var(--text-muted);
     max-width: 60ch;
     margin-bottom: var(--space-4);
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 a {
@@ -157,8 +256,7 @@ a {
 }
 
 .section-num {
-    font-family: var(--font-serif);
-    font-style: italic;
+    font-family: var(--font-mono);
     font-size: var(--text-h2);
     color: var(--accent);
     margin-bottom: var(--space-2);
@@ -176,7 +274,7 @@ a {
 .document-container {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .panel-dark {
@@ -190,11 +288,11 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
-    padding: 0 var(--space-5);
-    font-weight: 650;
-    font-size: var(--text-small);
-    border-radius: var(--radius-sm);
+    height: 40px;
+    padding: 0 var(--space-4);
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: 0;
     border: 1px solid transparent;
     cursor: pointer;
     transition:
@@ -267,6 +365,12 @@ section[id] {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --page-gutter: 48px;
     }
 }
 

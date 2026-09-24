@@ -1,12 +1,16 @@
 .section {
-    padding: var(--space-10) 0;
+    padding: var(--space-12) 0;
     background-color: var(--bg);
+    /* Clean band. The motif is a field attached to one fragment's artwork, not a wash
+     * across 1956px of page. */
+    position: relative;
+    isolation: isolate;
 }
 
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .header {
@@ -27,15 +31,15 @@
 
 .headline {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
 }
 
 .body {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 58ch;
     margin-bottom: 0;
@@ -48,6 +52,48 @@
     gap: var(--space-9);
     align-items: center;
     padding: var(--space-8) 0;
+}
+
+.fragmentVisual {
+    position: relative;
+}
+
+/* The output field, and the densest on the page: the case record is where the system has
+ * finished aligning, so the structure is at its most regular here. The white card sits on
+ * top of it and erases the middle, which is occlusion doing the work. */
+.gridField {
+    position: absolute;
+    inset: -30px -56px -44px -64px;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--paper-lines-dense);
+    background-size: var(--paper-module) var(--paper-module);
+    -webkit-mask-image: radial-gradient(
+        122% 112% at 60% 36%,
+        #000 0%,
+        #000 32%,
+        transparent 78%
+    );
+    mask-image: radial-gradient(
+        122% 112% at 60% 36%,
+        #000 0%,
+        #000 32%,
+        transparent 78%
+    );
+}
+
+/* A deliberate rectangular bite out of the field, painted in the band's own colour, so the
+ * field reads as technical paper that has been worked on rather than as a generated
+ * pattern. Same stacking level as the field, later in tree order, so it erases it. */
+.gridErasure {
+    position: absolute;
+    left: -64px;
+    bottom: -44px;
+    width: 176px;
+    height: 58px;
+    z-index: -1;
+    background: var(--bg);
+    pointer-events: none;
 }
 
 .fragmentCopy {
@@ -71,8 +117,8 @@
 }
 
 .fragmentHeadline {
-    font-size: clamp(1.375rem, 2vw, 1.75rem);
-    font-weight: 700;
+    font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+    font-weight: 500;
     color: var(--text);
     letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
@@ -81,7 +127,7 @@
 
 .fragmentBody {
     font-size: var(--text-body);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 44ch;
     margin-bottom: 0;
@@ -93,8 +139,8 @@
  * row structure. */
 .uiCard {
     background: var(--surface-card);
-    box-shadow: var(--shadow);
-    padding: var(--space-5);
+    border: 1px solid var(--border);
+    padding: var(--space-5) 28px;
 }
 
 .uiCardHeader {

@@ -1,12 +1,29 @@
 .section {
     background-color: var(--bg);
-    padding: var(--space-11) 0 var(--space-12) 0;
+    padding: var(--space-12) 0;
+    /* The band itself is clean. The motif enters as a field and one marginal cluster. */
+    position: relative;
+}
+
+/* A partial three by two matrix, sitting in the band's empty margin the way a coordinate
+ * note sits beside a drawing. Dots are annotations here, never wallpaper: most
+ * intersections on the page carry no dot at all. */
+.section::after {
+    content: "";
+    position: absolute;
+    left: var(--page-gutter);
+    bottom: var(--space-7);
+    width: calc(var(--paper-module) * 3);
+    height: calc(var(--paper-module) * 2);
+    background-image: var(--paper-dot-mark);
+    background-size: var(--paper-module) var(--paper-module);
+    pointer-events: none;
 }
 
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 .header {
@@ -27,16 +44,16 @@
 
 .headline {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
     max-width: 24ch;
 }
 
 .body {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-muted);
     max-width: 58ch;
     margin-bottom: 0;
@@ -95,14 +112,25 @@
     position: relative;
     height: clamp(440px, 38vw, 580px);
     background-color: var(--bg-soft);
-    /* Faint dot raster: unstructured information as texture only. */
-    background-image: radial-gradient(
-        circle at 1px 1px,
-        rgba(16, 21, 34, 0.055) 1px,
-        transparent 1.7px
-    );
-    background-size: 18px 18px;
+    /* The intake stage, first step of the progression: loose lines, no dots, faded hard
+     * across the box so it reads as an unfinished field rather than a grid. */
     overflow: hidden;
+}
+
+.stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-lines-faint);
+    background-size: var(--paper-module) var(--paper-module);
+    -webkit-mask-image: linear-gradient(
+        108deg,
+        #000 0%,
+        #000 22%,
+        transparent 66%
+    );
+    mask-image: linear-gradient(108deg, #000 0%, #000 22%, transparent 66%);
+    pointer-events: none;
 }
 
 .layer {
@@ -169,7 +197,6 @@
     width: 200px;
     background: var(--surface-card);
     border: 1px solid var(--border-strong);
-    box-shadow: 0 10px 26px rgba(16, 21, 34, 0.14);
     padding: 12px 14px;
 }
 
@@ -274,8 +301,8 @@
     transform: translate(-50%, -50%);
     width: min(470px, 92%);
     background: var(--surface-card);
-    box-shadow: var(--shadow);
-    padding: var(--space-5);
+    border: 1px solid var(--border);
+    padding: var(--space-5) 28px;
 }
 
 .classifiedHead {
@@ -466,7 +493,6 @@
     background: var(--surface-card);
     border: 1px solid var(--border-strong);
     border-right: 3px solid var(--border-strong);
-    box-shadow: var(--shadow);
     padding: var(--space-5);
 }
 
@@ -728,8 +754,8 @@
     transform: translate(-50%, -50%);
     width: min(480px, 92%);
     background: var(--surface-card);
-    box-shadow: var(--shadow);
-    padding: var(--space-5);
+    border: 1px solid var(--border);
+    padding: var(--space-5) 28px;
 }
 
 .sheetHead {
@@ -834,8 +860,6 @@
 
 .marginNote {
     margin-left: auto;
-    font-family: var(--font-serif);
-    font-style: italic;
     font-size: 12px;
     color: var(--accent-strong);
     transform: rotate(-1deg);
@@ -961,8 +985,8 @@
     transform: translate(-50%, -50%);
     width: min(440px, 92%);
     background: var(--surface-card);
-    box-shadow: var(--shadow);
-    padding: var(--space-5);
+    border: 1px solid var(--border);
+    padding: var(--space-5) 28px;
 }
 
 .nextMeta {

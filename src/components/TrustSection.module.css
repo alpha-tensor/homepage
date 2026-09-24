@@ -1,6 +1,8 @@
 .section {
-    padding: var(--space-11) 0;
+    padding: var(--space-12) 0;
     background-color: var(--surface-dark);
+    /* Clean. The dark bands are interruptions: this one carries no texture at all, so the
+     * proof strip's field reads as an event by contrast rather than as a system. */
     overflow: hidden;
 }
 
@@ -8,7 +10,7 @@
     position: relative;
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--space-6);
+    padding: 0 var(--page-gutter);
 }
 
 /* Recurring matrix on dark: aligned grid with one bright exception. */
@@ -40,16 +42,16 @@
 
 .headline {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--white);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin-bottom: var(--space-4);
     max-width: 22ch;
 }
 
 .body {
     font-size: var(--text-body-lg);
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--text-on-dark-soft);
     max-width: 60ch;
     margin-bottom: 0;
