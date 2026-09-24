@@ -187,8 +187,8 @@
      * The hero's tone values live there as channel triplets rather than here,
      * because a gradient has to fade to zero alpha of its own hue and `rgba()`
      * needs a triplet to do that. They move up to this block once the composition
-     * stops moving. Guide: `alpha_tensor_homepage_motif_direction.md` sections
-     * 4, 5 and 20. */
+     * stops moving. Guide: `docs/design/homepage-motif-direction.md` sections
+     * 4, 5 and 20. Motion is section 27 and is not implemented. */
     --motif-ember: var(--accent-bright);
     --motif-orange: var(--accent);
     --motif-oxblood: #7d2d16;

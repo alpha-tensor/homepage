@@ -26,7 +26,7 @@ import styles from "./HeroMatrix.module.css";
  * `data-motif` marks the node for tooling. `design-paper` reads fields from CSS
  * gradient backgrounds and its dot rule governs annotation clusters, so it
  * cannot score a dense display matrix and reports this node as unmeasured
- * instead of passing it silently. Guide: `alpha_tensor_homepage_motif_direction.md`.
+ * instead of passing it silently. Guide: `docs/design/homepage-motif-direction.md`.
  */
 
 export const HeroMatrix = (): React.JSX.Element => (
