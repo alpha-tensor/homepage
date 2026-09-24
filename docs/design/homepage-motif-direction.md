@@ -1223,3 +1223,129 @@ Static visual fidelity has priority over animation. The target is a matrix that
 appears physically fixed while some extremely slow activity seems to exist
 underneath it. Use the cheapest architecture that convincingly produces that
 illusion.
+
+## 28. Silhouette
+
+Recorded 2026-09-24, after the matrix was made visible. Supersedes the rectangular
+field model in sections 6 and 7 for the hero core.
+
+### 28.1 The failure
+
+With the 6px screen at 0.13 alpha the motif became perceptible, and that exposed
+the remaining structural problem. The visible silhouette was a rectangle. The top,
+the left, the bottom and both bottom corners were all identifiable, and because
+the matrix filled that rectangle evenly it reinforced the shape instead of
+breaking it up. The result reads as a panel with softened edges rather than as a
+chromatic surface.
+
+The higher dot visibility is not the cause and must be kept. It is what made the
+shape legible enough to diagnose.
+
+### 28.2 Model
+
+Discard the model of a dark rectangle faded outward. A rectangle with softened
+edges is still a rectangle, and more blur only makes a larger blurry rectangle.
+
+    Dark rectangle, then fade the rectangle outward               (rejected)
+    Overlapping broad chromatic masses that together leave
+    enough dark surface behind the product                        (required)
+
+The field DOM box stays rectangular, because that is implementation detail. The
+visible alpha must not resemble those bounds.
+
+### 28.3 Core
+
+Build the core opacity from three overlapping masses rather than one mask with four
+softened edges.
+
+| Mass       | Carries                                        |
+| :--------- | :--------------------------------------------- |
+| Upper      | the floating documents and the top of the card |
+| Central    | the main card                                  |
+| Lower warm | the queue and the space around it              |
+
+Their overlap creates the substrate. They must not individually read as circles,
+which means generous overlap and different sizes.
+
+The visible region must have no identifiable top edge, left edge, bottom edge,
+bottom left corner or bottom right corner. Every mass must therefore reach zero
+alpha inside the box, because a mask cannot paint outside its element and an opaque
+mask at the box boundary prints a straight edge.
+
+Do not use `mask-composite: intersect`. Intersecting a horizontal ramp with a
+vertical ramp is precisely what produces the rectangle. The masses union instead,
+which is the default, so the hero core mask must contain no `linear-gradient` at
+all. That absence is the machine checkable form of this rule.
+
+### 28.4 Composition
+
+The motif should not surround the product equally, and probably should not surround
+it at all. The strongest field sits above and behind the right side of the card, and
+underneath the queue. The left side disappears much sooner. That protects the copy
+and makes the motif feel attached to the product rather than attached to the hero
+section.
+
+### 28.5 Atmosphere
+
+Keep the two layer architecture. The atmosphere still carries chroma beyond the core
+with no ink and no screen. It becomes organic radial falloff as well, using the same
+centres as the core with larger radii, so the relationship that keeps the cream
+transition chromatic survives in radial form: through the core's fade the atmosphere
+is the more opaque of the two.
+
+It must fall to essentially zero before it reaches meaningful body copy.
+
+### 28.6 Matrix
+
+Pitch stays 6px. The increased visibility is directionally right. Do not increase it
+further in this pass and do not return to the barely visible state it replaced. The
+screen is a layer inside the core, so it inherits the organic silhouette without any
+change of its own. Dots must disappear with the core rather than forming a
+rectangular sheet outside it.
+
+If the new silhouette genuinely needs it, screen alpha may come down slightly
+afterwards. Do not lead with that.
+
+### 28.7 Colour
+
+Not retuned in this pass. The violet, plum and warm relationship is sufficient to
+judge geometry, and gradients must not be added in order to hide edges.
+
+### 28.8 Copy safety
+
+A hard constraint at desktop widths. The body copy region must remain visually
+equivalent to plain cream.
+
+- no matrix dots underneath it
+- no dark substrate underneath it
+- only a very weak chromatic atmosphere may approach it
+
+This is a presence constraint, not a contrast ratio. Dots behind body copy are
+objectionable at any contrast, so measuring mean luminance does not catch it. The
+measurement has to look for high frequency variation under the copy, not for average
+darkening.
+
+### 28.9 Validation
+
+Edge softness alone is not the success metric. Sample the perimeter of the visible
+motif and measure where it disappears.
+
+- The left edge X must differ materially across rows. If the left edge X is roughly
+  constant over most rows, the rectangle is still visible and the pass fails.
+- The bottom must not disappear at a single Y coordinate across the field width.
+- The copy region must stay at cream with dot amplitude near zero beneath it.
+
+Judge desktop before touching responsive. The responsive overrides still carry the
+rectangular model and are out of scope for this pass.
+
+### 28.10 Target reading
+
+    product UI
+    chromatic matrix surface
+    soft irregular disappearance into cream
+
+Not this.
+
+    product UI
+    large dark rectangle
+    blurred rectangle edge
