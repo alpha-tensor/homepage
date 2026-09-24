@@ -49,9 +49,9 @@
      * level with green is brown, not ember. */
     --tone-navy: 80, 70, 124;
     --tone-violet: 112, 84, 142;
-    --tone-plum: 104, 51, 80;
-    --tone-ember: 236, 113, 26;
-    --tone-orange: 212, 85, 9;
+    --tone-plum: 110, 50, 60;
+    --tone-ember: 206, 90, 4;
+    --tone-orange: 196, 78, 6;
     --tone-oxblood: 125, 45, 22;
     --tone-calm: 226, 232, 244;
 }
@@ -87,13 +87,13 @@
         /* Ember, broad, below and right of the queue. */
         radial-gradient(
                 78% 46% at 80% 86%,
-                rgba(var(--tone-ember), 0.16),
+                rgba(var(--tone-ember), 0.185),
                 rgba(var(--tone-ember), 0) 100%
             ),
         /* Oxblood, lower left, restrained. */
         radial-gradient(
                 56% 30% at 34% 88%,
-                rgba(var(--tone-oxblood), 0.09),
+                rgba(var(--tone-oxblood), 0.08),
                 rgba(var(--tone-oxblood), 0) 100%
             ),
         /* Violet, upper right, and now carrying down into the middle of the
@@ -106,7 +106,7 @@
         /* Plum, the middle mass, opened out for the same reason. */
         radial-gradient(
                 92% 62% at 62% 58%,
-                rgba(var(--tone-plum), 0.2),
+                rgba(var(--tone-plum), 0.25),
                 rgba(var(--tone-plum), 0) 100%
             ),
         /* Navy, the whole upper half, extremely broad, and held back so it does
