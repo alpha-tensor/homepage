@@ -151,13 +151,30 @@
     mask-composite: intersect;
 }
 
-/* Stacked layouts keep the field below the copy and close to the artifact. */
+/* Stacked layouts: the field stops being an oversized field beside the product
+ * and becomes a localised band around it.
+ *
+ * The desktop model is an oversized field with a column of clean cream beside
+ * it. On one column there is no beside, so the field moves behind the product.
+ * That alone is not enough. With the desktop's deep percentage fades the field
+ * only showed a neutral wash in the margins the card and the queue leave
+ * visible, because the colour sits entirely under the opaque panels: measured
+ * at 960 a band just above the card read (211, 208, 203), cream with a grey
+ * lift on it. Worse, where a violet field is half faded it blends against cream
+ * whose red already sits above its blue, so the hue cancels and the result is
+ * slate rather than violet.
+ *
+ * So the fades here are fixed lengths rather than percentages, and the overhang
+ * is deeper than the fade. The mask is at full strength before it reaches the
+ * card, which is what puts real colour in the margins. A percentage would drift
+ * with the field's height, which changes with the card's height. */
 @media (max-width: 960px) {
     .field {
-        top: -32px;
-        bottom: -56px;
-        right: -24px;
-        width: calc(100% + 48px);
+        top: -84px;
+        bottom: -88px;
+        left: calc(-1 * var(--hero-gutter));
+        right: calc(-1 * var(--hero-gutter));
+        width: auto;
         --screen-alpha: 0.05;
     }
 
@@ -165,16 +182,44 @@
         mask-image:
             linear-gradient(
                 to right,
-                transparent 2%,
-                #000 12%,
-                #000 88%,
+                transparent 0,
+                #000 28px,
+                #000 calc(100% - 28px),
                 transparent 100%
             ),
             linear-gradient(
                 to bottom,
-                transparent 0%,
-                #000 8%,
-                #000 90%,
+                transparent 0,
+                #000 32px,
+                #000 calc(100% - 52px),
+                transparent 100%
+            );
+    }
+}
+
+/* A phone gets a shorter band and a softer screen, because the same field on a
+ * 342px measure is a much larger share of the viewport. */
+@media (max-width: 640px) {
+    .field {
+        top: -72px;
+        bottom: -84px;
+        --screen-alpha: 0.045;
+    }
+
+    .surface {
+        mask-image:
+            linear-gradient(
+                to right,
+                transparent 0,
+                #000 16px,
+                #000 calc(100% - 16px),
+                transparent 100%
+            ),
+            linear-gradient(
+                to bottom,
+                transparent 0,
+                #000 28px,
+                #000 calc(100% - 44px),
                 transparent 100%
             );
     }

@@ -86,16 +86,22 @@ test("dot contrast stays under the visible-grid ceiling", () => {
 });
 
 test("colour and texture share exactly one mask", () => {
-  assert.equal(
-    (css.match(/mask-image:/g) ?? []).length,
-    2,
-    "expected one mask on the desktop composite and one responsive override. " +
-      "A separate mask for the screen would let texture outlive the colour it sits on.",
-  );
-  assert.ok(
-    !ruleFor(".field").includes("mask-image"),
-    "the positioning box must not mask; the mask belongs to the composite alone",
-  );
+  // Attribute every mask to the rule that declares it rather than counting
+  // declarations, so adding a breakpoint is allowed and adding a second masked
+  // layer is not. The screen and the colour live in one element, which is the
+  // only reason they cannot fade apart.
+  const masked = [...css.matchAll(/([^{}]*)\{([^{}]*)\}/g)]
+    .map(([, head, body]) => ({ head: head.trim(), body }))
+    .filter(({ body }) => body.includes("mask-image:"));
+  assert.ok(masked.length >= 1, "the composite no longer declares a mask");
+  for (const { head } of masked) {
+    assert.ok(
+      head.endsWith(".surface"),
+      `a rule other than .surface declares a mask: "...${head.slice(-60)}". ` +
+        "A mask on the screen or on the positioning box would let texture outlive " +
+        "the colour it sits on.",
+    );
+  }
   const children = (tsx.match(/<span/g) ?? []).length;
   assert.equal(
     children,
@@ -106,13 +112,23 @@ test("colour and texture share exactly one mask", () => {
 
 test("the composite mask geometry is frozen", () => {
   const surface = ruleFor(".surface");
-  for (const stop of ["transparent 24%", "#000 50%", "#000 92%", "transparent 100%"]) {
+  for (const stop of [
+    "transparent 24%",
+    "#000 50%",
+    "#000 92%",
+    "transparent 100%",
+  ]) {
     assert.ok(
       surface.includes(stop),
       `the mask's horizontal ramp lost its ${stop} stop. The cream dissolve is settled.`,
     );
   }
-  for (const stop of ["transparent 0%", "#000 13%", "#000 87%", "transparent 95%"]) {
+  for (const stop of [
+    "transparent 0%",
+    "#000 13%",
+    "#000 87%",
+    "transparent 95%",
+  ]) {
     assert.ok(
       surface.includes(stop),
       `the mask's vertical ramp lost its ${stop} stop. The 95 percent bottom stop ` +
@@ -137,10 +153,9 @@ test("the substrate is the shared ink, never a near black panel", () => {
 
 test("the motif palette is closed", () => {
   const tones = Object.fromEntries(
-    [...css.matchAll(/--tone-([a-z]+): ([0-9]+), ([0-9]+), ([0-9]+);/g)].map((m) => [
-      m[1],
-      [Number(m[2]), Number(m[3]), Number(m[4])],
-    ]),
+    [...css.matchAll(/--tone-([a-z]+): ([0-9]+), ([0-9]+), ([0-9]+);/g)].map(
+      (m) => [m[1], [Number(m[2]), Number(m[3]), Number(m[4])]],
+    ),
   );
   assert.deepEqual(
     Object.keys(tones).sort(),
@@ -162,5 +177,9 @@ test("the screen is painted, not generated", () => {
     "the component must not generate dots. A generated field reintroduces per-dot " +
       "variation, which is what read as a star field.",
   );
-  assert.match(tsx, /data-motif="hero-field"/, "the tooling marker was removed");
+  assert.match(
+    tsx,
+    /data-motif="hero-field"/,
+    "the tooling marker was removed",
+  );
 });

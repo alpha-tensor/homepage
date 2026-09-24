@@ -6,6 +6,12 @@
     position: relative;
     isolation: isolate;
     overflow: clip;
+    /* The hero's own gutter. It defaults to the page gutter so desktop is
+     * unchanged, and steps down further than the page does on a phone, because
+     * at 390 a 48px gutter each side leaves a 294px measure and the product card
+     * starts wrapping its rows. The field reads this token too, so the field and
+     * the content stay in step when it changes. */
+    --hero-gutter: var(--page-gutter);
 }
 
 /* Partial coordinate lines, the page's drafting mark: one horizontal that runs and
@@ -36,7 +42,7 @@
 .documentContainer {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--page-gutter);
+    padding: 0 var(--hero-gutter);
 }
 
 .grid {
@@ -389,7 +395,7 @@
 @media (max-width: 960px) {
     .grid {
         grid-template-columns: 1fr;
-        gap: var(--space-7);
+        gap: var(--space-11);
     }
 
     .headline {
@@ -399,10 +405,26 @@
     .queueStub {
         margin-left: 0;
     }
+}
 
-    .evidenceDocRight,
-    .evidenceDocLeft {
+/* A phone gets one floating document, not two. Copy stays in clean cream above,
+ * the product sits in its own field below, and the sheet straddles the boundary
+ * between them, which is the only place on a narrow viewport where that
+ * boundary is exposed. The notice is the one it loses, because its role is to
+ * sit inside the field and the field's core is not big enough here to hold a
+ * second sheet without crowding the card. */
+@media (max-width: 640px) {
+    .hero {
+        --hero-gutter: var(--space-5);
+    }
+
+    .evidenceDocRight {
         display: none;
+    }
+
+    .evidenceDocLeft {
+        top: -92px;
+        left: -6px;
     }
 }
 
