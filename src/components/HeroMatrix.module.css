@@ -1,20 +1,34 @@
-/* One composite field, viewed through one dot screen.
+/* Two layers, one deliberate exception.
  *
- * The model matters more than the values. Colour lives in the substrate as
- * broad, heavily blurred fields, and the dots are a single neutral screen laid
- * over the top of the finished surface. An earlier pass did the opposite: it put
- * the colour into the dots themselves, one dot layer per region, which made the
- * matrix the subject and left the substrate a flat near black. Measured, that
- * read as a black grid with coloured points. This reverses the hierarchy.
- * Surface first, matrix second.
+ * An earlier pass put the substrate, the colour and the screen in one element
+ * behind one mask, so that nothing could fade apart and no layer could show its
+ * own edge. That solved mismatched edges, but it forced a single opacity ramp to
+ * do two jobs, and a single ramp from near black to transparent necessarily
+ * passes through grey: dark composited over cream at intermediate alpha IS grey.
+ * Measured, the field carried a broad neutral band around the top, left and
+ * bottom that read as blur or a box shadow rather than illumination.
  *
- * Putting the composite in one element is the point, not a simplification:
- *   - there is exactly one mask, so the substrate, the colour and the screen
- *     cannot fade with different shapes and no layer can show its own edge.
- *   - the screen cannot outlive the colour it sits on, so no dot can read as a
- *     particle outside the field.
- *   - the screen is one tile over one background, so a dot's appearance depends
- *     only on where it falls, never on which region it belongs to. */
+ * So chroma and darkness are separated.
+ *
+ *   .core        the ink and the dot screen, fading quickly. This is the dark
+ *                surface, and it is still one element with one mask, so the
+ *                screen still cannot outlive the substrate it sits on.
+ *   .atmosphere  the same colour fields with no ink and no screen, fading much
+ *                further out. Over cream a chromatic field at low alpha is a
+ *                tint, not grey, so the outer transition carries violet, plum
+ *                and ember instead of neutral.
+ *
+ * The atmosphere sits below the core, so inside the core nothing changes: the
+ * screen still paints over the colour over the ink exactly as before. Only the
+ * transition out of the core changes, and it changes from
+ * dark -> charcoal -> grey -> cream to dark violet -> muted haze -> cream.
+ *
+ * Both layers reach full strength at the same point and the atmosphere's ramp
+ * starts further out, so through the core's fade the atmosphere is always the
+ * more opaque of the two. That is what keeps cream from dominating the blend.
+ * The upper ramp starts above the box because the box top is clipped 22px below
+ * the hero's top, which leaves no room inside the box for the atmosphere to get
+ * ahead of the core. */
 
 .field {
     position: absolute;
@@ -36,15 +50,10 @@
 
     /* The colour, as channel triplets so each field can fade to zero alpha of its
      * own hue. Fading to `transparent` would interpolate toward black and grey
-     * the midpoint of every field, which is the smudge this pass exists to lose.
-     *
-     * Every field is deliberately far larger than the part of it that can be
-     * seen, so the composition reads as a coloured mass the product happens to
-     * sit on rather than as pools placed to fill the gaps between panels.
+     * the midpoint of every field.
      *
      * Navy and violet both lean red of green on purpose. A blue whose green runs
-     * level with or above its red composites as slate once it is diluted, which
-     * is what made the upper field read as blue grey rather than violet. The
+     * level with or above its red composites as slate once it is diluted. The
      * warm tones carry very little blue for the same reason: a warm with blue
      * level with green is brown, not ember. */
     --tone-navy: 80, 70, 124;
@@ -54,99 +63,110 @@
     --tone-orange: 196, 78, 6;
     --tone-oxblood: 125, 45, 22;
     --tone-calm: 226, 232, 244;
+
+    /* One source for the colour, used by both layers. */
+    --tone-stack:
+        radial-gradient(
+            74% 58% at 44% 46%,
+            rgba(var(--tone-calm), 0.025),
+            rgba(var(--tone-calm), 0) 100%
+        ),
+        radial-gradient(
+            52% 30% at 86% 96%,
+            rgba(var(--tone-orange), 0.1),
+            rgba(var(--tone-orange), 0) 100%
+        ),
+        radial-gradient(
+            78% 46% at 80% 86%,
+            rgba(var(--tone-ember), 0.185),
+            rgba(var(--tone-ember), 0) 100%
+        ),
+        radial-gradient(
+            56% 30% at 34% 88%,
+            rgba(var(--tone-oxblood), 0.08),
+            rgba(var(--tone-oxblood), 0) 100%
+        ),
+        radial-gradient(
+            84% 64% at 76% 14%,
+            rgba(var(--tone-violet), 0.24),
+            rgba(var(--tone-violet), 0) 100%
+        ),
+        radial-gradient(
+            92% 62% at 62% 58%,
+            rgba(var(--tone-plum), 0.25),
+            rgba(var(--tone-plum), 0) 100%
+        ),
+        radial-gradient(
+            120% 74% at 66% 24%,
+            rgba(var(--tone-navy), 0.12),
+            rgba(var(--tone-navy), 0) 100%
+        );
+    --tone-sizes:
+        100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+        100% 100%;
+    --screen-stack: radial-gradient(
+        circle,
+        rgba(var(--screen-rgb), var(--screen-alpha)) var(--dot-core),
+        rgba(var(--screen-rgb), 0) var(--dot-edge)
+    );
 }
 
-.surface {
+/* The dark surface. Ink and screen only, behind a short fade. */
+.core {
     position: absolute;
     inset: 0;
     display: block;
 
     background-color: var(--surface-strong);
-    background-image:
-        /* The screen, topmost. One colour, one alpha, one pitch, everywhere. */
-        radial-gradient(
-            circle,
-            rgba(var(--screen-rgb), var(--screen-alpha)) var(--dot-core),
-            rgba(var(--screen-rgb), 0) var(--dot-edge)
-        ),
-        /* The calm lift. Listed above every tone so it mutes them rather than the
-         * bare ink, and centred left of the product so the densest colour ends up
-         * to the right of it. This is the vignette: it is what stops the middle
-         * carrying as much colour as the periphery. */
-        radial-gradient(
-                74% 58% at 44% 46%,
-                rgba(var(--tone-calm), 0.025),
-                rgba(var(--tone-calm), 0) 100%
-            ),
-        /* Lower right, the warm end. */
-        radial-gradient(
-                52% 30% at 86% 96%,
-                rgba(var(--tone-orange), 0.1),
-                rgba(var(--tone-orange), 0) 100%
-            ),
-        /* Ember, broad, below and right of the queue. */
-        radial-gradient(
-                78% 46% at 80% 86%,
-                rgba(var(--tone-ember), 0.185),
-                rgba(var(--tone-ember), 0) 100%
-            ),
-        /* Oxblood, lower left, restrained. */
-        radial-gradient(
-                56% 30% at 34% 88%,
-                rgba(var(--tone-oxblood), 0.08),
-                rgba(var(--tone-oxblood), 0) 100%
-            ),
-        /* Violet, upper right, and now carrying down into the middle of the
-         * composition rather than stopping at the top band. */
-        radial-gradient(
-                84% 64% at 76% 14%,
-                rgba(var(--tone-violet), 0.24),
-                rgba(var(--tone-violet), 0) 100%
-            ),
-        /* Plum, the middle mass, opened out for the same reason. */
-        radial-gradient(
-                92% 62% at 62% 58%,
-                rgba(var(--tone-plum), 0.25),
-                rgba(var(--tone-plum), 0) 100%
-            ),
-        /* Navy, the whole upper half, extremely broad, and held back so it does
-         * not wash the violet above it toward slate. */
-        radial-gradient(
-                120% 74% at 66% 24%,
-                rgba(var(--tone-navy), 0.12),
-                rgba(var(--tone-navy), 0) 100%
-            );
+    background-image: var(--screen-stack), var(--tone-stack);
     background-size:
         var(--dot-pitch) var(--dot-pitch),
-        100% 100%,
-        100% 100%,
-        100% 100%,
-        100% 100%,
-        100% 100%,
-        100% 100%,
-        100% 100%;
+        var(--tone-sizes);
     background-repeat: repeat;
 
-    /* One mask over the finished composite. Two broad ramps, no diagonal and no
-     * per-layer shape, so the field dissolves into cream as a single object.
-     * The left ramp starts under the card's own left edge, which keeps the colour
-     * off the copy column, and the bottom reaches nothing at 95 percent, which
-     * leaves about 60px of clean cream before the statistics band rather than
-     * running the two dark events together. */
     mask-image:
         linear-gradient(
             to right,
             transparent 24%,
-            #000 50%,
+            #000 33%,
+            #000 92%,
+            transparent 99%
+        ),
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            #000 7%,
+            #000 calc(100% - 126px),
+            transparent calc(100% - 74px)
+        );
+    mask-composite: intersect;
+}
+
+/* The colour without the darkness. No screen and no ink, so what shows past the
+ * core is a tint over cream rather than a fading dark surface. */
+.atmosphere {
+    position: absolute;
+    inset: 0;
+    display: block;
+
+    background-image: var(--tone-stack);
+    background-size: var(--tone-sizes);
+    background-repeat: repeat;
+
+    mask-image:
+        linear-gradient(
+            to right,
+            transparent 6%,
+            #000 33%,
             #000 92%,
             transparent 100%
         ),
         linear-gradient(
             to bottom,
-            transparent 0%,
-            #000 13%,
-            #000 87%,
-            transparent 95%
+            transparent -22%,
+            #000 7%,
+            #000 calc(100% - 74px),
+            transparent 100%
         );
     mask-composite: intersect;
 }
@@ -156,18 +176,9 @@
  *
  * The desktop model is an oversized field with a column of clean cream beside
  * it. On one column there is no beside, so the field moves behind the product.
- * That alone is not enough. With the desktop's deep percentage fades the field
- * only showed a neutral wash in the margins the card and the queue leave
- * visible, because the colour sits entirely under the opaque panels: measured
- * at 960 a band just above the card read (211, 208, 203), cream with a grey
- * lift on it. Worse, where a violet field is half faded it blends against cream
- * whose red already sits above its blue, so the hue cancels and the result is
- * slate rather than violet.
- *
- * So the fades here are fixed lengths rather than percentages, and the overhang
- * is deeper than the fade. The mask is at full strength before it reaches the
- * card, which is what puts real colour in the margins. A percentage would drift
- * with the field's height, which changes with the card's height. */
+ * The fades here are fixed lengths rather than percentages, because a percentage
+ * drifts with the field's height and the field's height follows the card's,
+ * which wraps on a narrow measure. */
 @media (max-width: 960px) {
     .field {
         top: -84px;
@@ -178,7 +189,7 @@
         --screen-alpha: 0.05;
     }
 
-    .surface {
+    .core {
         mask-image:
             linear-gradient(
                 to right,
@@ -190,6 +201,24 @@
             linear-gradient(
                 to bottom,
                 transparent 0,
+                #000 32px,
+                #000 calc(100% - 92px),
+                transparent calc(100% - 52px)
+            );
+    }
+
+    .atmosphere {
+        mask-image:
+            linear-gradient(
+                to right,
+                transparent -6%,
+                #000 28px,
+                #000 calc(100% - 28px),
+                transparent 100%
+            ),
+            linear-gradient(
+                to bottom,
+                transparent -12%,
                 #000 32px,
                 #000 calc(100% - 52px),
                 transparent 100%
@@ -206,18 +235,36 @@
         --screen-alpha: 0.045;
     }
 
-    .surface {
+    .core {
         mask-image:
             linear-gradient(
                 to right,
                 transparent 0,
-                #000 16px,
-                #000 calc(100% - 16px),
+                #000 22px,
+                #000 calc(100% - 22px),
                 transparent 100%
             ),
             linear-gradient(
                 to bottom,
                 transparent 0,
+                #000 28px,
+                #000 calc(100% - 84px),
+                transparent calc(100% - 44px)
+            );
+    }
+
+    .atmosphere {
+        mask-image:
+            linear-gradient(
+                to right,
+                transparent -5%,
+                #000 22px,
+                #000 calc(100% - 22px),
+                transparent 100%
+            ),
+            linear-gradient(
+                to bottom,
+                transparent -10%,
                 #000 28px,
                 #000 calc(100% - 44px),
                 transparent 100%

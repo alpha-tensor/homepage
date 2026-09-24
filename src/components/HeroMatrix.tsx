@@ -11,16 +11,17 @@ import styles from "./HeroMatrix.module.css";
  * pitch, one alpha, so a dot's appearance depends only on where it falls and
  * never on which region it belongs to.
  *
- * This is the inverse of the earlier model, which coloured the dots by region
- * and left the substrate flat. Measured, that read as a black grid carrying
- * coloured points, because at a 9px pitch the dots were separated enough to be
- * read as objects. Here the pitch is 6px, the dot is about a pixel, the screen
- * sits well under the threshold of a visible grid, and the surface is what the
- * eye resolves first.
+ * Two layers, not one. The ink and the screen fade quickly as `.core`, and the
+ * colour alone extends much further as `.atmosphere`. A single opacity ramp from
+ * near black to transparent must pass through grey, because dark composited over
+ * cream at intermediate alpha is grey, and that produced a broad neutral halo
+ * around the field. Separating chroma from darkness means the transition out of
+ * the core reads as a muted violet or warm haze instead. The atmosphere sits
+ * below the core, so inside the core nothing changes at all: the screen still
+ * paints over the colour over the ink.
  *
- * Everything is one element with one mask, so the substrate, the colour and the
- * screen fade together and the field dissolves into cream as a single object
- * rather than as several layers each showing its own edge.
+ * This is a deliberate exception to the rule that everything shares one mask.
+ * The ink and the screen still share theirs, which is the coupling that mattered.
  *
  * `data-motif` marks the node for tooling. `design-paper` reads fields from CSS
  * gradient backgrounds and its dot rule governs annotation clusters, so it
@@ -30,6 +31,10 @@ import styles from "./HeroMatrix.module.css";
 
 export const HeroMatrix = (): React.JSX.Element => (
   <span className={styles.field} data-motif="hero-field" aria-hidden="true">
-    <span className={styles.surface} />
+    {/* Order matters: the atmosphere paints first and the core above it, so the
+     * core stays opaque where it is at full strength and the atmosphere shows
+     * only where the core has faded. */}
+    <span className={styles.atmosphere} />
+    <span className={styles.core} />
   </span>
 );
