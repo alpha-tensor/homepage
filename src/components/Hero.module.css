@@ -339,7 +339,7 @@
     /* A dark surface, not a solid one: lifted a few steps off the ink and kept
      * translucent so the substrate and the matrix stay faintly visible through
      * it. The queue should read as part of the system, not as a second panel. */
-    background: rgba(30, 34, 43, 0.62);
+    background: rgba(30, 34, 43, 0.92);
     border: 1px solid rgba(244, 240, 232, 0.1);
     padding: var(--space-4);
     margin-left: var(--space-6);
