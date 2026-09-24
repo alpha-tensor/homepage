@@ -9,6 +9,12 @@
             the visitor's stored choice, and only injects Google Tag Manager and
             Google Analytics once analytics or marketing consent is granted. The
             React banner reads and writes consent through window.__AT_CONSENT.
+
+            The document lab at /lab is exempt: it is a hands-on surface for
+            uploading a document, so no Google tag is loaded or configured there.
+            The consent API still works on that route, so a choice made there is
+            stored and applies on the next route that does allow tags.
+
             Keep the cookie inventory in src/content/legal.ts in step with this.
         -->
         <script>
@@ -18,6 +24,14 @@
                 var KEY = "at.consent.v1";
                 var GTM_ID = "GTM-PFLPC88K";
                 var GA_ID = "G-94HFF53B4R";
+
+                // The /lab route and anything under it is kept free of Google
+                // tags even when consent is granted. See the comment above. The
+                // path is read defensively so a host without location.pathname
+                // (the test harness) cannot throw here.
+                var path = (window.location && window.location.pathname) || "";
+                var IS_LAB_ROUTE =
+                    path === "/lab" || path.indexOf("/lab/") === 0;
 
                 window.dataLayer = window.dataLayer || [];
                 function gtag() {
@@ -116,6 +130,11 @@
                 }
 
                 function loadTags(state) {
+                    // No Google tag loads or is configured on the lab route, even
+                    // when the visitor has granted consent. The first-party
+                    // consent API still records and applies the choice; only the
+                    // tag injection below is suppressed.
+                    if (IS_LAB_ROUTE) return;
                     // Tracked per tag through the DOM, not with one shared flag.
                     // A visitor can grant marketing first and analytics later,
                     // and the GA script has to still load when they do. The old

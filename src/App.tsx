@@ -6,6 +6,7 @@ import { FinalCtaSection } from "./components/FinalCtaSection";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
+import { LabPage } from "./lab/LabPage";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { PlatformSection } from "./components/PlatformSection";
 import { PositioningBridge } from "./components/PositioningBridge";
@@ -13,11 +14,11 @@ import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { ProductEvidence } from "./components/ProductEvidence";
 import { ProofStrip } from "./components/ProofStrip";
 import { TrustSection } from "./components/TrustSection";
-import { DEMO_URL } from "./content/landingPage";
 
 const HOME_TITLE =
   "AlphaTensor. Operational Automation for Immigration Law Firms.";
 const PRIVACY_TITLE = "Privacy and cookie policy. AlphaTensor";
+const LAB_TITLE = "Document lab. AlphaTensor";
 const NOT_FOUND_TITLE = "404. Page not found. AlphaTensor";
 
 const normalizePathname = (pathname: string): string => {
@@ -58,10 +59,6 @@ interface AppProps {
 }
 
 function App({ initialPath }: AppProps): React.JSX.Element {
-  const handleScheduleClick = () => {
-    window.open(DEMO_URL, "_blank", "noreferrer");
-  };
-
   // Reads the real pathname as an external store. The server snapshot is the
   // route this document was prerendered for, so hydration matches; unknown paths
   // switch to the 404 page after hydration without a markup mismatch.
@@ -76,20 +73,34 @@ function App({ initialPath }: AppProps): React.JSX.Element {
   );
   const isHomeRoute = pathname === "/" || pathname === "/index.html";
   const isPrivacyRoute = pathname === "/privacy";
+  const isLabRoute = pathname === "/lab";
 
   useEffect(() => {
     document.title = isHomeRoute
       ? HOME_TITLE
       : isPrivacyRoute
         ? PRIVACY_TITLE
-        : NOT_FOUND_TITLE;
-  }, [isHomeRoute, isPrivacyRoute]);
+        : isLabRoute
+          ? LAB_TITLE
+          : NOT_FOUND_TITLE;
+  }, [isHomeRoute, isPrivacyRoute, isLabRoute]);
 
   if (isPrivacyRoute) {
     return (
       <main>
         <Header />
         <PrivacyPolicy />
+        <Footer />
+        <ConsentBanner />
+      </main>
+    );
+  }
+
+  if (isLabRoute) {
+    return (
+      <main>
+        <Header />
+        <LabPage />
         <Footer />
         <ConsentBanner />
       </main>
@@ -111,7 +122,7 @@ function App({ initialPath }: AppProps): React.JSX.Element {
       <Header />
 
       {/* Five second test: outcome, immigration context, proof, next step */}
-      <Hero onCtaClick={handleScheduleClick} />
+      <Hero />
 
       {/* Immediate proof */}
       <ProofStrip />
@@ -135,7 +146,7 @@ function App({ initialPath }: AppProps): React.JSX.Element {
       <TrustSection />
 
       {/* Final CTA */}
-      <FinalCtaSection onCtaClick={handleScheduleClick} />
+      <FinalCtaSection />
 
       <Footer />
       <ConsentBanner />

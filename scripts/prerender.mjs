@@ -40,7 +40,14 @@ const ROUTES = [
     out: "privacy.html",
     also: ["privacy/index.html"],
   },
-  // Any path that is neither home nor privacy renders the not-found page.
+  {
+    render: "/lab",
+    boot: "/lab",
+    // Same double emission as /privacy, for the same trailing-slash reason.
+    out: "lab.html",
+    also: ["lab/index.html"],
+  },
+  // Any path that is neither home, privacy, nor lab renders the not-found page.
   { render: "/404", boot: "/404", out: "404.html", also: [] },
 ];
 

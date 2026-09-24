@@ -1,0 +1,63 @@
+.ladder {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    /* Hidden until its turn. Rendered anyway so the panel keeps its height. */
+    opacity: 0;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.rowVisible {
+    animation: rungIn 0.34s ease both;
+}
+
+.label {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.value {
+    font-size: var(--text-body);
+    font-weight: 600;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.unknown {
+    font-size: var(--text-body);
+    color: var(--text-soft);
+}
+
+@keyframes rungIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 560px) {
+    .row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2px;
+    }
+}

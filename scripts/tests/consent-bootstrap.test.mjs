@@ -41,7 +41,7 @@ class CustomEventStub {
 }
 
 /** A DOM small enough to run the bootstrap and big enough to observe it. */
-function createHarness({ stored = null } = {}) {
+function createHarness({ stored = null, pathname = "/" } = {}) {
   const injected = [];
   let cookieJar = "";
   const cookieWrites = [];
@@ -89,7 +89,7 @@ function createHarness({ stored = null } = {}) {
       getItem: (key) => storage.get(key) ?? null,
       setItem: (key, value) => storage.set(key, value),
     },
-    location: { hostname: "alphatensor.com" },
+    location: { hostname: "alphatensor.com", pathname },
     dataLayer: [],
     dispatchEvent: (event) => events.push(event),
     addEventListener: () => {},
@@ -207,4 +207,52 @@ test("a choice is persisted and announced", () => {
   assert.equal(persisted.version, 1);
   assert.equal(typeof persisted.updatedAt, "string");
   assert.equal(harness.eventsOfType("at:consent-change"), 1);
+});
+
+// The lab route exemption. /lab is a hands-on surface for uploading a document,
+// so no Google tag may load or be configured there, even with consent granted.
+
+test("on the home route, granted consent still injects both tags", () => {
+  const harness = createHarness({ pathname: "/" });
+
+  harness.consent.set({ analytics: true, marketing: true });
+
+  assert.deepEqual(harness.ids(), ["at-gtag", "at-gtm"]);
+});
+
+test("on the lab route, granted consent injects nothing", () => {
+  const harness = createHarness({ pathname: "/lab" });
+
+  harness.consent.set({ analytics: true, marketing: true });
+
+  assert.deepEqual(harness.ids(), []);
+});
+
+test("on a lab subpath, granted consent injects nothing", () => {
+  const harness = createHarness({ pathname: "/lab/session/1" });
+
+  harness.consent.set({ analytics: true, marketing: true });
+
+  assert.deepEqual(harness.ids(), []);
+});
+
+test("a stored grant loads nothing on the lab route", () => {
+  const harness = createHarness({
+    stored: { analytics: true, marketing: true, version: 1 },
+    pathname: "/lab",
+  });
+
+  assert.deepEqual(harness.ids(), []);
+});
+
+test("the lab route still persists and announces a choice", () => {
+  const harness = createHarness({ pathname: "/lab" });
+
+  harness.consent.set({ analytics: true, marketing: false });
+
+  const persisted = JSON.parse(harness.storage.get("at.consent.v1"));
+  assert.equal(persisted.analytics, true);
+  assert.equal(persisted.marketing, false);
+  assert.equal(harness.eventsOfType("at:consent-change"), 1);
+  assert.deepEqual(harness.ids(), []);
 });

@@ -1,0 +1,94 @@
+.page {
+    padding: var(--space-10) 0 var(--space-9);
+    background: var(--bg);
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--page-gutter);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-9);
+}
+
+/* A rule between stages, never above the first. */
+.stage + .stage {
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border);
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    padding-left: var(--space-2);
+    border-left: 3px solid var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: var(--space-4);
+}
+
+.headline {
+    max-width: 20ch;
+    margin: 0 0 var(--space-4);
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: var(--text);
+}
+
+.lead {
+    max-width: 60ch;
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-body-lg);
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.stageHead {
+    max-width: 760px;
+    margin-bottom: var(--space-6);
+}
+
+.stageLabel {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.stageTitle {
+    margin: 0 0 var(--space-3);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+.stageLead {
+    margin: 0;
+    max-width: 56ch;
+    font-size: var(--text-body-lg);
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding: var(--space-9) 0 var(--space-8);
+    }
+
+    .container {
+        padding: 0 var(--space-4);
+    }
+}
