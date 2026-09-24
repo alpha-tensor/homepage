@@ -40,12 +40,18 @@
      *
      * Every field is deliberately far larger than the part of it that can be
      * seen, so the composition reads as a coloured mass the product happens to
-     * sit on rather than as pools placed to fill the gaps between panels. */
-    --tone-navy: 74, 82, 124;
-    --tone-violet: 117, 96, 143;
-    --tone-plum: 94, 58, 86;
-    --tone-ember: 224, 122, 58;
-    --tone-orange: 199, 90, 27;
+     * sit on rather than as pools placed to fill the gaps between panels.
+     *
+     * Navy and violet both lean red of green on purpose. A blue whose green runs
+     * level with or above its red composites as slate once it is diluted, which
+     * is what made the upper field read as blue grey rather than violet. The
+     * warm tones carry very little blue for the same reason: a warm with blue
+     * level with green is brown, not ember. */
+    --tone-navy: 80, 70, 124;
+    --tone-violet: 112, 84, 142;
+    --tone-plum: 104, 51, 80;
+    --tone-ember: 236, 113, 26;
+    --tone-orange: 212, 85, 9;
     --tone-oxblood: 125, 45, 22;
     --tone-calm: 226, 232, 244;
 }
@@ -69,43 +75,45 @@
          * carrying as much colour as the periphery. */
         radial-gradient(
                 74% 58% at 44% 46%,
-                rgba(var(--tone-calm), 0.04),
+                rgba(var(--tone-calm), 0.025),
                 rgba(var(--tone-calm), 0) 100%
             ),
         /* Lower right, the warm end. */
         radial-gradient(
                 52% 30% at 86% 96%,
-                rgba(var(--tone-orange), 0.13),
+                rgba(var(--tone-orange), 0.1),
                 rgba(var(--tone-orange), 0) 100%
             ),
         /* Ember, broad, below and right of the queue. */
         radial-gradient(
                 78% 46% at 80% 86%,
-                rgba(var(--tone-ember), 0.13),
+                rgba(var(--tone-ember), 0.16),
                 rgba(var(--tone-ember), 0) 100%
             ),
         /* Oxblood, lower left, restrained. */
         radial-gradient(
                 56% 30% at 34% 88%,
-                rgba(var(--tone-oxblood), 0.11),
+                rgba(var(--tone-oxblood), 0.09),
                 rgba(var(--tone-oxblood), 0) 100%
             ),
-        /* Violet, upper right. */
+        /* Violet, upper right, and now carrying down into the middle of the
+         * composition rather than stopping at the top band. */
         radial-gradient(
-                84% 52% at 76% 14%,
-                rgba(var(--tone-violet), 0.16),
+                84% 64% at 76% 14%,
+                rgba(var(--tone-violet), 0.24),
                 rgba(var(--tone-violet), 0) 100%
             ),
-        /* Plum, the middle mass. */
+        /* Plum, the middle mass, opened out for the same reason. */
         radial-gradient(
-                92% 54% at 62% 58%,
-                rgba(var(--tone-plum), 0.17),
+                92% 62% at 62% 58%,
+                rgba(var(--tone-plum), 0.2),
                 rgba(var(--tone-plum), 0) 100%
             ),
-        /* Navy, the whole upper half, extremely broad. */
+        /* Navy, the whole upper half, extremely broad, and held back so it does
+         * not wash the violet above it toward slate. */
         radial-gradient(
                 120% 74% at 66% 24%,
-                rgba(var(--tone-navy), 0.17),
+                rgba(var(--tone-navy), 0.12),
                 rgba(var(--tone-navy), 0) 100%
             );
     background-size:
