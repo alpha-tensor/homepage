@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { trackEvent } from "../content/analytics";
-import { DEMO_URL, landingPageContent } from "../content/landingPage";
+import { landingPageContent } from "../content/landingPage";
 import { StatusChip, type StatusTone } from "./ui/StatusChip";
 import { HeroMatrix } from "./HeroMatrix";
 import styles from "./Hero.module.css";
-
-interface HeroProps {
-  onCtaClick?: () => void;
-}
 
 const HERO_CASE = {
   client: "Maria Lopez",
@@ -65,7 +61,7 @@ const CASE_QUEUE = [
   },
 ] as const;
 
-export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
+export const Hero = (): React.JSX.Element => {
   const [played, setPlayed] = useState(false);
 
   useEffect(() => {
@@ -79,8 +75,6 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
       "hero_primary",
       landingPageContent.hero.primaryCta,
     );
-    if (onCtaClick) onCtaClick();
-    else window.open(DEMO_URL, "_blank", "noreferrer");
   };
 
   const handleSecondaryClick = () => {
@@ -105,13 +99,15 @@ export const Hero = ({ onCtaClick }: HeroProps): React.JSX.Element => {
             <p className={styles.body}>{landingPageContent.hero.body}</p>
 
             <div className={styles.actions}>
-              <button
-                type="button"
+              {/* The primary action is the document lab. A plain anchor, not a
+               * button: there is no router, so this is a real navigation. */}
+              <a
                 className="btn btn-primary"
+                href={landingPageContent.finalCta.primaryHref}
                 onClick={handlePrimaryClick}
               >
                 {landingPageContent.hero.primaryCta}
-              </button>
+              </a>
               <a
                 className="btn btn-outline"
                 href="#how-it-works"

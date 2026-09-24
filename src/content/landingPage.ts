@@ -225,11 +225,12 @@ export const landingPageContent = {
 
   finalCta: {
     headline: "Find the manual steps your firm can stop repeating.",
-    body: "Walk through how document sorting, data capture, and routine review are handled, then map where Alpha Tensor fits the systems your firm already uses.",
-    primaryCta: "Book a Demo",
+    body: "Upload a form and see what Alpha Tensor reads from it, item by item, on the page itself. No account, no working session, no slide deck.",
+    primaryCta: "Try the document lab",
+    primaryHref: "/lab",
     secondaryCta: "Review the workflow",
     secondaryHref: "#how-it-works",
-    micro: "A working session on your case flow, not a slide deck.",
+    micro: "Only the first page is processed. No account needed.",
   },
 
   footer: {

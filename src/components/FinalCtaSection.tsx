@@ -1,24 +1,20 @@
 import React from "react";
 import { trackEvent } from "../content/analytics";
-import { DEMO_URL, landingPageContent } from "../content/landingPage";
+import { landingPageContent } from "../content/landingPage";
 import styles from "./FinalCtaSection.module.css";
 
-interface FinalCtaSectionProps {
-  onCtaClick?: () => void;
-}
-
-export const FinalCtaSection = ({
-  onCtaClick,
-}: FinalCtaSectionProps): React.JSX.Element => {
+/**
+ * The final call to action.
+ *
+ * The primary destination is the document lab, so this is an anchor to `/lab`
+ * rather than a button that opens a calendar. The secondary action is an
+ * in-page anchor and is unchanged.
+ */
+export const FinalCtaSection = (): React.JSX.Element => {
   const content = landingPageContent.finalCta;
 
   const handlePrimaryClick = () => {
     trackEvent("demo_cta_clicked", "final_cta_primary", content.primaryCta);
-    if (onCtaClick) {
-      onCtaClick();
-    } else {
-      window.open(DEMO_URL, "_blank", "noreferrer");
-    }
   };
 
   const handleSecondaryClick = () => {
@@ -36,13 +32,13 @@ export const FinalCtaSection = ({
           <p className={styles.subline}>{content.body}</p>
 
           <div className={styles.actionRow}>
-            <button
-              type="button"
+            <a
               className={`btn btn-primary ${styles.primaryButton}`}
+              href={content.primaryHref}
               onClick={handlePrimaryClick}
             >
               {content.primaryCta}
-            </button>
+            </a>
           </div>
 
           <a

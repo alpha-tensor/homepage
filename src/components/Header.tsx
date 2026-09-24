@@ -1,13 +1,16 @@
 import React from "react";
 import AlphaMark from "../AlphaMark";
 import { trackEvent } from "../content/analytics";
-import { DEMO_URL, landingPageContent } from "../content/landingPage";
+import { landingPageContent } from "../content/landingPage";
 import styles from "./Header.module.css";
 
 export const Header = (): React.JSX.Element => {
-  const handleDemoClick = () => {
-    trackEvent("demo_cta_clicked", "header", "Book a Demo");
-    window.open(DEMO_URL, "_blank", "noreferrer");
+  const handleLabClick = () => {
+    trackEvent(
+      "demo_cta_clicked",
+      "header",
+      landingPageContent.finalCta.primaryCta,
+    );
   };
 
   return (
@@ -26,13 +29,15 @@ export const Header = (): React.JSX.Element => {
           ))}
         </nav>
 
-        <button
-          type="button"
+        {/* Plain anchor, not a button: there is no router, so the header
+         * primary action is a real navigation to the lab route. */}
+        <a
           className={`btn btn-primary ${styles.demoButton}`}
-          onClick={handleDemoClick}
+          href="/lab"
+          onClick={handleLabClick}
         >
-          Book a Demo
-        </button>
+          {landingPageContent.finalCta.primaryCta}
+        </a>
       </div>
     </header>
   );
