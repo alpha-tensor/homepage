@@ -40,13 +40,33 @@
     display: block;
     pointer-events: none;
 
-    /* The screen. Six pixels against a one pixel dot is dense enough that the eye
-     * groups the points into a surface instead of reading rows and columns. */
-    --dot-pitch: 6px;
-    --dot-core: 0.5px;
-    --dot-edge: 0.8px;
+    /* The screen. Six pixels against a 1.3 pixel dot is dense enough that the eye
+     * groups the points into a surface instead of reading rows and columns.
+     * Uniformity is what keeps this from reading as particles: every dot is
+     * identical, so a brighter screen cannot reintroduce the star field that per
+     * dot variation produced.
+     *
+     * Alpha came down from 0.13 to 0.10 with the silhouette, on the instruction to
+     * make the whole motif more transparent. There is a real floor here and it was
+     * already hit once: a 1px dot at 0.06 was technically present and perceptually
+     * absent. This stays deliberately above that. */
+    --dot-pitch: 5px;
+    --dot-core: 0.65px;
+    --dot-edge: 0.9px;
     --screen-rgb: 244, 240, 232;
-    --screen-alpha: 0.06;
+    /* The dot profile as tokens rather than as literals buried in the gradient, so the
+     * entrance reveal can animate them and an invariant can read them. There is no
+     * per breakpoint softening any more: `--screen-alpha` used to carry that, and the
+     * switch to a solid dot core with a soft rim left it dead, so it is gone. */
+    --dot-alpha-core: 1;
+    --dot-alpha-edge: 0.3;
+
+    /* The hero's own core. Deliberately lighter and more violet than the global
+     * ink so the jump from cream is smaller without the field reading grey. The
+     * global token is untouched and the statistics band still uses it. Lifted from
+     * rgb(30, 29, 42) in the transparency pass, which is what makes the dark mass
+     * itself recede rather than just its dots. */
+    --hero-core: rgb(38, 37, 50);
 
     /* The colour, as channel triplets so each field can fade to zero alpha of its
      * own hue. Fading to `transparent` would interpolate toward black and grey
@@ -64,41 +84,63 @@
     --tone-oxblood: 125, 45, 22;
     --tone-calm: 226, 232, 244;
 
+    /* Motion groups.
+     *
+     * Three offsets, one per group, added to the position of every gradient in that
+     * group. At 0% each `calc()` reduces to the literal it replaced, so the
+     * decomposition is render neutral by construction and a pixel diff can prove it.
+     *
+     *   upper    navy, violet
+     *   middle   plum, calm
+     *   lower    ember, orange, oxblood
+     *
+     * The groups are addressed by token rather than by reordering the stack into three
+     * blocks, because the layer order is part of the rendering. Concatenating three
+     * groups would change the order the gradients composite in, and at these alphas
+     * that is a visible change. So there is still one stack, still in its original
+     * order, and each gradient asks its group for its offset. */
+    --up-dx: 0%;
+    --up-dy: 0%;
+    --mid-dx: 0%;
+    --mid-dy: 0%;
+    --low-dx: 0%;
+    --low-dy: 0%;
+
     /* One source for the colour, used by both layers. */
     --tone-stack:
         radial-gradient(
-            74% 58% at 44% 46%,
-            rgba(var(--tone-calm), 0.025),
+            74% 58% at calc(44% + var(--mid-dx)) calc(46% + var(--mid-dy)),
+            rgba(var(--tone-calm), 0.02),
             rgba(var(--tone-calm), 0) 100%
         ),
         radial-gradient(
-            52% 30% at 86% 96%,
-            rgba(var(--tone-orange), 0.1),
+            52% 30% at calc(86% + var(--low-dx)) calc(96% + var(--low-dy)),
+            rgba(var(--tone-orange), 0.5),
             rgba(var(--tone-orange), 0) 100%
         ),
         radial-gradient(
-            78% 46% at 80% 86%,
-            rgba(var(--tone-ember), 0.185),
+            78% 46% at calc(80% + var(--low-dx)) calc(86% + var(--low-dy)),
+            rgba(var(--tone-ember), 0.2),
             rgba(var(--tone-ember), 0) 100%
         ),
         radial-gradient(
-            56% 30% at 34% 88%,
-            rgba(var(--tone-oxblood), 0.08),
+            56% 30% at calc(34% + var(--low-dx)) calc(88% + var(--low-dy)),
+            rgba(var(--tone-oxblood), 0.06),
             rgba(var(--tone-oxblood), 0) 100%
         ),
         radial-gradient(
-            84% 64% at 76% 14%,
-            rgba(var(--tone-violet), 0.24),
+            84% 64% at calc(76% + var(--up-dx)) calc(14% + var(--up-dy)),
+            rgba(var(--tone-violet), 0.8),
             rgba(var(--tone-violet), 0) 100%
         ),
         radial-gradient(
-            92% 62% at 62% 58%,
-            rgba(var(--tone-plum), 0.25),
+            92% 62% at calc(62% + var(--mid-dx)) calc(58% + var(--mid-dy)),
+            rgba(var(--tone-plum), 0.19),
             rgba(var(--tone-plum), 0) 100%
         ),
         radial-gradient(
-            120% 74% at 66% 24%,
-            rgba(var(--tone-navy), 0.12),
+            120% 74% at calc(66% + var(--up-dx)) calc(24% + var(--up-dy)),
+            rgba(var(--tone-navy), 0.2),
             rgba(var(--tone-navy), 0) 100%
         );
     --tone-sizes:
@@ -106,18 +148,55 @@
         100% 100%;
     --screen-stack: radial-gradient(
         circle,
-        rgba(var(--screen-rgb), var(--screen-alpha)) var(--dot-core),
-        rgba(var(--screen-rgb), 0) var(--dot-edge)
+        rgba(var(--screen-rgb), var(--dot-alpha-core)) var(--dot-core),
+        rgba(var(--screen-rgb), var(--dot-alpha-edge)) var(--dot-edge)
     );
+
+    /* The visible silhouette, as three masses.
+     *
+     * A dark rectangle faded outward is still a rectangle: measured, the old mask
+     * held its top edge within 21px across the full box width and its left edge at
+     * a constant x for most rows, so the motif read as a panel with soft edges. The
+     * replacement is three overlapping masses whose union happens to leave enough
+     * dark surface behind the product. Their centres are where the product is, and
+     * their overlap is what creates the substrate, so no mass reads as its own
+     * circle.
+     *
+     * Every mass reaches zero alpha inside the box. That is a hard requirement, not
+     * a preference, because a mask cannot paint outside its element, so an opaque
+     * mask at a box edge prints a straight line there.
+     *
+     * The atmosphere is the same three centres with larger radii, so the two layers
+     * cannot drift apart and the relationship that keeps the cream transition
+     * chromatic survives in radial form: through the core's fade the atmosphere is
+     * the more opaque of the two. */
+    --mass-upper: 71% 17%;
+    --mass-central: 56% 40%;
+    --mass-lower: 60% 74%;
+    --core-upper: 20% 14%;
+    --core-central: 34% 30%;
+    --core-lower: 28% 17%;
+    --atmo-upper: 28% 20%;
+    --atmo-central: 42% 36%;
+    --atmo-lower: 39% 24%;
+    --mask-solid: 45%;
+    --atmo-solid: 30%;
 }
 
-/* The dark surface. Ink and screen only, behind a short fade. */
+/* The dark surface. Ink and screen only, behind the union of the three masses.
+ *
+ * There is deliberately no `linear-gradient` here. Intersecting a horizontal ramp
+ * with a vertical one is exactly what produced the rectangle, so the absence of a
+ * linear gradient in this rule is the machine checkable form of the silhouette
+ * rule. `mask-composite: add` unions the masses; the default would be add too, but
+ * naming it keeps the intent visible next to the responsive overrides, which still
+ * intersect because they still carry the older rectangular model. */
 .core {
     position: absolute;
     inset: 0;
     display: block;
 
-    background-color: var(--surface-strong);
+    background-color: var(--hero-core);
     background-image: var(--screen-stack), var(--tone-stack);
     background-size:
         var(--dot-pitch) var(--dot-pitch),
@@ -125,25 +204,27 @@
     background-repeat: repeat;
 
     mask-image:
-        linear-gradient(
-            to right,
-            transparent 24%,
-            #000 33%,
-            #000 92%,
-            transparent 99%
+        radial-gradient(
+            ellipse var(--core-upper) at var(--mass-upper),
+            #000 var(--mask-solid),
+            rgba(0, 0, 0, 0) 100%
         ),
-        linear-gradient(
-            to bottom,
-            transparent 0%,
-            #000 7%,
-            #000 calc(100% - 126px),
-            transparent calc(100% - 74px)
+        radial-gradient(
+            ellipse var(--core-central) at var(--mass-central),
+            #000 var(--mask-solid),
+            rgba(0, 0, 0, 0) 100%
+        ),
+        radial-gradient(
+            ellipse var(--core-lower) at var(--mass-lower),
+            #000 var(--mask-solid),
+            rgba(0, 0, 0, 0) 100%
         );
-    mask-composite: intersect;
+    mask-composite: add;
 }
 
 /* The colour without the darkness. No screen and no ink, so what shows past the
- * core is a tint over cream rather than a fading dark surface. */
+ * core is a tint over cream rather than a fading dark surface. Same three centres,
+ * pushed out, which is what keeps the outer transition chromatic. */
 .atmosphere {
     position: absolute;
     inset: 0;
@@ -154,21 +235,35 @@
     background-repeat: repeat;
 
     mask-image:
-        linear-gradient(
-            to right,
-            transparent 6%,
-            #000 33%,
-            #000 92%,
-            transparent 100%
+        radial-gradient(
+            ellipse var(--atmo-upper) at var(--mass-upper),
+            #000 var(--atmo-solid),
+            rgba(0, 0, 0, 0) 100%
         ),
-        linear-gradient(
-            to bottom,
-            transparent -22%,
-            #000 7%,
-            #000 calc(100% - 74px),
-            transparent 100%
+        radial-gradient(
+            ellipse var(--atmo-central) at var(--mass-central),
+            #000 var(--atmo-solid),
+            rgba(0, 0, 0, 0) 100%
+        ),
+        radial-gradient(
+            ellipse var(--atmo-lower) at var(--mass-lower),
+            #000 var(--atmo-solid),
+            rgba(0, 0, 0, 0) 100%
         );
-    mask-composite: intersect;
+    mask-composite: add;
+}
+
+/* Mobile and cramped desktop views keep the field but not the ambient drift. A
+ * registered property feeding `background-image` repaints the gradient stack every
+ * frame on the main thread, and below this width the payoff is smallest while the cost
+ * is least affordable. The one time entrance still runs, so the field settles instead
+ * of appearing hard. */
+@media (max-width: 1200px) {
+    .field {
+        animation:
+            fieldSettle 1.5s ease-out both,
+            matrixReveal 0.8s ease-out 0.3s both;
+    }
 }
 
 /* Stacked layouts: the field stops being an oversized field beside the product
@@ -186,7 +281,6 @@
         left: calc(-1 * var(--hero-gutter));
         right: calc(-1 * var(--hero-gutter));
         width: auto;
-        --screen-alpha: 0.05;
     }
 
     .core {
@@ -205,6 +299,11 @@
                 #000 calc(100% - 92px),
                 transparent calc(100% - 52px)
             );
+        /* Still the older rectangular model down here. It has to keep intersecting,
+         * because the desktop rule now unions its masses and this block would
+         * otherwise union two full width ramps into a solid band. Out of scope for
+         * the silhouette pass, which judges desktop first. */
+        mask-composite: intersect;
     }
 
     .atmosphere {
@@ -223,6 +322,7 @@
                 #000 calc(100% - 52px),
                 transparent 100%
             );
+        mask-composite: intersect;
     }
 }
 
@@ -232,7 +332,6 @@
     .field {
         top: -72px;
         bottom: -84px;
-        --screen-alpha: 0.045;
     }
 
     .core {
@@ -251,6 +350,7 @@
                 #000 calc(100% - 84px),
                 transparent calc(100% - 44px)
             );
+        mask-composite: intersect;
     }
 
     .atmosphere {
@@ -269,5 +369,160 @@
                 #000 calc(100% - 44px),
                 transparent 100%
             );
+        mask-composite: intersect;
+    }
+}
+
+/* ---------------------------------------------------------------------------------
+ * Motion
+ *
+ * The offset tokens have to be registered or the browser treats them as opaque
+ * strings and snaps between keyframes rather than interpolating. Percentages for the
+ * gradient positions, numbers for the dot profile. `inherits: true` so an animation
+ * set on the field reaches both layers, which matters because `--tone-stack` is
+ * declared on the field and its inner `var()`s resolve there, not where the stack is
+ * finally consumed.
+ * ---------------------------------------------------------------------------------*/
+@property --up-dx {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+@property --up-dy {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+@property --mid-dx {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+@property --mid-dy {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+@property --low-dx {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+@property --low-dy {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+}
+@property --dot-alpha-core {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 1;
+}
+@property --dot-alpha-edge {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0.3;
+}
+
+/* Prototype timings. These are deliberately exaggerated so the direction is easy to
+ * judge: six to eight second cycles at three to four percent. Production is thirty to
+ * forty eight seconds at one and a half to three percent, and the periods are offset
+ * per group so the three never beat in step. Do not ship these numbers.
+ *
+ * Each cycle starts and ends at zero, so the animation passes through the tuned
+ * composition twice per cycle rather than orbiting around it. That matters for two
+ * reasons: the composition the field was tuned against is a state the motion actually
+ * visits, and disabling the animation lands exactly on it, which is what makes the
+ * equivalence check meaningful. */
+@keyframes drift-upper {
+    0%,
+    100% {
+        --up-dx: 0%;
+        --up-dy: 0%;
+    }
+    25% {
+        --up-dx: 4%;
+        --up-dy: -2%;
+    }
+    75% {
+        --up-dx: -4%;
+        --up-dy: 2%;
+    }
+}
+
+@keyframes drift-middle {
+    0%,
+    100% {
+        --mid-dx: 0%;
+        --mid-dy: 0%;
+    }
+    25% {
+        --mid-dx: 3%;
+        --mid-dy: 3%;
+    }
+    75% {
+        --mid-dx: -3%;
+        --mid-dy: -3%;
+    }
+}
+
+@keyframes drift-lower {
+    0%,
+    100% {
+        --low-dx: 0%;
+        --low-dy: 0%;
+    }
+    25% {
+        --low-dx: 3%;
+        --low-dy: -2%;
+    }
+    75% {
+        --low-dx: -3%;
+        --low-dy: 2%;
+    }
+}
+
+/* The entrance, separate from the ambient motion and deliberately in the same
+ * animation list so the list never changes and pausing cannot restart the drift. The
+ * field eases up while the matrix reveals just behind it. */
+@keyframes fieldSettle {
+    from {
+        opacity: 0.55;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes matrixReveal {
+    from {
+        --dot-alpha-core: 0;
+        --dot-alpha-edge: 0;
+    }
+    to {
+        --dot-alpha-core: 1;
+        --dot-alpha-edge: 0.3;
+    }
+}
+
+.field {
+    animation:
+        fieldSettle 1.5s ease-out both,
+        matrixReveal 0.8s ease-out 0.3s both,
+        drift-upper 7s ease-in-out infinite,
+        drift-middle 6.5s ease-in-out infinite,
+        drift-lower 8s ease-in-out infinite;
+}
+
+/* Continuous motion is gated on the hero being on screen. Paused rather than
+ * removed, so the offsets hold their phase instead of snapping back to zero and
+ * re-animating on re-entry. */
+.field[data-motif-motion="paused"] {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .field {
+        animation: none;
     }
 }

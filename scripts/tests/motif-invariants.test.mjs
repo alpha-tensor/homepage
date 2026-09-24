@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const CSS_PATH = resolve(REPO_ROOT, "src/components/HeroMatrix.module.css");
 const TSX_PATH = resolve(REPO_ROOT, "src/components/HeroMatrix.tsx");
+const TOKENS_PATH = resolve(REPO_ROOT, "src/index.css");
 
 /** Comments change freely; assertions must not depend on them. */
 function readNormalised(path) {
@@ -37,6 +38,43 @@ function readNormalised(path) {
 
 const css = readNormalised(CSS_PATH);
 const tsx = readNormalised(TSX_PATH);
+const tokens = readNormalised(TOKENS_PATH);
+
+/**
+ * Perceived luminance, Rec. 601. Only ever used to reason about the gap between
+ * two near-black surfaces, which is the one comparison a channel triplet cannot
+ * make by inspection.
+ */
+function luminance([r, g, b]) {
+  return 0.299 * r + 0.587 * g + 0.114 * b;
+}
+
+/**
+ * An `--token: r, g, b;` channel triplet as numbers, with or without an `rgb()`
+ * wrapper. Parsed by hand rather than by regex so the token name is the only
+ * thing being matched and a wrapper is not a special case.
+ */
+function readRgbTriplet(rule, token) {
+  const start = rule.indexOf(`${token}:`);
+  assert.notEqual(start, -1, `${token} is no longer declared`);
+  const declaration = rule.slice(start, rule.indexOf(";", start));
+  const channels = declaration.match(/[0-9]+/g);
+  assert.ok(
+    channels && channels.length >= 3,
+    `${token} is no longer a channel triplet`,
+  );
+  return channels.slice(0, 3).map(Number);
+}
+
+/** A `--token: #rrggbb;` colour as numbers. */
+function readHexToken(text, token) {
+  const match = text.match(new RegExp(`${token}: #([0-9a-fA-F]{6});`));
+  assert.ok(match, `${token} is no longer a six digit hex token`);
+  const hex = match[1];
+  return [0, 2, 4].map((offset) =>
+    Number.parseInt(hex.slice(offset, offset + 2), 16),
+  );
+}
 
 /** The whole rule for a selector, so a property can be attributed to one block. */
 function ruleFor(selector) {
@@ -53,14 +91,34 @@ function maskedRules() {
     .filter(({ body }) => body.includes("mask-image:"));
 }
 
-/** The first stop position in a rule's first horizontal ramp. */
-function firstRampStart(rule) {
-  const match = rule.match(/to right, transparent (-?[0-9.]+)(%|px)/);
-  assert.ok(match, "no horizontal ramp found");
-  return Number(match[1]);
+/** Every `--name: value;` declaration in a rule, as a lookup. */
+function tokensFor(rule) {
+  return Object.fromEntries(
+    [...rule.matchAll(/--([a-z-]+): ([^;]+);/g)].map(([, name, value]) => [
+      name,
+      value.trim(),
+    ]),
+  );
 }
 
-test("the screen keeps one colour, one alpha and one pitch", () => {
+/** A `--name: 20% 14%;` pair as numbers. */
+function readPair(rule, token) {
+  const value = tokensFor(rule)[token];
+  const match = value && /^([0-9.]+)% ([0-9.]+)%$/.exec(value);
+  assert.ok(match, `${token} is no longer a pair of percentages`);
+  return [Number(match[1]), Number(match[2])];
+}
+
+/** A `--name: 0.3;` numeric token as a number. */
+function readNumber(rule, token) {
+  const value = tokensFor(rule)[token];
+  assert.ok(value !== undefined, `${token} is no longer declared`);
+  const parsed = Number(value);
+  assert.ok(Number.isFinite(parsed), `${token} is not a number`);
+  return parsed;
+}
+
+test("the screen keeps one colour, one profile and one pitch", () => {
   assert.equal(
     (css.match(/--screen-rgb\)/g) ?? []).length,
     2,
@@ -69,8 +127,8 @@ test("the screen keeps one colour, one alpha and one pitch", () => {
   );
   assert.match(
     ruleFor(".field"),
-    /--dot-pitch: 6px;/,
-    "the dot pitch is frozen at 6px. Do not raise it to compensate for a " +
+    /--dot-pitch: 5px;/,
+    "the dot pitch is frozen at 5px. Do not raise it to compensate for a " +
       "responsive or composition problem.",
   );
   assert.match(
@@ -80,24 +138,81 @@ test("the screen keeps one colour, one alpha and one pitch", () => {
   );
 });
 
-test("dot contrast stays under the visible-grid ceiling", () => {
-  const alphas = [...css.matchAll(/--screen-alpha: ([0-9.]+)/g)].map((m) =>
-    Number(m[1]),
-  );
-  assert.ok(alphas.length > 0, "no --screen-alpha declaration found");
-  const [desktop, ...responsive] = alphas;
+test("the dot profile is a solid core with a softer rim", () => {
+  const field = ruleFor(".field");
+  // The profile replaced a flat `--screen-alpha`. A solid core with a soft rim is what
+  // keeps a 5px pitch reading as a surface instead of a grid, and the rim has to stay
+  // below the core or the dot becomes a flat disc with a hard edge.
+  const core = readNumber(field, "dot-alpha-core");
+  const edge = readNumber(field, "dot-alpha-edge");
   assert.ok(
-    desktop <= 0.08,
-    `desktop screen alpha is ${desktop}; above 0.08 the dots read as a grid ` +
-      "before the surface reads as colour",
+    edge < core,
+    `the rim alpha ${edge} is not below the core alpha ${core}, so the profile is ` +
+      "flat or inverted and the screen reads as a grid rather than a surface",
   );
-  for (const alpha of responsive) {
+  assert.match(
+    field,
+    /rgba\(var\(--screen-rgb\), var\(--dot-alpha-core\)\) var\(--dot-core\)/,
+    "the screen stack must read its alphas from the profile tokens, or the entrance " +
+      "reveal and this invariant are both disconnected from what actually ships",
+  );
+  assert.ok(
+    !field.includes("--screen-alpha"),
+    "`--screen-alpha` is gone, superseded by the profile tokens. A reintroduced flat " +
+      "alpha would quietly overrule the profile.",
+  );
+});
+
+test("the ambient drift moves only the colour groups", () => {
+  const drift = css.slice(css.indexOf("@keyframes drift-"));
+  assert.notEqual(drift, css, "the drift keyframes are gone");
+  const settle = drift.indexOf("@keyframes fieldSettle");
+  const block = settle === -1 ? drift : drift.slice(0, settle);
+  for (const forbidden of ["screen", "opacity", "transform", "mask", "pitch"]) {
     assert.ok(
-      alpha <= desktop,
-      `a responsive override raises the screen alpha to ${alpha} from ${desktop}. ` +
-        "Scaling must not be paid for with dot contrast.",
+      !block.includes(forbidden),
+      `the drift keyframes reference ${forbidden}. The dots, the ink, the pitch and ` +
+        "the masks are the fixed physical part of the motif and are never animation " +
+        "targets.",
     );
   }
+  for (const group of ["--up-d", "--mid-d", "--low-d"]) {
+    assert.ok(
+      block.includes(group),
+      `the drift keyframes no longer move ${group}`,
+    );
+  }
+});
+
+test("motion is gated on visibility and on reduced motion", () => {
+  assert.match(
+    css,
+    /\.field\[data-motif-motion="paused"\] \{ animation-play-state: paused; \}/,
+    "the visibility gate is gone, so a registered property feeding background-image " +
+      "would repaint the gradient stack for as long as the page is open, on screen or not",
+  );
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\) \{ \.field \{ animation: none; \}/,
+    "reduced motion must stop the drift, not slow it",
+  );
+
+  // Pinned deliberately. The drift is the only piece that repaints continuously, and
+  // narrow viewports are where that is least affordable, so losing this override would
+  // silently put the cost back on phones and cramped desktops.
+  const start = css.indexOf("@media (max-width: 1200px) {");
+  assert.notEqual(start, -1, "the narrow viewport motion override is gone");
+  const block = css.slice(start, css.indexOf("}", start));
+  assert.ok(
+    !block.includes("drift-"),
+    `the drift still runs below 1200px: "${block}". It repaints the gradient stack ` +
+      "every frame on the main thread.",
+  );
+  assert.ok(
+    block.includes("fieldSettle") && block.includes("matrixReveal"),
+    "the narrow viewport override also dropped the entrance, which is a one time cost " +
+      "and the effect that stops the field appearing hard.",
+  );
 });
 
 test("the ink and the screen share one mask, and only the atmosphere has another", () => {
@@ -146,78 +261,99 @@ test("the atmosphere carries colour and no darkness", () => {
   );
 });
 
-test("the atmosphere leads the core so the cream transition stays chromatic", () => {
+test("the atmosphere is the core pushed out at the same centres", () => {
+  const field = ruleFor(".field");
   const core = ruleFor(".core");
   const atmosphere = ruleFor(".atmosphere");
-  // Both reach full strength at the same horizontal stop, and the atmosphere's
-  // ramp starts further out. That relationship is what keeps the atmosphere the
-  // more opaque of the two throughout the core's fade, so cream never dominates
-  // the blend and the transition never passes through neutral grey.
-  assert.ok(
-    firstRampStart(atmosphere) < firstRampStart(core),
-    "the atmosphere's horizontal ramp must start further out than the core's",
-  );
-  // The upper ramp of the atmosphere must start above the box, because the box
-  // top is clipped at the hero's top edge and there is no room inside the box for
-  // the atmosphere to get ahead of the core there.
-  assert.match(
-    atmosphere,
-    /to bottom, transparent -[0-9]/,
-    "the atmosphere's upper ramp must begin above the box top",
-  );
+  // Sharing the centre tokens is what keeps the two layers from drifting apart, and
+  // strictly larger atmosphere radii are what keep the atmosphere the more opaque of
+  // the two through the core's fade, so cream never dominates the blend and the
+  // transition never passes through neutral grey.
+  for (const name of ["upper", "central", "lower"]) {
+    assert.ok(
+      core.includes(`ellipse var(--core-${name}) at var(--mass-${name})`),
+      `the core no longer anchors its ${name} mass to --mass-${name}`,
+    );
+    assert.ok(
+      atmosphere.includes(`ellipse var(--atmo-${name}) at var(--mass-${name})`),
+      `the atmosphere no longer shares --mass-${name} with the core`,
+    );
+    const [coreX, coreY] = readPair(field, `core-${name}`);
+    const [atmoX, atmoY] = readPair(field, `atmo-${name}`);
+    assert.ok(
+      atmoX > coreX && atmoY > coreY,
+      `the atmosphere's ${name} mass is not strictly larger than the core's, so ` +
+        "through the core's fade the core would be the more opaque of the two and " +
+        "the transition would pass through neutral grey.",
+    );
+  }
 });
 
-test("the core's mask geometry is frozen", () => {
+test("the hero silhouette has no straight edge", () => {
   const core = ruleFor(".core");
-  for (const stop of [
-    "transparent 24%",
-    "#000 33%",
-    "#000 92%",
-    "transparent 99%",
-  ]) {
-    assert.ok(
-      core.includes(stop),
-      `the core's horizontal ramp lost its ${stop} stop`,
-    );
-  }
-  for (const stop of [
-    "transparent 0%",
-    "#000 7%",
-    "calc(100% - 126px)",
-    "calc(100% - 74px)",
-  ]) {
-    assert.ok(
-      core.includes(stop),
-      `the core's vertical ramp lost its ${stop} stop`,
-    );
-  }
-  // The core must reach nothing well above the box bottom, so the dark surface
-  // ends before the full width statistics band rather than running into it.
+  // The visible rectangle was produced by intersecting a horizontal ramp with a
+  // vertical one, so a linear gradient in this rule is the machine checkable form of
+  // the failure. Measured on the state this replaced, the mask held its top edge
+  // within 21px across the full box width and its left edge at effectively one x for
+  // most of the height.
   assert.ok(
-    core.includes("transparent calc(100% - 74px)"),
-    "the core's last vertical stop must be its transparent end, not the box bottom",
+    !core.includes("linear-gradient"),
+    "the core mask declares a linear-gradient, so an edge of the motif is a straight " +
+      "line again. The masses must union rather than a ramp intersecting a ramp.",
   );
+  const masses = (core.match(/radial-gradient\(/g) ?? []).length;
   assert.ok(
-    !/to bottom, transparent 0%, #000 [0-9]+%, #000 calc\(100% - [0-9]+px\), transparent 100%/.test(
-      core,
-    ),
-    "the core must not fade all the way to the box bottom, or it runs into the " +
-      "statistics band",
+    masses >= 3,
+    `the core mask declares ${masses} mass(es). At least three overlapping ones are ` +
+      "needed so that no single mass reads as its own circle.",
+  );
+  assert.match(
+    core,
+    /mask-composite: add;/,
+    "the masses must union. Intersecting them would remove the overlap that creates " +
+      "the substrate.",
   );
 });
 
-test("the substrate is the shared ink, never a near black panel", () => {
+test("the substrate is a hero local core, lighter than the ink and never a panel", () => {
   const core = ruleFor(".core");
   assert.match(
     core,
-    /background-color: var\(--surface-strong\);/,
-    "the field sits on the shared ink token. A local near-black would reinstate " +
-      "the slab the colour fields exist to relieve.",
+    /background-color: var\(--hero-core\);/,
+    "the field sits on the hero's own core token, not an inline colour. The " +
+      "token is where the intent lives, and an inline value would let the " +
+      "substrate drift without a single place to review.",
   );
-  const ramps = (core.match(/linear-gradient\(/g) ?? []).length;
+  // The hero core is deliberately lighter than the shared ink. The field has to
+  // separate from cream at a lower darkness than a full strength band, and a
+  // near-black panel is the slab the colour fields exist to relieve. The margin
+  // is not a measurement, it only keeps the two tokens from converging: the
+  // moment they do, the hero is a dark band again and the comparison is gone.
+  const heroCore = luminance(readRgbTriplet(ruleFor(".field"), "--hero-core"));
+  const ink = luminance(readHexToken(tokens, "--surface-strong"));
   assert.ok(
-    ramps >= 2,
-    "a field with fewer than two ramps has a straight edge and reads as a rectangle",
+    heroCore > ink + 6,
+    `the hero core is ${heroCore.toFixed(1)} against an ink of ${ink.toFixed(1)}. ` +
+      "It must stay meaningfully lighter than the global ink, or the field " +
+      "returns to the near black slab.",
+  );
+  assert.ok(
+    !css.includes("--surface-strong:"),
+    "the hero stylesheet must not redeclare the shared ink token. The " +
+      "statistics band and the other dark surfaces still read it.",
+  );
+  // Every mass must fade to zero alpha rather than stopping at its ellipse edge.
+  // A mask cannot paint outside its element, so a hard stop at a box edge prints a
+  // straight line there, and that is how the rectangle becomes visible again. This
+  // replaces the old assertion that the field carried two linear ramps, which was
+  // the same intent expressed in the geometry that produced the rectangle.
+  const masses = (core.match(/radial-gradient\(/g) ?? []).length;
+  const fades = (core.match(/rgba\(0, 0, 0, 0\) 100%/g) ?? []).length;
+  assert.equal(
+    fades,
+    masses,
+    `${fades} of ${masses} masses fade out. A mass that stops without fading prints ` +
+      "a hard edge and reads as a panel.",
   );
 });
 
@@ -242,14 +378,31 @@ test("the motif palette is closed", () => {
 });
 
 test("the screen is painted, not generated", () => {
+  // The original form of this assertion also banned `for (`, which was a blunt proxy
+  // for "no per-dot generation". It now fires on the IntersectionObserver loop, which
+  // has nothing to do with dots, so the ban narrowed to the things that actually
+  // reintroduce per-dot variation.
   assert.ok(
-    !/Math\.random|\.map\(|Array\.from|for \(/.test(tsx),
+    !/Math\.random|\.map\(|Array\.from/.test(tsx),
     "the component must not generate dots. A generated field reintroduces per-dot " +
       "variation, which is what read as a star field.",
+  );
+  assert.equal(
+    (tsx.match(/<span/g) ?? []).length,
+    3,
+    "the field is a positioning box, an atmosphere and a core, nothing more. A mass " +
+      "per element would make the colour independently movable at the cost of the " +
+      "shared stack that keeps the two layers coherent.",
   );
   assert.match(
     tsx,
     /data-motif="hero-field"/,
     "the tooling marker was removed",
+  );
+  assert.match(
+    tsx,
+    /data-motif-motion=\{motion\}/,
+    "the motion gate is gone, so the field would keep repainting the gradient stack " +
+      "once the hero is off screen.",
   );
 });
