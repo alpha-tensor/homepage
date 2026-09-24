@@ -146,10 +146,14 @@
 }
 
 .evidenceDocLeft {
-    top: 170px;
-    /* Pushed left so the sheet straddles the ink/cream boundary rather than
-     * sitting entirely on the dark side. */
-    left: -120px;
+    /* The field's left ramp begins exactly at the card's left edge, and the card
+     * paints above this sheet, so a sheet to the left of the card cannot cross
+     * the cream to field boundary: the only place that boundary is exposed is
+     * the strip above the card's top edge. Sit there, mostly clear of the card,
+     * so the sheet reads as source material arriving at the operational system
+     * rather than as a second panel beside it. */
+    top: -80px;
+    left: -4px;
     width: 190px;
     transform: rotate(-7deg);
 }
