@@ -7,6 +7,7 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { LabPage } from "./lab/LabPage";
+import { TaglineLab } from "./lab/TaglineLab";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { PlatformSection } from "./components/PlatformSection";
 import { PositioningBridge } from "./components/PositioningBridge";
@@ -19,6 +20,7 @@ const HOME_TITLE =
   "AlphaTensor. Operational Automation for Immigration Law Firms.";
 const PRIVACY_TITLE = "Privacy and cookie policy. AlphaTensor";
 const LAB_TITLE = "Document lab. AlphaTensor";
+const TAGLINE_LAB_TITLE = "Tagline experiment. AlphaTensor";
 const NOT_FOUND_TITLE = "404. Page not found. AlphaTensor";
 
 const normalizePathname = (pathname: string): string => {
@@ -74,22 +76,35 @@ function App({ initialPath }: AppProps): React.JSX.Element {
   const isHomeRoute = pathname === "/" || pathname === "/index.html";
   const isPrivacyRoute = pathname === "/privacy";
   const isLabRoute = pathname === "/lab";
+  const isTaglineLabRoute = pathname === "/lab/tagline";
 
   useEffect(() => {
     document.title = isHomeRoute
       ? HOME_TITLE
       : isPrivacyRoute
         ? PRIVACY_TITLE
-        : isLabRoute
-          ? LAB_TITLE
-          : NOT_FOUND_TITLE;
-  }, [isHomeRoute, isPrivacyRoute, isLabRoute]);
+        : isTaglineLabRoute
+          ? TAGLINE_LAB_TITLE
+          : isLabRoute
+            ? LAB_TITLE
+            : NOT_FOUND_TITLE;
+  }, [isHomeRoute, isPrivacyRoute, isLabRoute, isTaglineLabRoute]);
 
   if (isPrivacyRoute) {
     return (
       <main>
         <Header />
         <PrivacyPolicy />
+        <Footer />
+        <ConsentBanner />
+      </main>
+    );
+  }
+
+  if (isTaglineLabRoute) {
+    return (
+      <main>
+        <TaglineLab />
         <Footer />
         <ConsentBanner />
       </main>

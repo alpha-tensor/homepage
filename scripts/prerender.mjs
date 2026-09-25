@@ -47,7 +47,16 @@ const ROUTES = [
     out: "lab.html",
     also: ["lab/index.html"],
   },
-  // Any path that is neither home, privacy, nor lab renders the not-found page.
+  {
+    // Design experiment, not a product page. It lives under /lab so the consent
+    // bootstrap in index.html keeps it free of Google tags while it is being
+    // judged, and so it can be deleted without touching a real route.
+    render: "/lab/tagline",
+    boot: "/lab/tagline",
+    out: "lab/tagline.html",
+    also: ["lab/tagline/index.html"],
+  },
+  // Any path that is none of the above renders the not-found page.
   { render: "/404", boot: "/404", out: "404.html", also: [] },
 ];
 

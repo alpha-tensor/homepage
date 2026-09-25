@@ -83,6 +83,12 @@ export const ReadingStage = ({
               {identity.page_count ? ` of ${identity.page_count}` : ""}{" "}
               processed.
             </p>
+            {identity.has_text_layer === false && (
+              <p className={styles.note}>
+                This looks like a scan. This version reads the text layer on the
+                first page, so a scan is not identified yet.
+              </p>
+            )}
             <RungLadder
               key={documentId ?? "document"}
               rungs={identity.rungs}

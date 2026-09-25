@@ -191,7 +191,13 @@
             })();
         </script>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- viewport-fit=cover lets the page paint into the notch and the home
+             indicator band; the safe-area padding in src/index.css keeps content
+             clear of them. On every inset-free display the insets resolve to 0. -->
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
         <meta
             name="description"
             content="Alpha Tensor helps immigration firms handle more cases without adding staff by removing repetitive document sorting, data capture, and routine case review."
@@ -213,7 +219,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Outfit:wght@300;400;500&display=swap"
             rel="stylesheet"
         />
         <style>

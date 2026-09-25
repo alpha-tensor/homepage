@@ -1,4 +1,8 @@
 :root {
+    /* The marketing page is light-only. Declaring the scheme makes the browser
+     * paint scrollbars, form controls and the canvas light before any CSS runs,
+     * instead of letting an OS dark preference invert them on first paint. */
+    color-scheme: light;
     --bg: #f4f0e8;
     --bg-soft: #ece6dc;
     /* Slightly cooler, desaturated band: reads as neutral environment (systems
@@ -220,7 +224,10 @@ html {
 }
 
 body {
+    /* 100vh is the fallback; browsers that understand dvh drop the second line
+     * and keep the height stable as mobile browser chrome collapses. */
     min-height: 100vh;
+    min-height: 100dvh;
     background: var(--bg);
 }
 
@@ -305,7 +312,12 @@ a {
 .document-container {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--page-gutter);
+    /* Clear the notch and rounded corners on a full-bleed phone. env() resolves
+     * to 0 off an inset display, so the gutter is just --page-gutter. */
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right));
 }
 
 .panel-dark {
@@ -414,7 +426,8 @@ section[id] {
     }
 
     .document-container {
-        padding: 0 var(--space-4);
+        padding-left: max(var(--space-4), env(safe-area-inset-left));
+        padding-right: max(var(--space-4), env(safe-area-inset-right));
     }
 
     h1 {

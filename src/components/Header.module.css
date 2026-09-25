@@ -13,7 +13,12 @@
     width: 100%;
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 var(--page-gutter);
+    /* Mirrors .document-container so the sticky header stays aligned with the
+     * page gutter on a full-bleed phone and clears the notch in landscape. */
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right));
     height: var(--header-height);
     display: flex;
     justify-content: space-between;
