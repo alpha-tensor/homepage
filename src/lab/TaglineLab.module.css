@@ -1,0 +1,735 @@
+/* Standalone hero and tagline experiment. Intent lives in TaglineLab.tsx.
+ *
+ * Everything on this page is local to it. The shared tokens are read, never
+ * written, so the homepage is unaffected by any number here.
+ *
+ * The whole motif is four numbers: pitch, dot, ink, and the mask origin. If a
+ * density level needs a fifth, the level is doing too much. */
+
+.page {
+    /* Outfit carries the display line only. IBM Plex Sans still carries every
+     * other element, so the page reads as this product rather than as a
+     * different one that happens to sell the same thing. */
+    --font-display: "Outfit", "IBM Plex Sans", system-ui, sans-serif;
+
+    --font-sans:
+        "Outfit", "IBM Plex Sans", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono:
+        "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        monospace;
+
+    /* The screen. Same profile as the hero matrix, which is what makes the two
+     * comparable: a solid core with a softer rim, so the dot holds its edge
+     * instead of blurring into a smudge at small sizes.
+     *
+     * The rim fades to zero alpha of its own hue, never to `transparent`.
+     * `transparent` is rgba(0,0,0,0), so interpolating toward it drags the
+     * midpoint toward black and prints a dark ring around every dot. */
+    --lab-pitch: 6px;
+    --lab-dot: 0.6px;
+    --lab-dot-soft: 0.95px;
+    --lab-ink: rgba(16, 21, 34, 0.055);
+    --lab-ink-soft: rgba(16, 21, 34, 0.02);
+    --lab-dot-tile: radial-gradient(
+        circle at center,
+        var(--lab-ink) var(--lab-dot),
+        var(--lab-ink-soft) var(--lab-dot-soft),
+        rgba(16, 21, 34, 0) var(--lab-dot-soft)
+    );
+
+    --movile-page-gutter: 10px;
+
+    /* Three words, three seconds each. The keyframes below hold one word for
+     * exactly a third of this, so the handoff is seamless. */
+    --lab-cycle: 9s;
+
+    /* One source for the bar height. The panel opens below the header with a
+     * matching top offset, so a literal in each place would drift apart the
+     * moment either one changes, silently misaligning the panel. */
+    --lab-header-height: 56px;
+
+    /* One inset for everything that touches a horizontal edge. The bar, the stage
+     * and the full-bleed panel all have to agree, or the panel's links will not
+     * line up with the mark directly above them. Declared once and overridden per
+     * breakpoint, rather than repeated in three rules that can drift apart. */
+    --lab-inset: max(20px, var(--page-gutter));
+
+    /* --- Colour test: the reference's neutral surface ----------------------
+     * Local to this page. The shipped tokens in `index.css` are read, never
+     * written, so the homepage keeps its warm cream while this is judged.
+     *
+     * Two functional consequences of moving from the warm cream to a neutral
+     * grey, neither of which is a matter of taste:
+     *
+     * `--border` is #d9d1c6, which is warm and within two levels of the new grey,
+     * so every hairline on the page would disappear. This is the ink at 16
+     * percent, which composites to a neutral hairline on any surface below it.
+     *
+     * `--text-muted` is #5a6270 and held 5.4:1 on cream. On 217 grey it falls to
+     * 4.3:1, under AA for the 18px lede. This value restores 5.3:1, so the copy
+     * keeps the legibility it had rather than the colour change quietly costing
+     * it. The reference instead sets its body copy at full ink; see the note in
+     * TaglineLab.tsx. */
+    --bg: rgb(217, 217, 217);
+    --text: rgb(31, 31, 31);
+    --border: rgba(31, 31, 31, 0.16);
+    --text-muted: #4d5560;
+
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* Navigation local to the experiment, so the production header is untouched.
+ * The mark sits left of the name on a wide viewport and the lockup centers under
+ * 1000px, because the reference centers its identity on a phone while a desktop
+ * bar reads better with the identity at the leading edge. */
+.labHeader {
+    /* Sticky rather than static: the panel opens below the header, so the close
+     * control has to stay on screen no matter how far the page is scrolled. The
+     * reference holds its identity and menu in a fixed bar for the same reason. */
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    /* Centered on a phone, leading on a desktop. The reference centers its
+     * identity at every width it shows, but a wide bar with the mark floating in
+     * the middle reads as a hero rather than as navigation. */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: var(--lab-header-height);
+    /* The page inset, plus the physical inset so the mark and the close control
+     * clear the notch in landscape. env() resolves to 0 on every display without
+     * an inset, so this box on a desktop is unchanged by construction, not by
+     * measurement. This is the rule the shared gutter already follows. */
+    padding-left: max(var(--lab-inset), env(safe-area-inset-left));
+    padding-right: max(var(--lab-inset), env(safe-area-inset-right));
+    background-color: var(--bg);
+}
+
+.brand {
+    grid-column: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    /* The wordmark is a brand asset, not display type, so it keeps the same face
+     * and weight as the production header. The experiment is the hero scale and
+     * the dot field, and re-setting the logo here would quietly make it a third
+     * variable. Outfit stays on the display line alone. */
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+.brandMark {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    color: var(--accent);
+}
+
+.menu {
+    position: relative;
+    grid-column: 3;
+    justify-self: end;
+}
+
+.menu summary {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--text);
+    cursor: pointer;
+    list-style: none;
+}
+
+.menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.menu summary span,
+.menu summary span::after {
+    display: block;
+    width: 15px;
+    height: 1px;
+    background: var(--bg);
+    content: "";
+    transition: transform 0.2s ease;
+}
+
+.menu summary span::after {
+    transform: translateY(4px);
+}
+
+/* The two bars cross into an X while the panel is open, the way the reference
+ * turns its hamburger into a close control in place rather than moving it. */
+.menu[open] summary span {
+    transform: rotate(45deg);
+}
+
+.menu[open] summary span::after {
+    transform: rotate(-90deg);
+}
+
+.menu summary:focus-visible,
+.menuPanel a:focus-visible {
+    outline: 2px solid var(--accent-bright);
+    outline-offset: 3px;
+}
+
+/* The panel. Opaque and full bleed, so the menu is a mode rather than a dropdown
+ * floating over the page. It starts below the header so the identity and the
+ * close control stay legible on top of it, which is what the reference does. */
+.menuPanel {
+    position: fixed;
+    /* Opens directly under the sticky bar, using the shared height. */
+    inset: var(--lab-header-height) 0 0;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-8);
+    /* The panel is the only element on the page that reaches every screen edge,
+     * so it is the one that has to honour the physical insets: the foot of the
+     * panel has to clear the home-indicator band, and the links have to clear the
+     * notch in landscape. */
+    padding-top: clamp(24px, 6vh, 56px);
+    padding-right: max(var(--lab-inset), env(safe-area-inset-right));
+    padding-bottom: max(clamp(32px, 8vh, 64px), env(safe-area-inset-bottom));
+    padding-left: max(var(--lab-inset), env(safe-area-inset-left));
+    background: var(--surface-strong);
+    overflow-y: auto;
+    /* Containment, not the bounce: an overscroll here must not chain to the
+     * document behind an opaque full-height panel. */
+    overscroll-behavior: contain;
+}
+
+.menu:not([open]) .menuPanel {
+    display: none;
+}
+
+.menuLinks {
+    display: grid;
+    justify-items: start;
+    gap: clamp(2px, 1vh, 10px);
+}
+
+.menuLinks a {
+    font-family: var(--font-display);
+    /* Roughly the reference's 40px menu item at the tablet width it was measured
+     * at, and allowed to grow on a desktop where a full screen panel has room. */
+    font-size: clamp(1.75rem, 5.5vw, 3.25rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+    color: var(--text-on-dark);
+    transition: color 0.15s ease;
+}
+
+.menuLinks a:hover {
+    color: var(--accent-bright);
+}
+
+/* The quiet block at the foot of the panel. The reference puts its address and
+ * contacts here. This carries the proof line instead, because inventing contact
+ * details for a lab route would be copy that has to be maintained twice. */
+.menuNote {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 34ch;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: 1.5;
+    color: var(--text-on-dark-muted);
+}
+
+.menuNoteLabel {
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-on-dark-faint);
+}
+
+/* --- Hero stage ---------------------------------------------------------- */
+
+.stage {
+    position: relative;
+    /* `clip` rather than `hidden`: the field is laid out past the stage box so
+     * it has room to fade, and `hidden` on a non-scroll container would still
+     * create a scroll port on some engines. */
+    overflow: clip;
+    padding-top: clamp(48px, 5px, 132px);
+    padding-bottom: clamp(56px, 13vh, 168px);
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right));
+}
+
+.inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+/* The field. One screen, one mask, no colour and no dark substrate, which is
+ * the entire difference between this and the hero matrix.
+ *
+ * The mask is what stops it reading as a panel. A dot field that terminates on
+ * a straight line is a rectangle with a pattern in it, which is the failure the
+ * hero already paid for once; fading on a radial means the field has no edge to
+ * find. Anchored low and right on a phone so the display type sits on clean
+ * cream, and higher on desktop where the composition is wider than the copy. */
+.field {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: var(--lab-dot-tile);
+    background-size: var(--lab-pitch) var(--lab-pitch);
+    background-position: center top;
+    -webkit-mask-image: radial-gradient(
+        150% 62% at 88% 84%,
+        #000 0%,
+        rgba(0, 0, 0, 0.4) 44%,
+        rgba(0, 0, 0, 0) 70%
+    );
+    mask-image: radial-gradient(
+        150% 62% at 88% 84%,
+        #000 0%,
+        rgba(0, 0, 0, 0.4) 44%,
+        rgba(0, 0, 0, 0) 70%
+    );
+    pointer-events: none;
+}
+
+/* The reference's circular accent, and the one piece of geometry on the page
+ * that is not type or dots. Outlined rather than filled so it stays quieter
+ * than the accent circle on the proof line, which is the one that carries
+ * meaning. Phone viewports drop it: at that width the type needs the whole
+ * column and a floating ring reads as a stray browser artifact. */
+.orbit {
+    display: relative;
+    position: absolute;
+    top: 8%;
+    right: 4%;
+    z-index: 0;
+    width: clamp(72px, 10vw, 132px);
+    aspect-ratio: 1;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: clamp(20px, 4vh, 40px);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* The display line.
+ *
+ * One weight, which is most of why the reference works: the size and the space
+ * carry the hierarchy, so nothing has to be bold. Tracking is negative at
+ * roughly the reference's -0.06em, pulled back slightly because Outfit is
+ * narrower than the reference's grotesque and over-tightening closes the
+ * counters on the lowercase.
+ *
+ * Line height below 1 is what makes the block read as a solid mass rather than
+ * as three separate sentences. */
+.display {
+    margin-bottom: clamp(24px, 4.5vh, 52px);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3.1rem, 13.5vw, 11rem);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    max-width: 15ch;
+}
+
+.line {
+    display: block;
+}
+
+/* The rotating word.
+ *
+ * `inline-grid` and one shared cell is the whole trick: the cell sizes to the
+ * widest word, so the line is laid out once and never reflows as the word
+ * changes. Reserving the width in CSS rather than measuring in JS means the
+ * server and the client render the same box, and nothing shifts on hydration.
+ *
+ * `overflow: hidden` clips the word as it rises, but a clip box at line-height
+ * 0.85 would cut the ascenders and the descenders off. The padding plus the
+ * equal negative margin grows the clip box past the text box without moving
+ * anything, which is what lets the loop be visible and still not overlap the
+ * line above it. */
+.rotator {
+    display: inline-grid;
+    vertical-align: baseline;
+    overflow: hidden;
+    padding: 0.18em 0.06em 0.24em;
+    margin: -0.18em -0.06em -0.24em;
+}
+
+.word {
+    grid-area: 1 / 1;
+    opacity: 0;
+    animation: labWordCycle var(--lab-cycle) infinite;
+}
+
+/* Visible for exactly one third of the cycle, fades inside that third, so the
+ * next word begins fading in as this one finishes fading out. No dead frame
+ * where the line is empty. */
+@keyframes labWordCycle {
+    0% {
+        opacity: 0;
+        transform: translateY(0.55em);
+    }
+    2% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    31.33% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    33.33% {
+        opacity: 0;
+        transform: translateY(-0.55em);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-0.55em);
+    }
+}
+
+/* Reduced motion pins the sentence at its first reading. The other words stay
+ * in the same grid cell at zero opacity, so the reserved width is unchanged
+ * and the line still cannot move. */
+@media (prefers-reduced-motion: reduce) {
+    .word {
+        animation: none;
+    }
+    .word:first-child {
+        opacity: 1;
+    }
+}
+
+.lede {
+    margin-bottom: clamp(28px, 4.5vh, 48px);
+    max-width: 44ch;
+    font-family: var(--font-sans);
+    /* Flat at every width, which is what the reference does: only the display
+     * line scales with the viewport, the supporting copy does not. The leading is
+     * deliberately tight at 1.1 and the tracking is negative, which is what makes
+     * a narrow column read as one block instead of as loose sentences. */
+    font-size: 18px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text-muted);
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: clamp(28px, 5vh, 56px);
+}
+
+/* Buttons are the other half of the sizing question, so this page answers it
+ * rather than inheriting the app default. The site buttons are 40px high at
+ * 0.875rem, which is right inside dense application chrome and light next to
+ * 176px type. These are 52 and 0.9375rem, closer to the reference's weight,
+ * without inventing a new button style: same border, same radius, same two
+ * tiers. If this reads correctly, the change belongs in the button tokens
+ * rather than in a lab stylesheet. */
+.actions :global(.btn) {
+    width: 100%;
+    height: 52px;
+    padding: 0 var(--space-5);
+    font-size: 0.9375rem;
+}
+
+.proof {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    max-width: none;
+    margin-bottom: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+/* The accent circle that carries meaning, as opposed to the decorative ring.
+ * One filled dot, one colour, one size, reused for every label on the page. */
+.mark {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent);
+}
+
+/* --- Density rail ------------------------------------------------------- */
+
+/* The point of the page. Three fields at identical geometry and different ink,
+ * so the only variable under judgement is how loud the motif should be. The
+ * clean swatch is the control: if a field does not beat plain cream, it should
+ * not be on the page at all. */
+.rail {
+    border-top: 1px solid var(--border);
+    padding-top: clamp(40px, 6vh, 72px);
+    padding-bottom: clamp(56px, 8vh, 96px);
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right));
+}
+
+.railInner {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+.railHead {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.swatches {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+}
+
+.swatch {
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+}
+
+.swatchScreen {
+    height: clamp(116px, 16vh, 168px);
+    background-image: var(--lab-dot-tile);
+    background-size: var(--lab-pitch) var(--lab-pitch);
+}
+
+/* Levels differ by ink alone. Overriding `--lab-ink` re-resolves inside
+ * `--lab-dot-tile`, because a custom property is substituted lazily against the
+ * element that uses it, so the tile picks up the local value. */
+.swatchScreen[data-level="clean"] {
+    background-image: none;
+}
+.swatchScreen[data-level="present"] {
+    --lab-ink: rgba(16, 21, 34, 0.11);
+    --lab-ink-soft: rgba(16, 21, 34, 0.04);
+}
+
+.swatchMeta {
+    padding: var(--space-4);
+    border-top: 1px solid var(--border);
+}
+
+.swatchLabel {
+    margin-bottom: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.swatchNote {
+    max-width: none;
+    margin-bottom: 0;
+    font-size: var(--text-small);
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+/* --- Wide viewports ----------------------------------------------------- */
+
+/* The reference uses 75px type, 60px lines and a 10px inset around 754px.
+ * This breakpoint is local to the experiment, not a sitewide header rule. */
+@media (min-width: 600px) and (max-width: 1000px) {
+    .page {
+        --lab-inset: 10px;
+    }
+
+    .stage {
+        padding-top: 60px;
+        padding-bottom: 100px;
+        padding-left: max(var(--lab-inset), env(safe-area-inset-left));
+        padding-right: max(var(--lab-inset), env(safe-area-inset-right));
+    }
+
+    .display {
+        font-size: 75px;
+        line-height: 0.8;
+        letter-spacing: -0.06em;
+        margin-bottom: 56px;
+        max-width: none;
+    }
+
+    .lede {
+        max-width: 38ch;
+    }
+
+    .actions :global(.btn) {
+        height: 32px;
+        padding: 0 14px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 1001px) {
+    .page {
+        /* Reproduces the hero's leading edge exactly: the stage uses the page
+         * gutter, then centres a container-width column inside what is left. The
+         * same expression here means the mark, and the panel below it, line up
+         * with the display line instead of floating at a viewport edge. */
+        --lab-inset: max(
+            var(--page-gutter),
+            calc((100% - var(--container-width)) / 2)
+        );
+    }
+
+    .labHeader {
+        grid-template-columns: 1fr auto;
+    }
+
+    .inner {
+        /* The reference right-aligns its display line at desktop and hangs the
+         * supporting copy off that same right edge in a narrow column, rather
+         * than running the copy under a left-aligned headline. */
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(260px, 24%, 340px);
+        align-items: start;
+    }
+
+    .display {
+        grid-column: 1 / -1;
+        /* Sized against the content width, not the viewport. `13.5vw` looked fine
+         * at 1440, where the longest line happened to equal the container almost
+         * exactly, and wrapped into two lines below it, which left the headline
+         * four lines tall on every common laptop. The gutter is a constant, so a
+         * viewport percentage overstates the room available at smaller widths and
+         * the error grows as the viewport shrinks.
+         *
+         * 7.4 is the advance width of the longest line divided by the font size,
+         * measured at 176px, plus about two percent of headroom. The divisor is
+         * the one thing here that depends on the typeface, so it needs remeasuring
+         * if the display face changes. The subtracted 16px covers the scrollbar,
+         * which `100vw` includes and the container does not.
+         */
+        font-size: clamp(
+            3.1rem,
+            calc((100vw - 2 * var(--page-gutter) - 16px) / 7.4),
+            11rem
+        );
+        /* The rotating word keeps its own reserved width inside an inline-grid,
+         * so the line cannot reflow as the word changes and right alignment stays
+         * put. Right alignment does not disturb that. */
+        text-align: right;
+        margin-bottom: var(--space-8);
+    }
+
+    .aside {
+        grid-column: 2;
+        display: grid;
+        gap: var(--space-3);
+    }
+
+    /* The items carry page-rhythm margins that are far too loose inside a 300px
+     * column. The column gap replaces them. */
+    .aside > * {
+        margin-bottom: 0;
+    }
+
+    /* Long CTA labels do not sit side by side in a column this narrow, and the
+     * reference stacks its own call to action at the tablet width too. */
+    .aside .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Block level so the proof wraps inside the column instead of overflowing it,
+     * with the accent mark pinned to the first line. */
+    .aside .proof {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .brand {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .menu {
+        grid-column: 2;
+    }
+
+    .stage {
+        /* No top padding at desktop. The bar above is in normal flow and already
+         * occupies 56px, so anything more is a gap between the navigation and the
+         * headline rather than breathing room. The reference runs its headline
+         * from 20px down the viewport with the nav overlaid on top; this is the
+         * tightest this page can go without turning the bar into an overlay. */
+        padding-top: 0;
+    }
+}
+
+/* At tablet and up the composition has room for the reference's proportions:
+ * a wider field, the ring, and the copy column held to a readable measure while
+ * the type grows past it. */
+@media (min-width: 720px) {
+    .field {
+        -webkit-mask-image: radial-gradient(
+            112% 88% at 76% 34%,
+            #000 0%,
+            rgba(0, 0, 0, 0.4) 42%,
+            rgba(0, 0, 0, 0) 72%
+        );
+        mask-image: radial-gradient(
+            112% 88% at 76% 34%,
+            #000 0%,
+            rgba(0, 0, 0, 0.4) 42%,
+            rgba(0, 0, 0, 0) 72%
+        );
+    }
+
+    .orbit {
+        display: block;
+    }
+
+    .actions {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .actions :global(.btn) {
+        width: auto;
+    }
+
+    .swatches {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
