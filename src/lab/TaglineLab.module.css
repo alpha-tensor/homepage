@@ -307,25 +307,6 @@
     pointer-events: none;
 }
 
-/* The reference's circular accent, and the one piece of geometry on the page
- * that is not type or dots. Outlined rather than filled so it stays quieter
- * than the accent circle on the proof line, which is the one that carries
- * meaning. Phone viewports drop it: at that width the type needs the whole
- * column and a floating ring reads as a stray browser artifact. */
-.orbit {
-    display: relative;
-    position: absolute;
-    top: 8%;
-    right: 4%;
-    z-index: 0;
-    width: clamp(72px, 10vw, 132px);
-    aspect-ratio: 1;
-    border: 1.5px solid var(--accent);
-    border-radius: 50%;
-    opacity: 0.45;
-    pointer-events: none;
-}
-
 .kicker {
     display: inline-flex;
     align-items: center;
@@ -473,8 +454,7 @@
     color: var(--text-muted);
 }
 
-/* The accent circle that carries meaning, as opposed to the decorative ring.
- * One filled dot, one colour, one size, reused for every label on the page. */
+/* One filled accent dot, reused for every label on the page. */
 .mark {
     flex-shrink: 0;
     width: 8px;
@@ -574,6 +554,11 @@
         --lab-inset: 10px;
     }
 
+    /* Do not stack the quiet dot field under the chromatic matrix. */
+    .field {
+        display: none;
+    }
+
     .stage {
         padding-top: 60px;
         padding-bottom: 100px;
@@ -654,6 +639,7 @@
 
     .aside {
         grid-column: 2;
+        grid-row: 2;
         display: grid;
         gap: var(--space-3);
     }
@@ -687,6 +673,12 @@
         grid-column: 2;
     }
 
+    /* The quiet full-stage field belongs to the mobile study. The separate
+     * chromatic matrix takes its place in the left column on desktop. */
+    .field {
+        display: none;
+    }
+
     .stage {
         /* No top padding at desktop. The bar above is in normal flow and already
          * occupies 56px, so anything more is a gap between the navigation and the
@@ -697,9 +689,7 @@
     }
 }
 
-/* At tablet and up the composition has room for the reference's proportions:
- * a wider field, the ring, and the copy column held to a readable measure while
- * the type grows past it. */
+/* At tablet and up the composition has room for a wider quiet dot field. */
 @media (min-width: 720px) {
     .field {
         -webkit-mask-image: radial-gradient(
@@ -714,10 +704,6 @@
             rgba(0, 0, 0, 0.4) 42%,
             rgba(0, 0, 0, 0) 72%
         );
-    }
-
-    .orbit {
-        display: block;
     }
 
     .actions {

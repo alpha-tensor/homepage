@@ -22,6 +22,8 @@ import { fileURLToPath } from "node:url";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const LAB_PATH = resolve(REPO_ROOT, "src/lab/TaglineLab.module.css");
+const MATRIX_PATH = resolve(REPO_ROOT, "src/lab/LabHeroMatrix.module.css");
+const LAB_COMPONENT_PATH = resolve(REPO_ROOT, "src/lab/TaglineLab.tsx");
 
 /** Comments and whitespace change freely; assertions must not depend on them. */
 const lab = readFileSync(LAB_PATH, "utf8")
@@ -90,6 +92,30 @@ test("the display line is right aligned at desktop only", () => {
     "the desktop breakpoint is where the right alignment belongs. The rotating " +
       "word keeps its reserved width inside an inline-grid, so the line cannot " +
       "reflow and right alignment stays put.",
+  );
+});
+
+test("the desktop matrix sits behind the left headline, not in the CTA row", () => {
+  const matrix = readFileSync(MATRIX_PATH, "utf8");
+  const component = readFileSync(LAB_COMPONENT_PATH, "utf8");
+  const desktop = desktopBlock();
+  assert.match(component, /<LabHeroMatrix \/>/);
+  assert.doesNotMatch(component, /styles\.orbit/);
+  assert.match(matrix, /\.field \{[\s\S]*?position: absolute;/);
+  assert.match(matrix, /inset: 0 auto 0 0/);
+  assert.match(matrix, /width: min\(70%, 940px\)/);
+  assert.doesNotMatch(matrix, /grid-column|grid-row/);
+  assert.match(desktop, /\.aside \{[^}]*grid-column: 2;[^}]*grid-row: 2/);
+  assert.match(desktop, /\.field \{[^}]*display: none/);
+  assert.match(matrix, /\.field \{\s*display: none/);
+  assert.match(matrix, /\.core \{[^}]*opacity: 0\.38/);
+  assert.match(
+    matrix,
+    /@media \(min-width: 600px\) and \(max-width: 1000px\) \{\s*\.field \{[^}]*display: block;[^}]*inset: 0 0 0 auto;/,
+  );
+  assert.match(
+    lab,
+    /@media \(min-width: 600px\) and \(max-width: 1000px\) \{[\s\S]*?\.field \{\s*display: none;/,
   );
 });
 

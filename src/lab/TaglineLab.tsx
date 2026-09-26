@@ -2,17 +2,12 @@ import React from "react";
 import AlphaMark from "../AlphaMark";
 import { landingPageContent } from "../content/landingPage";
 import styles from "./TaglineLab.module.css";
-
+import { LabHeroMatrix } from "./LabHeroMatrix";
 /**
  * Standalone hero and tagline experiment at `/lab/tagline`.
  *
- * This is not the homepage and does not import from it. The homepage hero is a
- * two column composition with the chromatic matrix behind the product evidence,
- * and judging a type scale against that backdrop is hard. This page drops the
- * product composition, the colour fields and the dark substrate, and keeps only
- * the things a tagline decision actually depends on: the display scale, the
- * rotating word, the button size, and a dot field that is far quieter than the
- * hero matrix.
+ * This is not the homepage. The lab keeps its own softer matrix behind the
+ * left side of the desktop headline, away from the CTA, without changing the live hero.
  *
  * Reference: the1.amsterdam. Its character comes from proportions rather than
  * decoration, so those are the parts borrowed.
@@ -26,9 +21,8 @@ import styles from "./TaglineLab.module.css";
  *   - Body copy that does not scale with the viewport. The reference holds it at
  *     flat 18px with 1.1 leading and -0.03em tracking from the phone width up.
  *     Only the display line changes size.
- * The palette stays AlphaTensor's. Nothing here adopts the reference's colours,
- * and the body keeps the muted ink rather than the reference's full-strength
- * near-black, because that is a design-system token and not a type decision.
+ * The neutral grey and near-black are a lab-only colour test. Body copy remains
+ * muted rather than adopting the reference's full-strength ink.
  *
  * The header is local to this page rather than the shared one, because the
  * reference collapses its navigation and the production header does not. The
@@ -171,10 +165,10 @@ export const TaglineLab = (): React.JSX.Element => {
          * the cheap version of the focus management a modal would need. */
         inert={menuOpen}
       >
-        {/* Decorative only. The field carries no information, so it is hidden
-         * from assistive tech rather than described. */}
+        {/* Mobile keeps the quiet dot field. Desktop uses the separate matrix
+         * behind the left side of the headline. Both are purely decorative. */}
         <span className={styles.field} aria-hidden="true" />
-        <span className={styles.orbit} aria-hidden="true" />
+        <LabHeroMatrix />
 
         <div className={styles.inner}>
           <h1

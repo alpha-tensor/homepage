@@ -1,0 +1,141 @@
+/* Lab-only copy of the homepage matrix's chromatic substrate and dot screen.
+ * Static and lower contrast by design. The homepage component stays unchanged. */
+.field {
+    display: none;
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 0;
+    width: min(70%, 940px);
+    pointer-events: none;
+
+    --dot-pitch: 5px;
+    --dot-core: 0.65px;
+    --dot-edge: 0.9px;
+    --screen-rgb: 244, 240, 232;
+    --hero-core: rgb(38, 37, 50);
+    --tone-navy: 80, 70, 124;
+    --tone-violet: 112, 84, 142;
+    --tone-plum: 110, 50, 60;
+    --tone-ember: 206, 90, 4;
+    --tone-orange: 196, 78, 6;
+    --tone-oxblood: 125, 45, 22;
+    --tone-calm: 226, 232, 244;
+    --tone-stack:
+        radial-gradient(
+            74% 58% at 44% 46%,
+            rgba(var(--tone-calm), 0.02),
+            rgba(var(--tone-calm), 0) 100%
+        ),
+        radial-gradient(
+            52% 30% at 86% 96%,
+            rgba(var(--tone-orange), 0.5),
+            rgba(var(--tone-orange), 0) 100%
+        ),
+        radial-gradient(
+            78% 46% at 80% 86%,
+            rgba(var(--tone-ember), 0.2),
+            rgba(var(--tone-ember), 0) 100%
+        ),
+        radial-gradient(
+            56% 30% at 34% 88%,
+            rgba(var(--tone-oxblood), 0.06),
+            rgba(var(--tone-oxblood), 0) 100%
+        ),
+        radial-gradient(
+            84% 64% at 76% 14%,
+            rgba(var(--tone-violet), 0.8),
+            rgba(var(--tone-violet), 0) 100%
+        ),
+        radial-gradient(
+            92% 62% at 62% 58%,
+            rgba(var(--tone-plum), 0.19),
+            rgba(var(--tone-plum), 0) 100%
+        ),
+        radial-gradient(
+            120% 74% at 66% 24%,
+            rgba(var(--tone-navy), 0.2),
+            rgba(var(--tone-navy), 0) 100%
+        );
+    --mass-upper: 44% 24%;
+    --mass-central: 48% 43%;
+    --mass-lower: 38% 69%;
+}
+
+.core,
+.atmosphere {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background-repeat: no-repeat;
+    mask-composite: add;
+}
+
+/* The original dark core would dominate the grey page. Reduce the whole layer,
+ * not just the dots, so the substrate and the screen remain one surface. */
+.core {
+    opacity: 0.38;
+    background-color: var(--hero-core);
+    background-image:
+        radial-gradient(
+            circle,
+            rgba(var(--screen-rgb), 1) var(--dot-core),
+            rgba(var(--screen-rgb), 0.3) var(--dot-edge)
+        ),
+        var(--tone-stack);
+    background-size:
+        var(--dot-pitch) var(--dot-pitch),
+        100% 100%;
+    background-repeat: repeat, no-repeat;
+    mask-image:
+        radial-gradient(
+            ellipse 24% 17% at var(--mass-upper),
+            #000 35%,
+            transparent 100%
+        ),
+        radial-gradient(
+            ellipse 35% 31% at var(--mass-central),
+            #000 35%,
+            transparent 100%
+        ),
+        radial-gradient(
+            ellipse 31% 20% at var(--mass-lower),
+            #000 35%,
+            transparent 100%
+        );
+}
+
+/* Chroma extends past the screen so the edges dissolve into colour, not grey. */
+.atmosphere {
+    opacity: 0.48;
+    background-image: var(--tone-stack);
+    background-size: 100% 100%;
+    mask-image:
+        radial-gradient(
+            ellipse 30% 23% at var(--mass-upper),
+            #000 25%,
+            transparent 100%
+        ),
+        radial-gradient(
+            ellipse 40% 37% at var(--mass-central),
+            #000 25%,
+            transparent 100%
+        ),
+        radial-gradient(
+            ellipse 37% 26% at var(--mass-lower),
+            #000 25%,
+            transparent 100%
+        );
+}
+
+@media (min-width: 600px) and (max-width: 1000px) {
+    .field {
+        display: block;
+        inset: 0 0 0 auto;
+    }
+}
+
+@media (min-width: 1001px) {
+    .field {
+        display: block;
+    }
+}
