@@ -137,5 +137,22 @@
 @media (min-width: 1001px) {
     .field {
         display: block;
+        /* Under the headline, not behind it.
+         *
+         * The desktop display line is right aligned across the full content width and
+         * three lines tall, so it leaves almost nothing clear at its own left edge:
+         * measured at 1554 the glyphs start at x 180 while the content box starts at
+         * 72. A full height field therefore sits under the entire headline, which is
+         * what this used to do. The one clear area on a desktop composition is below
+         * the headline and left of the copy column, so the field starts there.
+         *
+         * Two terms, because the headline does not start at the top of the stage. The
+         * overlay reserves the first term and the display line is three lines at 0.8
+         * leading, so its block is 2.4x the second. 2.6x clears the glyphs with a
+         * little air: measured at 1554 the headline bottom is 504 and this puts the
+         * field top at 540. The display size is the page's own token, so the two
+         * cannot drift apart the way a second literal here would. */
+        top: calc(var(--lab-header-height) + var(--lab-display-size) * 2.6);
+        width: min(62%, 820px);
     }
 }

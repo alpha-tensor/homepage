@@ -10,6 +10,9 @@
  *     the phone layout with it, which is the opposite of what was asked for.
  *   - The body copy does not scale with the viewport. It was a `clamp()` before
  *     this, so nothing in the file resists drifting back to one.
+ *   - The display size is a token on `.page`. The motif below the headline is
+ *     positioned from it, so a literal in the display rule would let the two drift
+ *     and the motif would start at the wrong height on every width.
  *
  * Dependency free: node:test and node:fs only.
  */
@@ -61,8 +64,8 @@ function desktopBlock() {
 test("the desktop display is sized against the content width", () => {
   const block = desktopBlock();
   const size = declaration(
-    block.slice(block.indexOf(".display {")),
-    "font-size",
+    block.slice(block.indexOf(".page {")),
+    "--lab-display-size",
   );
   assert.match(
     size,
@@ -75,6 +78,13 @@ test("the desktop display is sized against the content width", () => {
     size,
     /^clamp\(\s*[\d.]+rem,\s*[\d.]+vw/,
     "a bare vw middle term is the form that wrapped, so it must not come back",
+  );
+  assert.equal(
+    declaration(block.slice(block.indexOf(".display {")), "font-size"),
+    "var(--lab-display-size)",
+    "the display rule has to consume the token rather than repeat the expression. " +
+      "The motif below the headline is placed from this same number, so a second " +
+      "copy of it is a silent misalignment the moment either one is edited.",
   );
 });
 
@@ -95,7 +105,7 @@ test("the display line is right aligned at desktop only", () => {
   );
 });
 
-test("the desktop matrix sits behind the left headline, not in the CTA row", () => {
+test("the desktop matrix sits below the headline, left of the copy column", () => {
   const matrix = readFileSync(MATRIX_PATH, "utf8");
   const component = readFileSync(LAB_COMPONENT_PATH, "utf8");
   const desktop = desktopBlock();
@@ -116,6 +126,16 @@ test("the desktop matrix sits behind the left headline, not in the CTA row", () 
   assert.match(
     lab,
     /@media \(min-width: 600px\) and \(max-width: 1000px\) \{[\s\S]*?\.field \{\s*display: none;/,
+  );
+  /* The desktop placement. A full height field sits under the whole headline,
+   * because the desktop display line is right aligned across the full content width
+   * and three lines tall. The field starts below that block and stays clear of the
+   * copy column, and it takes its top from the same token the display rule uses. */
+  assert.match(
+    matrix,
+    /@media \(min-width: 1001px\) \{\s*\.field \{[^}]*display: block;[^}]*top: calc\(var\(--lab-header-height\) \+ var\(--lab-display-size\) \* 2\.6\);[^}]*width: min\(62%, 820px\);/,
+    "the desktop motif belongs under the headline and left of the copy column, " +
+      "which is the only clear area a full width right aligned headline leaves",
   );
 });
 

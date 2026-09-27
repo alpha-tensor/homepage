@@ -44,10 +44,29 @@
      * exactly a third of this, so the handoff is seamless. */
     --lab-cycle: 9s;
 
-    /* One source for the bar height. The panel opens below the header with a
-     * matching top offset, so a literal in each place would drift apart the
-     * moment either one changes, silently misaligning the panel. */
-    --lab-header-height: 56px;
+    /* The header is an overlay, so it reserves no flow space and the stage has to
+     * leave room for it. This is the overlay's own footprint: its vertical padding
+     * twice, plus the toggle. It becomes the top offset the stage reserves, so a
+     * literal in each place cannot drift apart the moment the toggle changes size.
+     * 50px is a 30px toggle inside 10px of padding and 82px is a 42px toggle inside
+     * 20px; the larger pair applies from the reference's own phone boundary. */
+    --lab-header-height: 50px;
+    --lab-header-pad: 10px;
+
+    /* Menu motion, lifted from the reference. The disc that reveals the panel is the
+     * slow one and the content it uncovers is quicker, so the panel is already
+     * legible by the time the disc finishes travelling. */
+    --lab-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --lab-dur-disc: 820ms;
+    --lab-dur-content: 560ms;
+
+    /* Menu geometry. 40px links rather than the reference's 60px below 1200px,
+     * because these labels are longer than the reference's and two columns of them at
+     * 60px do not fit a tablet. The information column is measured for its two blocks
+     * rather than for the reference's address block. */
+    --lab-link-size: 40px;
+    --lab-info-height: 180px;
+    --lab-row-size: 18px;
 
     /* One inset for everything that touches a horizontal edge. The bar, the stage
      * and the full-bleed panel all have to agree, or the panel's links will not
@@ -81,47 +100,76 @@
 }
 
 /* Navigation local to the experiment, so the production header is untouched.
- * The mark sits left of the name on a wide viewport and the lockup centers under
- * 1000px, because the reference centers its identity on a phone while a desktop
- * bar reads better with the identity at the leading edge. */
+ *
+ * The header is the overlay, not a bar above the page. It is fixed to the viewport
+ * and clipped, so the disc that opens the menu can grow from the toggle past every
+ * screen edge and be cut off cleanly. A bar in normal flow cannot do that, because
+ * the clip would be the bar itself. Everything except the identity and the toggle
+ * passes pointer events through while the panel is closed, so the page below behaves
+ * as if the overlay were not there.
+ *
+ * The shape is lifted from the reference rather than invented: a fixed full viewport
+ * shell, one disc that becomes the menu background, a toggle that inverts so its
+ * cross stays legible over that disc, two columns of large links, and an information
+ * column. The reference centres its identity on a phone; this keeps it at the leading
+ * edge at every width, because centring it under a leading display line reads as a
+ * hero rather than as navigation. */
 .labHeader {
-    /* Sticky rather than static: the panel opens below the header, so the close
-     * control has to stay on screen no matter how far the page is scrolled. The
-     * reference holds its identity and menu in a fixed bar for the same reason. */
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    display: grid;
-    /* Centered on a phone, leading on a desktop. The reference centers its
-     * identity at every width it shows, but a wide bar with the mark floating in
-     * the middle reads as a hero rather than as navigation. */
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    height: var(--lab-header-height);
-    /* The page inset, plus the physical inset so the mark and the close control
-     * clear the notch in landscape. env() resolves to 0 on every display without
-     * an inset, so this box on a desktop is unchanged by construction, not by
-     * measurement. This is the rule the shared gutter already follows. */
-    padding-left: max(var(--lab-inset), env(safe-area-inset-left));
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* The overlay reaches all four screen edges, so it is the one element that has to
+     * honour the physical insets as well as the page inset: the identity must clear
+     * the notch in landscape, and the foot of the panel the home indicator. env()
+     * resolves to 0 on every display without an inset, so the desktop box is set by
+     * the constants alone, by construction rather than by measurement. */
+    padding-top: max(var(--lab-header-pad), env(safe-area-inset-top));
     padding-right: max(var(--lab-inset), env(safe-area-inset-right));
-    background-color: var(--bg);
+    padding-bottom: max(var(--lab-header-pad), env(safe-area-inset-bottom));
+    padding-left: max(var(--lab-inset), env(safe-area-inset-left));
+    /* Clipping is the point of the whole arrangement: the disc scales far past the
+     * viewport and this is what stops that becoming a scrollable overshoot. */
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--text);
+    transition: color var(--lab-dur-content) var(--lab-ease);
 }
 
+.labHeader a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.topbar {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Lifted above the disc. The disc is a later sibling, and without this the growing
+ * circle would paint over the identity on its way across the bar. */
 .brand {
-    grid-column: 2;
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
-    /* The wordmark is a brand asset, not display type, so it keeps the same face
-     * and weight as the production header. The experiment is the hero scale and
-     * the dot field, and re-setting the logo here would quietly make it a third
-     * variable. Outfit stays on the display line alone. */
+    flex: none;
+    /* The wordmark is a brand asset, not display type, so it keeps the same face and
+     * weight as the production header. The experiment is the hero scale and the dot
+     * field, and re-setting the logo here would quietly make it a third variable. */
     font-family: var(--font-sans);
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.02em;
-    color: var(--text);
+    pointer-events: auto;
 }
 
 .brandMark {
@@ -131,128 +179,376 @@
     color: var(--accent);
 }
 
-.menu {
+/* --- The toggle and the disc that becomes the panel ---------------------- */
+
+.menuToggle {
     position: relative;
-    grid-column: 3;
-    justify-self: end;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.menu summary {
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
+.menuToggle:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 50%;
+}
+
+/* The circle that grows to fill the screen. This is the menu background, so it is
+ * always the ink: the panel does not carry one of its own, which is why the panel
+ * can be transparent and still be opaque over the page.
+ *
+ * `--lab-disc-scale` is measured in the component from the toggle to the furthest
+ * viewport corner. The distance depends on where the toggle sits and how large the
+ * display is, so a fixed factor would be either too small on a large monitor or
+ * needlessly slow on a phone. The component owns the number, this rule owns the
+ * motion. */
+.menuBackdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: var(--text);
-    cursor: pointer;
-    list-style: none;
+    transform-origin: 50% 50%;
+    transform: scale(var(--lab-disc-scale, 1));
+    transition: transform var(--lab-dur-disc) var(--lab-ease);
+    pointer-events: none;
+    will-change: transform;
 }
 
-.menu summary::-webkit-details-marker {
-    display: none;
+/* The visible disc, painted over the backdrop. It inverts on open and the two bars
+ * invert with it: an ink disc with paper bars closed, a paper disc with ink bars
+ * open. Without the split the cross would be paper on ink and vanish. */
+.menuDisc {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--text);
+    transition: background var(--lab-dur-content) var(--lab-ease);
 }
 
-.menu summary span,
-.menu summary span::after {
-    display: block;
-    width: 15px;
-    height: 1px;
+.labHeader[data-open="true"] .menuDisc {
     background: var(--bg);
-    content: "";
-    transition: transform 0.2s ease;
 }
 
-.menu summary span::after {
-    transform: translateY(4px);
+.iconBar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 1px;
+    margin: -0.5px 0 0 -12px;
+    background: var(--bg);
+    transform-origin: 50% 50%;
+    transition:
+        transform var(--lab-dur-content) var(--lab-ease),
+        background var(--lab-dur-content) var(--lab-ease);
 }
 
-/* The two bars cross into an X while the panel is open, the way the reference
- * turns its hamburger into a close control in place rather than moving it. */
-.menu[open] summary span {
+.labHeader[data-open="true"] .iconBar {
+    background: var(--text);
+}
+
+/* Two bars offset half a gap either side of the centre, so the closed state is one
+ * line and the open state is a clean cross rather than a skewed X. */
+.iconBar:nth-child(1) {
+    transform: translateY(2.5px);
+}
+
+.iconBar:nth-child(2) {
+    transform: translateY(-2.5px);
+}
+
+.labHeader[data-open="true"] .iconBar:nth-child(1) {
+    transform: rotate(-45deg);
+}
+
+.labHeader[data-open="true"] .iconBar:nth-child(2) {
     transform: rotate(45deg);
 }
 
-.menu[open] summary span::after {
-    transform: rotate(-90deg);
+/* --- The panel ---------------------------------------------------------- */
+
+.navigation {
+    position: relative;
+    display: flex;
+    /* Only the panel shrinks. The topbar keeps its height, so the toggle cannot be
+     * squeezed by a tall panel on a short viewport. */
+    flex: 1 1 auto;
+    /* A flex item will not shrink below its content without this, and without the
+     * shrink the panel cannot scroll on a short landscape viewport. */
+    min-height: 0;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    column-gap: 40px;
+    row-gap: 30px;
+    width: 100%;
+    padding-bottom: 0;
+    /* Its own colour rather than the header's: the panel is only ever visible over
+     * the dark disc, and the header's own flip is delayed to spare the identity while
+     * the disc is still travelling. */
+    color: var(--bg);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow-y: auto;
+    /* Containment, not the bounce: an overscroll inside an opaque full height panel
+     * must not chain to the document behind it. */
+    overscroll-behavior: contain;
+    transition:
+        opacity var(--lab-dur-content) var(--lab-ease),
+        visibility 0s linear var(--lab-dur-content);
 }
 
-.menu summary:focus-visible,
-.menuPanel a:focus-visible {
+.labHeader[data-open="true"] {
+    color: var(--bg);
+    pointer-events: auto;
+}
+
+.labHeader[data-open="true"] .navigation {
+    padding-bottom: 40px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+        opacity var(--lab-dur-content) var(--lab-ease) 120ms,
+        visibility 0s,
+        padding-bottom var(--lab-dur-disc) var(--lab-ease);
+}
+
+/* Two columns of links. `width: max-content` lets the pair state their own width, so
+ * the information column can drop to its own line when the two do not fit side by
+ * side, which is the only reason this wraps at all. */
+.navColumns {
+    display: flex;
+    flex: none;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 80px;
+    width: max-content;
+}
+
+.navList {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    width: min-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* The spacer that lifts the links as the panel opens: 50px collapsing to 1px. This is
+ * what makes a column rise into place rather than simply fade, and it is the one
+ * piece of menu motion the reference is actually built around. */
+.navList::before {
+    content: "";
+    display: block;
+    flex: none;
+    width: 100%;
+    height: 50px;
+    transition: height var(--lab-dur-disc) var(--lab-ease);
+}
+
+.labHeader[data-open="true"] .navList::before {
+    height: 1px;
+}
+
+.navList a {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--lab-link-size);
+    font-weight: 400;
+    line-height: 1em;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+    transition:
+        opacity 240ms var(--lab-ease),
+        transform 240ms var(--lab-ease);
+}
+
+.navList a:hover,
+.navList a:focus-visible {
+    opacity: 0.55;
+    transform: translateX(6px);
+}
+
+.navList a:focus-visible,
+.contactLink:focus-visible {
     outline: 2px solid var(--accent-bright);
     outline-offset: 3px;
 }
 
-/* The panel. Opaque and full bleed, so the menu is a mode rather than a dropdown
- * floating over the page. It starts below the header so the identity and the
- * close control stay legible on top of it, which is what the reference does. */
-.menuPanel {
-    position: fixed;
-    /* Opens directly under the sticky bar, using the shared height. */
-    inset: var(--lab-header-height) 0 0;
-    z-index: 4;
+/* --- The information column -------------------------------------------- */
+
+.footerInfo {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    width: 260px;
+    height: var(--lab-info-height);
+    padding-top: 20px;
+}
+
+.footerInfo section {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: var(--space-8);
-    /* The panel is the only element on the page that reaches every screen edge,
-     * so it is the one that has to honour the physical insets: the foot of the
-     * panel has to clear the home-indicator band, and the links have to clear the
-     * notch in landscape. */
-    padding-top: clamp(24px, 6vh, 56px);
-    padding-right: max(var(--lab-inset), env(safe-area-inset-right));
-    padding-bottom: max(clamp(32px, 8vh, 64px), env(safe-area-inset-bottom));
-    padding-left: max(var(--lab-inset), env(safe-area-inset-left));
-    background: var(--surface-strong);
-    overflow-y: auto;
-    /* Containment, not the bounce: an overscroll here must not chain to the
-     * document behind an opaque full-height panel. */
-    overscroll-behavior: contain;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    margin: 0;
 }
 
-.menu:not([open]) .menuPanel {
-    display: none;
+.infoLabel {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--lab-row-size);
+    font-weight: 600;
+    line-height: 1em;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
 }
 
-.menuLinks {
-    display: grid;
-    justify-items: start;
-    gap: clamp(2px, 1vh, 10px);
+/* The proof line wraps, so it is the one thing in the column that is not measured to
+ * its content. A measure keeps it readable inside a column sized by the labels. */
+.infoValue {
+    margin: 0;
+    font-size: var(--lab-row-size);
+    line-height: 1.15em;
+    letter-spacing: -0.03em;
 }
 
-.menuLinks a {
-    font-family: var(--font-display);
-    /* Roughly the reference's 40px menu item at the tablet width it was measured
-     * at, and allowed to grow on a desktop where a full screen panel has room. */
-    font-size: clamp(1.75rem, 5.5vw, 3.25rem);
-    font-weight: 400;
-    line-height: 1.12;
-    letter-spacing: -0.045em;
-    color: var(--text-on-dark);
-    transition: color 0.15s ease;
+.contactList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.menuLinks a:hover {
-    color: var(--accent-bright);
+/* A contact row is an overflow window with a 15px slide that reveals the dot. The
+ * window is max-content so it can never clip the label, and the inner sits in normal
+ * flow with a -15px margin so its max-content feeds the window while the dot is what
+ * falls outside it. */
+.contactLink {
+    position: relative;
+    display: block;
+    width: max-content;
+    min-height: 18px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-/* The quiet block at the foot of the panel. The reference puts its address and
- * contacts here. This carries the proof line instead, because inventing contact
- * details for a lab route would be copy that has to be maintained twice. */
-.menuNote {
-    display: grid;
-    gap: var(--space-2);
-    max-width: 34ch;
-    font-family: var(--font-mono);
-    font-size: var(--text-micro);
-    line-height: 1.5;
-    color: var(--text-on-dark-muted);
+.contactLinkInner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: -15px;
+    transition: margin-left 320ms var(--lab-ease);
 }
 
-.menuNoteLabel {
-    font-size: 0.6875rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-on-dark-faint);
+.contactLink:hover .contactLinkInner,
+.contactLink:focus-visible .contactLinkInner {
+    margin-left: 0;
+}
+
+.contactLinkDot {
+    flex: none;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* Phone. Same structure, tighter. The link size is smaller than the reference's 44px
+ * because these labels are longer than the reference's: at 44px the longest of them
+ * overflows a 600px viewport once the two columns are side by side. */
+@media (max-width: 809px) {
+    .page {
+        --lab-row-size: 16px;
+    }
+
+    .menuToggle {
+        width: 30px;
+        height: 30px;
+    }
+
+    .menuBackdrop,
+    .menuDisc {
+        width: 30px;
+        height: 30px;
+    }
+
+    .iconBar {
+        width: 20px;
+        margin-left: -10px;
+    }
+
+    .navigation {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 30px;
+        padding: 15px 0 20px;
+    }
+
+    /* Stacked rather than side by side: at this width two columns of links would
+     * either overflow or force the type below its floor. */
+    .navColumns {
+        flex-direction: column;
+        gap: 5px;
+        width: auto;
+    }
+
+    .navList {
+        gap: 5px;
+    }
+
+    .navList::before {
+        height: 0;
+    }
+
+    .footerInfo {
+        gap: 24px;
+        width: 100%;
+        height: auto;
+        padding-top: 10px;
+    }
+}
+
+/* A full screen panel on a wide viewport has room for the reference's link size,
+ * which is what the panel is actually for. */
+@media (min-width: 1200px) {
+    .page {
+        --lab-link-size: 60px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Scoped to the page and written as a blanket because the alternatives are lost
+     * to specificity: the open state sets its transitions on selectors like
+     * `.labHeader[data-open="true"] .navigation`, and an override has to beat those. */
+    .page *,
+    .page *::before,
+    .page *::after {
+        transition-duration: 1ms !important;
+        transition-delay: 0ms !important;
+    }
 }
 
 /* --- Hero stage ---------------------------------------------------------- */
@@ -263,7 +559,10 @@
      * it has room to fade, and `hidden` on a non-scroll container would still
      * create a scroll port on some engines. */
     overflow: clip;
-    padding-top: clamp(48px, 5px, 132px);
+    /* The overlay sits over the top of the page, so the stage reserves its footprint
+     * plus the hero's own breathing room. 54px is the gap this had before the bar
+     * became an overlay, so the hero does not move at this width. */
+    padding-top: calc(var(--lab-header-height) + 54px);
     padding-bottom: clamp(56px, 13vh, 168px);
     padding-left: max(var(--page-gutter), env(safe-area-inset-left));
     padding-right: max(var(--page-gutter), env(safe-area-inset-right));
@@ -560,7 +859,10 @@
     }
 
     .stage {
-        padding-top: 60px;
+        /* 66px of breathing room rather than 54px: this band keeps the reference's
+         * looser tablet spacing. At 810px the overlay grows and the rule below takes
+         * over, so the hero stays at the same distance from the viewport top. */
+        padding-top: calc(var(--lab-header-height) + 66px);
         padding-bottom: 100px;
         padding-left: max(var(--lab-inset), env(safe-area-inset-left));
         padding-right: max(var(--lab-inset), env(safe-area-inset-right));
@@ -585,6 +887,21 @@
     }
 }
 
+/* The overlay switches to its larger toggle here, which is the reference's own phone
+ * boundary. The footprint it reserves and the stage's compensation are declared
+ * together, so the hero lands at the same distance from the viewport top either side
+ * of the change. */
+@media (min-width: 810px) {
+    .page {
+        --lab-header-height: 82px;
+        --lab-header-pad: 20px;
+    }
+
+    .stage {
+        padding-top: calc(var(--lab-header-height) + 34px);
+    }
+}
+
 @media (min-width: 1001px) {
     .page {
         /* Reproduces the hero's leading edge exactly: the stage uses the page
@@ -594,6 +911,31 @@
         --lab-inset: max(
             var(--page-gutter),
             calc((100% - var(--container-width)) / 2)
+        );
+
+        /* The display size, declared once.
+         *
+         * Sized against the content width, not the viewport. `13.5vw` looked fine at
+         * 1440, where the longest line happened to equal the container almost exactly,
+         * and wrapped into two lines below it, which left the headline four lines tall
+         * on every common laptop. The gutter is a constant, so a viewport percentage
+         * overstates the room available at smaller widths and the error grows as the
+         * viewport shrinks.
+         *
+         * 7.4 is the advance width of the longest line divided by the font size,
+         * measured at 176px, plus about two percent of headroom. The divisor is the one
+         * thing here that depends on the typeface, so it needs remeasuring if the
+         * display face changes. The subtracted 16px covers the scrollbar, which `100vw`
+         * includes and the container does not.
+         *
+         * It is a token rather than a literal in the display rule because the motif
+         * below the headline has to know where the headline ends: three lines at 0.8
+         * leading make that block 2.4x this value tall, and a second copy of this
+         * expression in the matrix rule would drift apart from this one. */
+        --lab-display-size: clamp(
+            3.1rem,
+            calc((100vw - 2 * var(--page-gutter) - 16px) / 7.4),
+            11rem
         );
     }
 
@@ -612,24 +954,9 @@
 
     .display {
         grid-column: 1 / -1;
-        /* Sized against the content width, not the viewport. `13.5vw` looked fine
-         * at 1440, where the longest line happened to equal the container almost
-         * exactly, and wrapped into two lines below it, which left the headline
-         * four lines tall on every common laptop. The gutter is a constant, so a
-         * viewport percentage overstates the room available at smaller widths and
-         * the error grows as the viewport shrinks.
-         *
-         * 7.4 is the advance width of the longest line divided by the font size,
-         * measured at 176px, plus about two percent of headroom. The divisor is
-         * the one thing here that depends on the typeface, so it needs remeasuring
-         * if the display face changes. The subtracted 16px covers the scrollbar,
-         * which `100vw` includes and the container does not.
-         */
-        font-size: clamp(
-            3.1rem,
-            calc((100vw - 2 * var(--page-gutter) - 16px) / 7.4),
-            11rem
-        );
+        /* Declared on `.page`. See the note there for why the divisor is 7.4 and why
+         * this is a token rather than a literal. */
+        font-size: var(--lab-display-size);
         /* The rotating word keeps its own reserved width inside an inline-grid,
          * so the line cannot reflow as the word changes and right alignment stays
          * put. Right alignment does not disturb that. */
@@ -680,12 +1007,11 @@
     }
 
     .stage {
-        /* No top padding at desktop. The bar above is in normal flow and already
-         * occupies 56px, so anything more is a gap between the navigation and the
-         * headline rather than breathing room. The reference runs its headline
-         * from 20px down the viewport with the nav overlaid on top; this is the
-         * tightest this page can go without turning the bar into an overlay. */
-        padding-top: 0;
+        /* No padding of its own at desktop: the overlay already reserves 82px, which
+         * is below the toggle and below the identity. The headline therefore starts
+         * exactly where the bar's footprint ends, which is the tightest this page can
+         * go while the brand and the headline share the top band without colliding. */
+        padding-top: var(--lab-header-height);
     }
 }
 

@@ -1,8 +1,11 @@
 import React from "react";
 import AlphaMark from "../AlphaMark";
-import { landingPageContent } from "../content/landingPage";
+import { DEMO_URL, landingPageContent } from "../content/landingPage";
 import styles from "./TaglineLab.module.css";
 import { LabHeroMatrix } from "./LabHeroMatrix";
+
+/** The panel is referenced by the toggle, so the id has exactly one definition. */
+const NAV_ID = "lab-tagline-nav";
 /**
  * Standalone hero and tagline experiment at `/lab/tagline`.
  *
@@ -25,11 +28,11 @@ import { LabHeroMatrix } from "./LabHeroMatrix";
  * muted rather than adopting the reference's full-strength ink.
  *
  * The header is local to this page rather than the shared one, because the
- * reference collapses its navigation and the production header does not. The
- * mark keeps the production face and weight: a wordmark is a brand asset, and
- * re-setting it here would add a third variable to an experiment about display
- * scale and dot density. It centres on a narrow viewport and leads on a wide
- * one, where a mid-bar identity reads as a hero rather than as navigation.
+ * reference opens its navigation as a disc that grows from the toggle to fill the
+ * screen and the production header does not. The fixed overlay, the inverting
+ * toggle and the two column panel are that arrangement, ported. The mark keeps the
+ * production face and weight: a wordmark is a brand asset, and re-setting it here
+ * would add a third variable to an experiment about display scale and dot density.
  *
  * The rotating word. A word that changes every few seconds only works if the
  * line does not move, so the words share a single grid cell and the cell sizes
@@ -87,10 +90,43 @@ const DENSITY: DensityLevel[] = [
 
 export const TaglineLab = (): React.JSX.Element => {
   /* The menu is a full screen panel, so background scrolling has to stop while it
-   * is open or the page slides around behind a fixed layer. `<details>` keeps the
-   * disclosure semantics; React only mirrors the open state so the scroll lock
-   * and the Escape key have something to act on. */
+   * is open or the page slides around behind a fixed layer. The overlay is inert
+   * until it is open, so the closed state costs the page nothing but the identity
+   * and the toggle. */
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const toggleRef = React.useRef<HTMLButtonElement>(null);
+  const backdropRef = React.useRef<HTMLSpanElement>(null);
+
+  /* The disc that becomes the menu background has to reach the furthest corner of
+   * the viewport from wherever the toggle sits. That distance depends on the display
+   * size, so it is measured rather than hardcoded: a fixed factor is either too
+   * small on a large monitor or needlessly slow on a phone. */
+  const measureDisc = React.useCallback(() => {
+    const toggle = toggleRef.current;
+    const backdrop = backdropRef.current;
+    if (!toggle || !backdrop) return;
+    const rect = toggle.getBoundingClientRect();
+    const centreX = rect.left + rect.width / 2;
+    const centreY = rect.top + rect.height / 2;
+    /* offsetWidth rather than the rect: the disc is scaled while open, and reading
+     * the transformed box would compound the factor on every reopen. */
+    const size = backdrop.offsetWidth || rect.width;
+    const corners: Array<[number, number]> = [
+      [0, 0],
+      [window.innerWidth, 0],
+      [0, window.innerHeight],
+      [window.innerWidth, window.innerHeight],
+    ];
+    let furthest = 0;
+    for (const [x, y] of corners) {
+      furthest = Math.max(furthest, Math.hypot(x - centreX, y - centreY));
+    }
+    backdrop.style.setProperty(
+      "--lab-disc-scale",
+      (((furthest * 2) / size) * 1.06).toFixed(3),
+    );
+  }, []);
 
   React.useEffect(() => {
     document.documentElement.style.overflow = menuOpen ? "hidden" : "";
@@ -99,62 +135,141 @@ export const TaglineLab = (): React.JSX.Element => {
     };
   }, [menuOpen]);
 
+  React.useEffect(() => {
+    if (menuOpen) {
+      measureDisc();
+      return;
+    }
+    backdropRef.current?.style.setProperty("--lab-disc-scale", "1");
+  }, [menuOpen, measureDisc]);
+
+  /* A rotation or a resize while the panel is open changes the furthest corner, so
+   * the factor has to be re-measured rather than left at whatever it was on open. */
+  React.useEffect(() => {
+    if (!menuOpen) return;
+    const onResize = () => measureDisc();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [menuOpen, measureDisc]);
+
+  React.useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <article className={styles.page}>
-      <header className={styles.labHeader}>
-        <a className={styles.brand} href="/" aria-label="AlphaTensor home">
-          <AlphaMark className={styles.brandMark} />
-          <span>AlphaTensor</span>
-        </a>
-        <details
-          className={styles.menu}
-          open={menuOpen}
-          onToggle={(event) => setMenuOpen(event.currentTarget.open)}
-          onKeyDown={(event) => {
-            if (event.key === "Escape" && menuOpen) {
-              closeMenu();
-              event.currentTarget.querySelector("summary")?.focus();
-            }
-          }}
+      <header
+        className={styles.labHeader}
+        data-open={menuOpen ? "true" : "false"}
+      >
+        <div className={styles.topbar}>
+          <a className={styles.brand} href="/" aria-label="AlphaTensor home">
+            <AlphaMark className={styles.brandMark} />
+            <span>AlphaTensor</span>
+          </a>
+
+          <button
+            type="button"
+            className={styles.menuToggle}
+            ref={toggleRef}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls={NAV_ID}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span
+              className={styles.menuBackdrop}
+              ref={backdropRef}
+              aria-hidden="true"
+            />
+            <span className={styles.menuDisc} aria-hidden="true">
+              <span className={styles.iconBar} />
+              <span className={styles.iconBar} />
+            </span>
+          </button>
+        </div>
+
+        <nav
+          className={styles.navigation}
+          id={NAV_ID}
+          aria-label="Experiment navigation"
         >
-          <summary aria-label="Toggle navigation menu">
-            <span aria-hidden="true" />
-          </summary>
-          <div className={styles.menuPanel}>
-            <nav
-              className={styles.menuLinks}
-              aria-label="Experiment navigation"
-            >
-              <a href="/" onClick={closeMenu}>
-                Home
-              </a>
-              <a href="/#product" onClick={closeMenu}>
-                Product
-              </a>
-              <a href="/#how-it-works" onClick={closeMenu}>
-                How it works
-              </a>
-              <a href="/lab" onClick={closeMenu}>
-                Document lab
-              </a>
-              <a href="#density" onClick={closeMenu}>
-                Compare the motif
-              </a>
-              <a
-                href={landingPageContent.finalCta.primaryHref}
-                onClick={closeMenu}
-              >
-                Get in touch
-              </a>
-            </nav>
-            <p className={styles.menuNote}>
-              <span className={styles.menuNoteLabel}>Currently</span>
-              {landingPageContent.hero.proof}
-            </p>
+          <div className={styles.navColumns}>
+            <ul className={styles.navList}>
+              <li>
+                <a href="/" onClick={closeMenu}>
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/#product" onClick={closeMenu}>
+                  Product
+                </a>
+              </li>
+              <li>
+                <a href="/#how-it-works" onClick={closeMenu}>
+                  How it works
+                </a>
+              </li>
+            </ul>
+            <ul className={styles.navList}>
+              <li>
+                <a href="/lab" onClick={closeMenu}>
+                  Document lab
+                </a>
+              </li>
+              <li>
+                <a href="#density" onClick={closeMenu}>
+                  Compare the motif
+                </a>
+              </li>
+              <li>
+                <a
+                  href={landingPageContent.finalCta.primaryHref}
+                  onClick={closeMenu}
+                >
+                  Get in touch
+                </a>
+              </li>
+            </ul>
           </div>
-        </details>
+
+          {/* The reference puts an address and a contact list here. This carries the
+           * proof line and the demo link instead, because inventing an address for a
+           * lab route would be copy that has to be maintained twice. */}
+          <div className={styles.footerInfo}>
+            <section>
+              <p className={styles.infoLabel}>Currently</p>
+              <p className={styles.infoValue}>
+                {landingPageContent.hero.proof}
+              </p>
+            </section>
+            <section>
+              <p className={styles.infoLabel}>Contact</p>
+              <div className={styles.contactList}>
+                <a className={styles.contactLink} href={DEMO_URL}>
+                  <span className={styles.contactLinkInner}>
+                    <span
+                      className={styles.contactLinkDot}
+                      aria-hidden="true"
+                    />
+                    <span>Book a demo</span>
+                  </span>
+                </a>
+              </div>
+            </section>
+          </div>
+        </nav>
       </header>
       <section
         className={styles.stage}
@@ -165,8 +280,8 @@ export const TaglineLab = (): React.JSX.Element => {
          * the cheap version of the focus management a modal would need. */
         inert={menuOpen}
       >
-        {/* Mobile keeps the quiet dot field. Desktop uses the separate matrix
-         * behind the left side of the headline. Both are purely decorative. */}
+        {/* Mobile keeps the quiet dot field. Desktop uses the separate matrix below
+         * the headline, clear of the glyphs. Both are purely decorative. */}
         <span className={styles.field} aria-hidden="true" />
         <LabHeroMatrix />
 

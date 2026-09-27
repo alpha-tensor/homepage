@@ -10,8 +10,11 @@
  * Two of these have already been lost once. The lab page shipped with a header
  * and a full-bleed panel that carried no safe-area inset, and with the panel
  * inset at the page gutter while the header sat at the tablet inset, so the menu
- * content did not line up with the mark above it. Neither showed up on a desktop
- * because `env()` resolves to 0 there.
+ * content did not line up with the mark above it. The lab header is now a full
+ * viewport overlay rather than a bar with a panel below it, which moves the problem
+ * rather than removing it: the overlay touches all four screen edges, so all four
+ * have to honour the physical inset. None of it shows up on a desktop, because
+ * `env()` resolves to 0 there.
  *
  * These are static invariants against the real stylesheets and the real document,
  * not visual regressions. They cannot tell you the insets look right on a notched
@@ -143,28 +146,31 @@ test("the page gutter and the sticky bar agree, and both clear the notch", () =>
 });
 
 test("every edge-touching rule on the lab page honours the insets", () => {
-  for (const selector of [".labHeader", ".menuPanel"]) {
-    const rule = ruleFor(lab, selector);
+  /* The overlay is fixed to the viewport and reaches every screen edge, so all four
+   * of its paddings are the ones that have to clear the physical inset. */
+  for (const [property, inset] of [
+    ["padding-top", "safe-area-inset-top"],
+    ["padding-right", "safe-area-inset-right"],
+    ["padding-bottom", "safe-area-inset-bottom"],
+    ["padding-left", "safe-area-inset-left"],
+  ]) {
     assertInset(
-      rule,
-      "padding-left",
-      "safe-area-inset-left",
-      `${selector} reaches the left edge, so it must clear the notch in landscape`,
-    );
-    assertInset(
-      rule,
-      "padding-right",
-      "safe-area-inset-right",
-      `${selector} reaches the right edge, so it must clear the notch in landscape`,
+      ruleFor(lab, ".labHeader"),
+      property,
+      inset,
+      `.labHeader reaches every edge, so its ${property} must clear the ${inset} ` +
+        "band as well as the page inset",
     );
   }
 
-  assertInset(
-    ruleFor(lab, ".menuPanel"),
-    "padding-bottom",
-    "safe-area-inset-bottom",
-    "the panel is full height, so its last link and its note sit in the " +
-      "home-indicator band without this",
+  /* The panel sits inside the overlay and inherits that padding, so it must not add
+   * any of its own while closed: two insets on the same edge stack. Its own
+   * padding-bottom is the one it gains on open, inside the header's. */
+  assert.equal(
+    declaration(ruleFor(lab, ".navigation"), "padding-bottom"),
+    "0",
+    "the panel must add no padding of its own while closed, or the header's inset " +
+      "and this one would stack and the panel would open short of the fold",
   );
 });
 
@@ -175,7 +181,7 @@ test("the lab page declares one inset, so its edges cannot drift apart", () => {
     "the bar, the stage and the panel all touch a horizontal edge. Declaring the " +
       "inset once is what keeps the panel's content under the mark above it.",
   );
-  for (const selector of [".labHeader", ".menuPanel"]) {
+  for (const selector of [".labHeader"]) {
     assert.match(
       ruleFor(lab, selector),
       /padding-(left|right): max\(var\(--lab-inset\)/,
@@ -185,16 +191,35 @@ test("the lab page declares one inset, so its edges cannot drift apart", () => {
   }
 });
 
-test("the bar and the panel share one height", () => {
+test("the overlay's footprint and the stage's reservation cannot drift apart", () => {
   assert.match(
     ruleFor(lab, ".page"),
-    /--lab-header-height: 56px;/,
-    "the panel opens directly below the bar using a matching top offset",
+    /--lab-header-height: 50px;/,
+    "the overlay reserves no flow space, so the stage has to reserve its footprint. " +
+      "The footprint is the sum of the overlay's vertical padding and the toggle, and " +
+      "a literal in the stage rule would stop matching the moment either changed.",
   );
   assert.match(
-    ruleFor(lab, ".menuPanel"),
-    /inset: var\(--lab-header-height\) 0 0;/,
-    "a literal here would silently misalign the panel the moment the bar changes",
+    ruleFor(lab, ".stage"),
+    /padding-top: calc\(var\(--lab-header-height\) \+ 54px\);/,
+    "the stage is what holds the hero clear of the overlay",
+  );
+  assert.match(
+    lab,
+    /@media \(min-width: 810px\) \{[\s\S]*?--lab-header-height: 82px;/,
+    "the overlay switches to its larger toggle at the reference's phone boundary, " +
+      "so the footprint it reserves has to grow with it",
+  );
+  assert.match(
+    lab,
+    /@media \(min-width: 810px\) \{[\s\S]*?\.stage \{\s*padding-top: calc\(var\(--lab-header-height\) \+ 34px\);/,
+    "the stage compensates for the larger overlay, so the hero lands at the same " +
+      "distance from the viewport top either side of the change",
+  );
+  assert.match(
+    lab,
+    /@media \(min-width: 1001px\) \{[\s\S]*?\.stage \{[^}]*padding-top: var\(--lab-header-height\);/,
+    "at desktop the headline starts exactly where the overlay's footprint ends",
   );
 });
 
@@ -226,7 +251,7 @@ test("scroll containment is scoped to the overlay that needs it", () => {
       "which on this site is the full-height menu panel",
   );
   assert.match(
-    ruleFor(lab, ".menuPanel"),
+    ruleFor(lab, ".navigation"),
     /overscroll-behavior: contain;/,
     "the panel is opaque and full height, so its scroll must not chain to the " +
       "document behind it",
