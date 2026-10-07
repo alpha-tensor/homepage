@@ -3,6 +3,7 @@ import AlphaMark from "../AlphaMark";
 import { DEMO_URL, landingPageContent } from "../content/landingPage";
 import styles from "./TaglineLab.module.css";
 import { LabHeroMatrix } from "./LabHeroMatrix";
+import { ProcessAccordion } from "./ProcessAccordion";
 
 /** The panel is referenced by the toggle, so the id has exactly one definition. */
 const NAV_ID = "lab-tagline-nav";
@@ -271,106 +272,107 @@ export const TaglineLab = (): React.JSX.Element => {
           </div>
         </nav>
       </header>
-      <section
-        className={styles.stage}
-        aria-labelledby="lab-headline"
-        /* The panel is opaque and full bleed, so anything under it is both
-         * unreachable and unreadable. `inert` takes the covered content out of
-         * the tab order and the accessibility tree in one attribute, which is
-         * the cheap version of the focus management a modal would need. */
-        inert={menuOpen}
-      >
-        {/* Mobile keeps the quiet dot field. Desktop uses the separate matrix below
-         * the headline, clear of the glyphs. Both are purely decorative. */}
-        <span className={styles.field} aria-hidden="true" />
-        <LabHeroMatrix />
+      {/* Everything under the overlay, in one inert wrapper. The menu panel is opaque
+       * and full bleed, so anything behind it is both unreachable and unreadable.
+       * `inert` takes the covered content out of the tab order and the accessibility
+       * tree in one attribute, and wrapping all of it once means a new section cannot
+       * be added and quietly left focusable behind an open menu. */}
+      <div inert={menuOpen}>
+        <section className={styles.stage} aria-labelledby="lab-headline">
+          {/* Mobile keeps the quiet dot field. Desktop uses the separate matrix below
+           * the headline, clear of the glyphs. Both are purely decorative. */}
+          <span className={styles.field} aria-hidden="true" />
+          <LabHeroMatrix />
 
-        <div className={styles.inner}>
-          <h1
-            className={styles.display}
-            id="lab-headline"
-            aria-label="From documents to clarity, action, or progress"
-          >
-            <span className={styles.line} aria-hidden="true">
-              From documents
-            </span>
-            <span className={styles.line} aria-hidden="true">
-              to
-            </span>
-            <span className={styles.line} aria-hidden="true">
-              <span className={styles.rotator}>
-                {ROTATING.map((word, index) => (
-                  <span
-                    key={word}
-                    className={styles.word}
-                    style={{
-                      animationDelay: `${index * WORD_SECONDS}s`,
-                    }}
-                  >
-                    {word}
-                  </span>
-                ))}
+          <div className={styles.inner}>
+            <h1
+              className={styles.display}
+              id="lab-headline"
+              aria-label="From documents to clarity, action, or progress"
+            >
+              <span className={styles.line} aria-hidden="true">
+                From documents
               </span>
-            </span>
-          </h1>
+              <span className={styles.line} aria-hidden="true">
+                to
+              </span>
+              <span className={styles.line} aria-hidden="true">
+                <span className={styles.rotator}>
+                  {ROTATING.map((word, index) => (
+                    <span
+                      key={word}
+                      className={styles.word}
+                      style={{
+                        animationDelay: `${index * WORD_SECONDS}s`,
+                      }}
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </span>
+              </span>
+            </h1>
 
-          <div className={styles.aside}>
-            <p className={styles.lede}>
-              Alpha Tensor turns a folder of documents into structured case
-              data, clear requirements, and the next action your team can take.
-            </p>
+            <div className={styles.aside}>
+              <p className={styles.lede}>
+                Alpha Tensor turns a folder of documents into structured case
+                data, clear requirements, and the next action your team can
+                take.
+              </p>
 
-            <div className={styles.actions}>
-              <a
-                className="btn btn-primary"
-                href={landingPageContent.finalCta.primaryHref}
-              >
-                {landingPageContent.hero.primaryCta}
-              </a>
-              <a className="btn btn-outline" href="#density">
-                Compare the motif
-              </a>
-            </div>
-
-            <p className={styles.proof}>
-              <span className={styles.mark} aria-hidden="true" />
-              {landingPageContent.hero.proof}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className={styles.rail}
-        id="density"
-        aria-labelledby="density-heading"
-        inert={menuOpen}
-      >
-        <div className={styles.railInner}>
-          <h2 className={styles.railHead} id="density-heading">
-            <span className={styles.mark} aria-hidden="true" />
-            Motif density, 6px pitch, identical geometry
-          </h2>
-
-          <div className={styles.swatches}>
-            {DENSITY.map((level) => (
-              <div className={styles.swatch} key={level.key}>
-                <div
-                  className={styles.swatchScreen}
-                  data-level={level.key}
-                  aria-hidden="true"
-                />
-                <div className={styles.swatchMeta}>
-                  <div className={styles.swatchLabel}>
-                    {level.label} · {level.ink}
-                  </div>
-                  <p className={styles.swatchNote}>{level.note}</p>
-                </div>
+              <div className={styles.actions}>
+                <a
+                  className="btn btn-primary"
+                  href={landingPageContent.finalCta.primaryHref}
+                >
+                  {landingPageContent.hero.primaryCta}
+                </a>
+                <a className="btn btn-outline" href="#density">
+                  Compare the motif
+                </a>
               </div>
-            ))}
+
+              <p className={styles.proof}>
+                <span className={styles.mark} aria-hidden="true" />
+                {landingPageContent.hero.proof}
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <ProcessAccordion />
+
+        <section
+          className={styles.rail}
+          id="density"
+          aria-labelledby="density-heading"
+        >
+          <div className={styles.railInner}>
+            <h2 className={styles.railHead} id="density-heading">
+              <span className={styles.mark} aria-hidden="true" />
+              Motif density, 6px pitch, identical geometry
+            </h2>
+
+            <div className={styles.swatches}>
+              {DENSITY.map((level) => (
+                <div className={styles.swatch} key={level.key}>
+                  <div
+                    className={styles.swatchScreen}
+                    data-level={level.key}
+                    aria-hidden="true"
+                  />
+                  <div className={styles.swatchMeta}>
+                    <div className={styles.swatchLabel}>
+                      {level.label} · {level.ink}
+                    </div>
+                    <p className={styles.swatchNote}>{level.note}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
     </article>
   );
 };

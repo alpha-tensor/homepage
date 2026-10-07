@@ -34,3 +34,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Generated marketing thumbnails. The source of truth is data/exports/form-thumbnails in the
+# root repo, copied here by make publish-form-thumbnails. Regenerable output, so it is not
+# tracked and it must not block a release.
+public/forms

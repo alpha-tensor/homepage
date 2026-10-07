@@ -542,12 +542,19 @@
 @media (prefers-reduced-motion: reduce) {
     /* Scoped to the page and written as a blanket because the alternatives are lost
      * to specificity: the open state sets its transitions on selectors like
-     * `.labHeader[data-open="true"] .navigation`, and an override has to beat those. */
+     * `.labHeader[data-open="true"] .navigation`, and an override has to beat those.
+     *
+     * Animations are covered as well as transitions. The accordion's entrance is an
+     * `animation` rather than a `transition`, so a transitions-only blanket would
+     * leave it running, which is the exact failure the doc warns about: the static
+     * composition has to be complete without motion. */
     .page *,
     .page *::before,
     .page *::after {
         transition-duration: 1ms !important;
         transition-delay: 0ms !important;
+        animation-duration: 1ms !important;
+        animation-delay: 0ms !important;
     }
 }
 

@@ -1,0 +1,297 @@
+/* The process accordion.
+ *
+ * Ported from the "Accordion in Motion" reference. Every number in this file was
+ * measured off that build at 1440, so the shape is theirs rather than invented.
+ *
+ *   - closed row 80px, which is the 36px number badge plus 22px of padding twice.
+ *     The badge sets the height, so the title can be one or two lines without the
+ *     row growing.
+ *   - row gap 15px, radius 20px, horizontal padding 28px.
+ *   - open row 223px: the 80px header plus a 143px panel.
+ *   - title 28px at 1.15 leading with -0.01em tracking.
+ *   - panel copy 16px at 1.6, held to a 560px measure, inset to the title's own
+ *     left edge rather than the row's, so it aligns with the words it belongs to.
+ *   - the open row is the only one with a fill. Closed rows are transparent, so the
+ *     list reads as large labels and only the open one is a panel.
+ *
+ * Motion is 400ms. Measured on the reference, a row travels 223px to 80px in about
+ * 360ms with the peak velocity around the third frame and a long tail, which is an
+ * ease-in-out rather than a spring: the height settles without overshoot. Because
+ * the curve is fast then slow, the transition is `cubic-bezier(0.4, 0, 0.2, 1)`.
+ *
+ * The height itself is the `grid-template-rows: 0fr -> 1fr` mechanism. It animates
+ * a panel of unknown height without measuring it in JavaScript, which a
+ * `max-height` guess cannot do and which a `height` transition needs a ref for.
+ *
+ * The fill is a light panel rather than the reference's darker one. Their page is
+ * white and their panel is rgb(243,243,243), so it is a panel appearing on a light
+ * surface. This page is rgb(217,217,217), where the same relative move is upward,
+ * so the fill is the page lightened by about 21 rather than darkened by 12. */
+
+.section {
+    --acc-row: 80px;
+    --acc-gap: 15px;
+    --acc-radius: 20px;
+    --acc-pad-x: 28px;
+    --acc-pad-y: 22px;
+    --acc-badge: 36px;
+    --acc-badge-gap: 20px;
+    --acc-title: clamp(1.25rem, 2.2vw, 1.75rem);
+    --acc-dur: 400ms;
+    --acc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --acc-open-fill: rgba(255, 255, 255, 0.55);
+
+    border-top: 1px solid var(--border);
+    padding-top: clamp(40px, 6vh, 72px);
+    padding-bottom: clamp(56px, 8vh, 96px);
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right));
+}
+
+.inner {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+/* Mirrors `.railHead`, because this is the same kind of label as the density rail
+ * above it and the two should not drift into two different label styles. */
+.kicker {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.mark {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.headline {
+    margin-bottom: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    max-width: 22ch;
+}
+
+.body {
+    margin-bottom: clamp(32px, 5vh, 56px);
+    font-size: 18px;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: var(--text-muted);
+    max-width: 62ch;
+}
+
+/* The accordion is measured against the reference's own 637 of a 1280 content
+ * width. The second column is reserved for the per-step visual, which the
+ * reference fills with a stacked image that swaps on the active row. This page has
+ * no per-step assets yet, so the column carries the active step's number at
+ * display scale and nothing else, and stays `aria-hidden` because the number is
+ * already announced by the row it belongs to. */
+.pair {
+    display: grid;
+    /* The reference's own split at a 1280 content width: 637 of accordion and 589 of
+     * visual, with a 54px gap between them. Both tracks are fractional rather than a
+     * fixed width plus a remainder, because `1fr` beside a large `fr` count collapses
+     * the small track to a couple of pixels and the visual then overflows the
+     * viewport instead of sitting in its own column. */
+    grid-template-columns: minmax(0, 637fr) minmax(0, 589fr);
+    gap: 54px;
+    align-items: start;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--acc-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.row {
+    border-radius: var(--acc-radius);
+    background-color: transparent;
+    transition: background-color var(--acc-dur) var(--acc-ease);
+}
+
+.row[data-open="true"] {
+    background-color: var(--acc-open-fill);
+}
+
+/* The heading wraps the button so the row keeps its place in the document outline
+ * without the heading itself carrying the hit area. */
+.rowHeading {
+    margin: 0;
+    font: inherit;
+}
+
+.rowButton {
+    display: flex;
+    align-items: center;
+    gap: var(--acc-badge-gap);
+    width: 100%;
+    min-height: var(--acc-row);
+    padding: var(--acc-pad-y) var(--acc-pad-x);
+    border: 0;
+    border-radius: var(--acc-radius);
+    background: none;
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.rowButton:focus-visible {
+    outline: 2px solid var(--accent-bright);
+    outline-offset: 2px;
+}
+
+/* The badge is what fixes the row height, which is why it is not a separate token
+ * from `--acc-row`: 36 plus 22 twice is 80. */
+.badge {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--acc-badge);
+    height: var(--acc-badge);
+    border-radius: 999px;
+    background-color: rgba(31, 31, 31, 0.06);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+}
+
+.title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-sans);
+    font-size: var(--acc-title);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+.chevron {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--acc-dur) var(--acc-ease);
+}
+
+.row[data-open="true"] .chevron {
+    transform: rotate(180deg);
+}
+
+.panelWrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--acc-dur) var(--acc-ease);
+}
+
+.row[data-open="true"] .panelWrap {
+    grid-template-rows: 1fr;
+}
+
+/* `min-height: 0` is required or the zero row still resolves to the content height,
+ * and the overflow is what clips the panel while the row is collapsing. */
+.panel {
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Inset to the title, not the row: 28 of row padding plus the 36px badge plus the
+ * 20px gap is 84, which is where the words start. */
+.panelInner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 0 var(--acc-pad-x) var(--acc-pad-x)
+        calc(var(--acc-pad-x) + var(--acc-badge) + var(--acc-badge-gap));
+}
+
+.panelText {
+    margin: 0;
+    max-width: 560px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+/* The active step's number, standing in for the reference's per-step image. It is a
+ * watermark rather than a figure, so it is set in the ink at low strength and never
+ * competes with the row it belongs to. */
+.visual {
+    display: grid;
+    place-items: center;
+    min-height: 100%;
+}
+
+.visualNumber {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(5rem, 13vw, 11rem);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: rgba(31, 31, 31, 0.12);
+    animation: processNumberIn var(--acc-dur) var(--acc-ease) both;
+}
+
+@keyframes processNumberIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.12em);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Below the two column breakpoint the accordion takes the full width and the number
+ * moves under it, so nothing is dropped on a phone. 1000px is the page's own
+ * desktop boundary. */
+@media (max-width: 1000px) {
+    .pair {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+    }
+
+    .visual {
+        min-height: 0;
+        place-items: start;
+    }
+
+    .visualNumber {
+        font-size: clamp(4rem, 16vw, 7rem);
+    }
+}
+
+@media (max-width: 809px) {
+    .section {
+        --acc-pad-x: 20px;
+        --acc-pad-y: 18px;
+        --acc-badge: 32px;
+        --acc-badge-gap: 16px;
+    }
+}
