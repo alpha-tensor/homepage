@@ -50,7 +50,11 @@ export const ProcessAccordion = (): React.JSX.Element => {
   const active = steps[openIndex];
 
   return (
-    <section className={styles.section} aria-labelledby={`${ID}-heading`}>
+    <section
+      className={styles.section}
+      id="process"
+      aria-labelledby={`${ID}-heading`}
+    >
       <div className={styles.inner}>
         <p className={styles.kicker}>
           <span className={styles.mark} aria-hidden="true" />

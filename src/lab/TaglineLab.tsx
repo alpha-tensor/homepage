@@ -7,6 +7,12 @@ import { ProcessAccordion } from "./ProcessAccordion";
 
 /** The panel is referenced by the toggle, so the id has exactly one definition. */
 const NAV_ID = "lab-tagline-nav";
+
+interface TaglineLabProps {
+  /* `lab` keeps the density comparison rail, which exists to judge the motif.
+   * `home` drops it and points the motif links at the process section instead. */
+  variant?: "lab" | "home";
+}
 /**
  * Standalone hero and tagline experiment at `/lab/tagline`.
  *
@@ -89,7 +95,10 @@ const DENSITY: DensityLevel[] = [
   },
 ];
 
-export const TaglineLab = (): React.JSX.Element => {
+export const TaglineLab = ({
+  variant = "lab",
+}: TaglineLabProps): React.JSX.Element => {
+  const isHome = variant === "home";
   /* The menu is a full screen panel, so background scrolling has to stop while it
    * is open or the page slides around behind a fixed layer. The overlay is inert
    * until it is open, so the closed state costs the page nothing but the identity
@@ -230,8 +239,8 @@ export const TaglineLab = (): React.JSX.Element => {
                 </a>
               </li>
               <li>
-                <a href="#density" onClick={closeMenu}>
-                  Compare the motif
+                <a href={isHome ? "#process" : "#density"} onClick={closeMenu}>
+                  {isHome ? "The process" : "Compare the motif"}
                 </a>
               </li>
               <li>
@@ -327,8 +336,11 @@ export const TaglineLab = (): React.JSX.Element => {
                 >
                   {landingPageContent.hero.primaryCta}
                 </a>
-                <a className="btn btn-outline" href="#density">
-                  Compare the motif
+                <a
+                  className="btn btn-outline"
+                  href={isHome ? "#process" : "#density"}
+                >
+                  {isHome ? "See the process" : "Compare the motif"}
                 </a>
               </div>
 
@@ -342,36 +354,38 @@ export const TaglineLab = (): React.JSX.Element => {
 
         <ProcessAccordion />
 
-        <section
-          className={styles.rail}
-          id="density"
-          aria-labelledby="density-heading"
-        >
-          <div className={styles.railInner}>
-            <h2 className={styles.railHead} id="density-heading">
-              <span className={styles.mark} aria-hidden="true" />
-              Motif density, 6px pitch, identical geometry
-            </h2>
+        {!isHome && (
+          <section
+            className={styles.rail}
+            id="density"
+            aria-labelledby="density-heading"
+          >
+            <div className={styles.railInner}>
+              <h2 className={styles.railHead} id="density-heading">
+                <span className={styles.mark} aria-hidden="true" />
+                Motif density, 6px pitch, identical geometry
+              </h2>
 
-            <div className={styles.swatches}>
-              {DENSITY.map((level) => (
-                <div className={styles.swatch} key={level.key}>
-                  <div
-                    className={styles.swatchScreen}
-                    data-level={level.key}
-                    aria-hidden="true"
-                  />
-                  <div className={styles.swatchMeta}>
-                    <div className={styles.swatchLabel}>
-                      {level.label} · {level.ink}
+              <div className={styles.swatches}>
+                {DENSITY.map((level) => (
+                  <div className={styles.swatch} key={level.key}>
+                    <div
+                      className={styles.swatchScreen}
+                      data-level={level.key}
+                      aria-hidden="true"
+                    />
+                    <div className={styles.swatchMeta}>
+                      <div className={styles.swatchLabel}>
+                        {level.label} · {level.ink}
+                      </div>
+                      <p className={styles.swatchNote}>{level.note}</p>
                     </div>
-                    <p className={styles.swatchNote}>{level.note}</p>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
       </div>
     </article>
   );
