@@ -1,11 +1,20 @@
 import React, { useCallback, useEffect, useSyncExternalStore } from "react";
+import { CaseJourney } from "./components/CaseJourney";
 import { ConsentBanner } from "./components/ConsentBanner";
+import { ExistingSystems } from "./components/ExistingSystems";
+import { FinalCtaSection } from "./components/FinalCtaSection";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
+import { Hero } from "./components/Hero";
 import { LabPage } from "./lab/LabPage";
 import { TaglineLab } from "./lab/TaglineLab";
 import { NotFoundPage } from "./components/NotFoundPage";
+import { PlatformSection } from "./components/PlatformSection";
+import { PositioningBridge } from "./components/PositioningBridge";
 import { PrivacyPolicy } from "./components/PrivacyPolicy";
+import { ProductEvidence } from "./components/ProductEvidence";
+import { ProofStrip } from "./components/ProofStrip";
+import { TrustSection } from "./components/TrustSection";
 
 const HOME_TITLE =
   "AlphaTensor. Operational Automation for Immigration Law Firms.";
@@ -123,12 +132,37 @@ function App({ initialPath }: AppProps): React.JSX.Element {
     );
   }
 
-  /* The v2 homepage: the tagline design, without the lab's density comparison
-   * rail. The previous homepage sections are not carried over yet, so this
-   * replaces them rather than merging. They are still in git and still on disk. */
   return (
     <main>
-      <TaglineLab variant="home" />
+      <Header />
+
+      {/* Five second test: outcome, immigration context, proof, next step */}
+      <Hero />
+
+      {/* Immediate proof */}
+      <ProofStrip />
+
+      {/* Scroll-driven case story: arrival to next action */}
+      <CaseJourney />
+
+      {/* Keep the CMS, remove the work around it */}
+      <PositioningBridge />
+
+      {/* Real product evidence */}
+      <ProductEvidence />
+
+      {/* Second half: the platform is broader than intake */}
+      <PlatformSection />
+
+      {/* Fits the way the firm already works */}
+      <ExistingSystems />
+
+      {/* Trust and operational depth */}
+      <TrustSection />
+
+      {/* Final CTA */}
+      <FinalCtaSection />
+
       <Footer />
       <ConsentBanner />
     </main>
