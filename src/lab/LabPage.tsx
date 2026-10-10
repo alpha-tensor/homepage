@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   createSession,
   describeError,
@@ -7,6 +13,8 @@ import {
 } from "./api";
 import { ContactStage } from "./ContactStage";
 import type { ContactSubmission } from "./ContactStage";
+import { buildLightFormFromDocument } from "./form/document";
+import { LightFormView } from "./form/LightForm";
 import styles from "./LabPage.module.css";
 import { ReadingStage } from "./ReadingStage";
 import type {
@@ -14,6 +22,7 @@ import type {
   DocumentIdentity,
   DocumentKind,
   LabStatus,
+  PublicFormField,
   Session,
 } from "./types";
 import { UploadStage } from "./UploadStage";
@@ -21,7 +30,9 @@ import { UploadStage } from "./UploadStage";
 /**
  * The public document lab at `/lab`.
  *
- * Three stages on one page: upload, read the document, and capture contact.
+ * Up to four stages on one page: upload, read the document, render the
+ * document's own page-one fields as a form, and capture contact. The form
+ * stage appears only when the file carries named fields, so a scan skips it.
  * The session credential lives in memory for the life of the tab, never in
  * storage, and the file is shown from a browser object URL that is revoked
  * when the page unmounts.
@@ -37,6 +48,7 @@ export const LabPage = (): React.JSX.Element => {
   const [session, setSession] = useState<Session | null>(null);
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [identity, setIdentity] = useState<DocumentIdentity | null>(null);
+  const [fields, setFields] = useState<PublicFormField[]>([]);
   const [status, setStatus] = useState<LabStatus>("empty");
   const [error, setError] = useState<string | null>(null);
   const [contactVisible, setContactVisible] = useState(false);
@@ -59,6 +71,7 @@ export const LabPage = (): React.JSX.Element => {
       setStatus("starting");
       setError(null);
       setIdentity(null);
+      setFields([]);
       setDocumentId(null);
       setContactVisible(false);
 
@@ -81,6 +94,7 @@ export const LabPage = (): React.JSX.Element => {
 
         setDocumentId(result.document_id);
         setIdentity(result.identity);
+        setFields(result.fields ?? []);
         setStatus("ready");
       } catch (caught) {
         setError(describeError(caught));
@@ -114,6 +128,7 @@ export const LabPage = (): React.JSX.Element => {
     setSession(null);
     setDocumentId(null);
     setIdentity(null);
+    setFields([]);
     setError(null);
     setStatus("empty");
     setContactVisible(false);
@@ -123,12 +138,25 @@ export const LabPage = (): React.JSX.Element => {
     setContactVisible(true);
   }, []);
 
+  // The document's own page-one fields, rendered as a form. Null for a scan,
+  // a flattened form, or an image, none of which carry named fields.
+  const form = useMemo(() => {
+    if (!file || !documentId) return null;
+    return buildLightFormFromDocument({
+      documentId,
+      filename: file.name,
+      identity,
+      fields,
+    });
+  }, [file, documentId, identity, fields]);
+
   const handleContactSubmit = useCallback(
     async (payload: ContactPayload): Promise<ContactSubmission> => {
       if (!session) {
         return {
           ok: false,
-          message: "This session has expired. Start again to upload the document.",
+          message:
+            "This session has expired. Start again to upload the document.",
         };
       }
       try {
@@ -188,10 +216,29 @@ export const LabPage = (): React.JSX.Element => {
           </section>
         )}
 
+        {form && (
+          <section className={styles.stage} aria-labelledby="lab-form">
+            <header className={styles.stageHead}>
+              <span className={styles.stageLabel}>03 / The form</span>
+              <h2 id="lab-form" className={styles.stageTitle}>
+                {form.template.title}
+              </h2>
+              <p className={styles.stageLead}>{form.template.description}</p>
+            </header>
+            <LightFormView
+              key={form.template.id}
+              template={form.template}
+              initialValues={form.values}
+            />
+          </section>
+        )}
+
         {contactVisible && session && (
           <section className={styles.stage} aria-labelledby="lab-contact">
             <header className={styles.stageHead}>
-              <span className={styles.stageLabel}>03 / Contact</span>
+              <span className={styles.stageLabel}>
+                {form ? "04 / Contact" : "03 / Contact"}
+              </span>
               <h2 id="lab-contact" className={styles.stageTitle}>
                 Where should we follow up?
               </h2>

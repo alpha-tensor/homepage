@@ -1,0 +1,249 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    max-width: 760px;
+}
+
+.section + .section {
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--border);
+}
+
+.sectionHead {
+    margin-bottom: var(--space-5);
+}
+
+.sectionTitle {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-h3);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-transform: none;
+}
+
+.sectionNote {
+    margin: 0;
+    max-width: 60ch;
+    font-size: var(--text-small);
+    color: var(--text-muted);
+}
+
+.groupBlock {
+    margin-bottom: var(--space-5);
+}
+
+.groupTitle {
+    margin: 0 0 var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.fieldList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.required,
+.optional {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.required {
+    color: var(--accent);
+}
+
+.optional {
+    color: var(--text-soft);
+    font-weight: 400;
+}
+
+.control {
+    width: 100%;
+    padding: 12px var(--space-4);
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--surface-card);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.4;
+}
+
+.control:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+    border-color: var(--accent);
+}
+
+.textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.help {
+    font-size: var(--text-small);
+    color: var(--text-soft);
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+}
+
+.check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-body);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.repeat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.repeatHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.addButton {
+    padding: 6px var(--space-4);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.addButton:hover {
+    background: var(--text);
+    color: var(--white);
+}
+
+.empty {
+    margin: 0;
+    font-size: var(--text-small);
+    color: var(--text-soft);
+}
+
+.row {
+    margin: 0;
+    padding: var(--space-4);
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.rowLegend {
+    padding: 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}
+
+.rowFields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin: var(--space-2) 0 var(--space-4);
+}
+
+.removeButton {
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent-strong);
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.output {
+    padding: var(--space-4);
+    border-left: 3px solid var(--accent);
+    background: var(--accent-wash);
+}
+
+.outputLabel {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-small);
+    color: var(--accent-strong);
+}
+
+.outputCode {
+    margin: 0;
+    max-height: 360px;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    line-height: 1.5;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+}

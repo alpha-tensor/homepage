@@ -7,6 +7,7 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { LabPage } from "./lab/LabPage";
+import { FormLabPage } from "./lab/form/FormLabPage";
 import { TaglineLab } from "./lab/TaglineLab";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { PlatformSection } from "./components/PlatformSection";
@@ -20,6 +21,7 @@ const HOME_TITLE =
   "AlphaTensor. Operational Automation for Immigration Law Firms.";
 const PRIVACY_TITLE = "Privacy and cookie policy. AlphaTensor";
 const LAB_TITLE = "Document lab. AlphaTensor";
+const FORM_LAB_TITLE = "Form lab. AlphaTensor";
 const TAGLINE_LAB_TITLE = "Tagline experiment. AlphaTensor";
 const NOT_FOUND_TITLE = "404. Page not found. AlphaTensor";
 
@@ -76,6 +78,7 @@ function App({ initialPath }: AppProps): React.JSX.Element {
   const isHomeRoute = pathname === "/" || pathname === "/index.html";
   const isPrivacyRoute = pathname === "/privacy";
   const isLabRoute = pathname === "/lab";
+  const isFormLabRoute = pathname === "/lab/form";
   const isTaglineLabRoute = pathname === "/lab/tagline";
 
   useEffect(() => {
@@ -83,12 +86,20 @@ function App({ initialPath }: AppProps): React.JSX.Element {
       ? HOME_TITLE
       : isPrivacyRoute
         ? PRIVACY_TITLE
-        : isTaglineLabRoute
-          ? TAGLINE_LAB_TITLE
-          : isLabRoute
-            ? LAB_TITLE
-            : NOT_FOUND_TITLE;
-  }, [isHomeRoute, isPrivacyRoute, isLabRoute, isTaglineLabRoute]);
+        : isFormLabRoute
+          ? FORM_LAB_TITLE
+          : isTaglineLabRoute
+            ? TAGLINE_LAB_TITLE
+            : isLabRoute
+              ? LAB_TITLE
+              : NOT_FOUND_TITLE;
+  }, [
+    isHomeRoute,
+    isPrivacyRoute,
+    isLabRoute,
+    isFormLabRoute,
+    isTaglineLabRoute,
+  ]);
 
   if (isPrivacyRoute) {
     return (
@@ -116,6 +127,17 @@ function App({ initialPath }: AppProps): React.JSX.Element {
       <main>
         <Header />
         <LabPage />
+        <Footer />
+        <ConsentBanner />
+      </main>
+    );
+  }
+
+  if (isFormLabRoute) {
+    return (
+      <main>
+        <Header />
+        <FormLabPage />
         <Footer />
         <ConsentBanner />
       </main>

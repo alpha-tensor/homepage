@@ -28,6 +28,30 @@ export interface UploadResult {
   document_id: string;
   status: "uploaded" | "preview_ready" | "failed";
   identity: DocumentIdentity;
+  /**
+   * The named fields carried on page one of the document itself. Present for a
+   * fillable form, empty for a scan or image. Optional so this client still
+   * works against an API that predates the field payload.
+   */
+  fields?: PublicFormField[];
+}
+
+/** One field carried on page one of the document's own form. */
+export interface PublicFormField {
+  /** The form's own field name, e.g. `Line1a_FamilyName[0]`. */
+  name: string;
+  /** The form's own label where it carries one, else a humanized name. */
+  label: string;
+  /** The form's control: text, checkbox, radio, select, signature, button, unknown. */
+  field_type: string;
+  /** The value already in the file, or an empty string. */
+  value: string;
+  /** The part of the document the field lies on, e.g. `Part 1. Information About You`. */
+  section: string;
+  /** A sub-heading within the section, e.g. `Your Full Name`, when the form has one. */
+  subsection?: string | null;
+  /** Choices for a radio or select field. */
+  options?: string[] | null;
 }
 
 /** The session credential. Held in memory only, never in storage. */

@@ -48,6 +48,14 @@ const ROUTES = [
     also: ["lab/index.html"],
   },
   {
+    // Generated-form experiment. Under /lab, so the consent bootstrap in
+    // index.html keeps it free of Google tags while it is being judged.
+    render: "/lab/form",
+    boot: "/lab/form",
+    out: "lab/form.html",
+    also: ["lab/form/index.html"],
+  },
+  {
     // Design experiment, not a product page. It lives under /lab so the consent
     // bootstrap in index.html keeps it free of Google tags while it is being
     // judged, and so it can be deleted without touching a real route.
