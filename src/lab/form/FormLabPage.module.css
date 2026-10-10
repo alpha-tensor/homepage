@@ -131,6 +131,10 @@
     margin-bottom: var(--space-6);
 }
 
+.stage form + .actions {
+    margin-top: var(--space-6);
+}
+
 @media (max-width: 768px) {
     .page {
         padding: var(--space-9) 0 var(--space-8);
