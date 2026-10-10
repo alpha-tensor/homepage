@@ -34,6 +34,7 @@ export type LightFieldType =
   | "combobox"
   | "radio"
   | "checkbox"
+  | "checkbox_group"
   | "multi_select"
   | "repeat_group";
 
@@ -56,7 +57,7 @@ export interface LightField {
   /** A short format hint, rendered under the control. */
   help?: string;
   options?: LightOption[];
-  /** Child fields, present only for `repeat_group`. */
+  /** Child fields, present for `repeat_group` and `checkbox_group`. */
   fields?: LightField[];
 }
 

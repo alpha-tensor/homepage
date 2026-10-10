@@ -102,6 +102,15 @@ export const buildLightFormFromDocument = (
   const bySection = new Map<string, LightField[]>();
   const values: Record<string, string> = {};
 
+  // The open question group. A single-choice item is one box per option, each
+  // repeating the question in its tooltip, so a run of boxes that share a
+  // question is drawn once, with the question as the legend and the boxes as a
+  // row of answers rather than the question printed on every one.
+  let openGroup: LightField | null = null;
+  let openQuestion = "";
+  let openSection = "";
+  let openGroupLabel = "";
+
   for (const field of fields) {
     // A reserved field is a machine field, e.g. the USCIS PDF417 barcode, and
     // must not be shown as something a person fills in.
@@ -113,6 +122,44 @@ export const buildLightFormFromDocument = (
       order.push(sectionKey);
     }
 
+    // A subsection becomes the renderer's group, which draws the sub-heading.
+    const group = field.subsection ?? undefined;
+    const question = field.question ?? "";
+
+    if (question) {
+      const continues =
+        openGroup !== null &&
+        question === openQuestion &&
+        sectionKey === openSection &&
+        (group ?? "") === openGroupLabel;
+      if (continues && openGroup) {
+        openGroup.fields?.push({
+          name: field.name,
+          label: field.label,
+          type: "checkbox",
+        });
+      } else {
+        const created: LightField = {
+          name: field.name,
+          label: question,
+          group,
+          type: "checkbox_group",
+          fields: [{ name: field.name, label: field.label, type: "checkbox" }],
+        };
+        bySection.get(sectionKey)?.push(created);
+        openGroup = created;
+        openQuestion = question;
+        openSection = sectionKey;
+        openGroupLabel = group ?? "";
+      }
+      values[field.name] = field.value;
+      continue;
+    }
+
+    // Any other field ends the run, so a later question starts a new group.
+    openGroup = null;
+    openQuestion = "";
+
     const options =
       field.options && field.options.length > 0
         ? field.options.map((value) => ({ value, label: humanize(value) }))
@@ -121,8 +168,7 @@ export const buildLightFormFromDocument = (
     bySection.get(sectionKey)?.push({
       name: field.name,
       label: field.label,
-      // A subsection becomes the renderer's group, which draws the sub-heading.
-      group: field.subsection ?? undefined,
+      group,
       type: mapFieldType(field.field_type, options, field.multiline),
       options,
     });

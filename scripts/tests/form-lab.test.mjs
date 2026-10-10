@@ -45,6 +45,7 @@ const SUPPORTED_TYPES = [
   "combobox",
   "radio",
   "checkbox",
+  "checkbox_group",
   "multi_select",
   "repeat_group",
 ];
@@ -200,5 +201,19 @@ test("the adapter drops reserved fields and draws multiline as a text area", () 
     ADAPTER,
     /return multiline \? "textarea" : "text";/,
     "a multiline text box read off a form must render as a text area",
+  );
+});
+
+test("the adapter shares one question across a run of option boxes", () => {
+  assert.match(
+    ADAPTER,
+    /type: "checkbox_group"/,
+    "one box per option must collapse into one group so the question is not " +
+      "repeated on every box",
+  );
+  assert.match(
+    ADAPTER,
+    /label: question,/,
+    "the shared question is the group legend, not a per box label",
   );
 });

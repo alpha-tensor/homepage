@@ -346,6 +346,19 @@ export const LightFormView = ({
       );
     }
 
+    if (field.type === "checkbox_group") {
+      return (
+        <fieldset className={styles.field} key={path}>
+          <legend className={styles.label}>{field.label}</legend>
+          <div className={styles.options}>
+            {(field.fields ?? []).map((child) =>
+              renderField(child, child.name),
+            )}
+          </div>
+        </fieldset>
+      );
+    }
+
     if (field.type === "checkbox") {
       return (
         <div className={styles.field} key={path}>

@@ -52,6 +52,12 @@ export interface PublicFormField {
   subsection?: string | null;
   /** Choices for a radio or select field. */
   options?: string[] | null;
+  /**
+   * The shared question of a single-choice item drawn as one box per option,
+   * e.g. `Are you fluent in English?`. The boxes carry their own answers and
+   * this is stated once, as their legend.
+   */
+  question?: string | null;
   /** The form marks this a multiline text box, so it should render as a text area. */
   multiline?: boolean;
   /** Reserved fields, such as a USCIS PDF417 barcode, are not user fields. */
