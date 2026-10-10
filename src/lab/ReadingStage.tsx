@@ -1,17 +1,18 @@
 import React, { useState } from "react";
+import type { DerivedForm } from "./form/document";
+import { LightFormView } from "./form/LightForm";
 import { RungLadder } from "./RungLadder";
 import styles from "./ReadingStage.module.css";
-import type { DocumentIdentity, DocumentKind, LabStatus } from "./types";
+import type { DocumentIdentity, LabStatus } from "./types";
 
 interface ReadingStageProps {
   fileName: string;
   fileSize: number;
-  kind: DocumentKind;
-  previewUrl: string;
   documentId: string | null;
   status: LabStatus;
   identity: DocumentIdentity | null;
   error: string | null;
+  form: DerivedForm | null;
   onRetry: () => void;
   onStartOver: () => void;
   onLadderComplete: () => void;
@@ -24,21 +25,21 @@ const formatBytes = (bytes: number): string => {
 };
 
 /**
- * Stage B: the visitor's own file, and what AlphaTensor reads from page one.
+ * Stage B: what AlphaTensor reads from page one, beside the form it implies.
  *
- * The file is shown from a browser object URL the moment it is chosen, before
- * any request resolves, so the page never waits on the server to show the
- * document. The ladder then fills in rung by rung.
+ * The left column is the identity ladder, filling in rung by rung. The right
+ * column is the document's own page-one fields rendered as a form, which
+ * replaces the file preview so the visitor reads what was read rather than the
+ * file they already have.
  */
 export const ReadingStage = ({
   fileName,
   fileSize,
-  kind,
-  previewUrl,
   documentId,
   status,
   identity,
   error,
+  form,
   onRetry,
   onStartOver,
   onLadderComplete,
@@ -122,27 +123,24 @@ export const ReadingStage = ({
         )}
       </div>
 
-      <figure className={styles.viewer}>
-        <figcaption className={styles.fileMeta}>
+      <div className={styles.pane}>
+        <div className={styles.paneHead}>
           <span className={styles.fileName}>{fileName}</span>
           <span className={styles.fileSize}>{formatBytes(fileSize)}</span>
-        </figcaption>
-        <div className={styles.frameWrap}>
-          {kind === "pdf" ? (
-            <iframe
-              className={styles.frame}
-              title="Your document, first page"
-              src={`${previewUrl}#page=1&view=FitH`}
-            />
-          ) : (
-            <img
-              className={styles.image}
-              src={previewUrl}
-              alt="Your uploaded document"
-            />
-          )}
         </div>
-      </figure>
+        {form ? (
+          <LightFormView
+            key={form.template.id}
+            template={form.template}
+            initialValues={form.values}
+          />
+        ) : status === "ready" ? (
+          <p className={styles.note}>
+            This document carries no named page-one fields, so there is no form
+            to show.
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 };

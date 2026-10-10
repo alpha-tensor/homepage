@@ -91,8 +91,5 @@ export interface ContactResult {
   recorded: boolean;
 }
 
-/** A preview is either the browser's PDF viewer or an image. */
-export type DocumentKind = "pdf" | "image";
-
 /** Where the reading stage is in the upload and ladder sequence. */
 export type LabStatus = "empty" | "starting" | "reading" | "ready" | "failed";

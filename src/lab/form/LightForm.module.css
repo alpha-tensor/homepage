@@ -34,6 +34,15 @@
     margin-bottom: var(--space-5);
 }
 
+/* A sub-heading needs air above it, and more than a field gap. The margin
+   collapses with the previous block's, so the gap is the larger of the two
+   rather than the sum, whether the group follows another group or a run of
+   ungrouped fields. */
+.groupBlock + .groupBlock,
+.fieldList + .groupBlock {
+    margin-top: var(--space-7);
+}
+
 .groupTitle {
     margin: 0 0 var(--space-4);
     font-size: 1.0625rem;

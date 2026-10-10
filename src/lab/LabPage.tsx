@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   createSession,
   describeError,
@@ -14,13 +8,11 @@ import {
 import { ContactStage } from "./ContactStage";
 import type { ContactSubmission } from "./ContactStage";
 import { buildLightFormFromDocument } from "./form/document";
-import { LightFormView } from "./form/LightForm";
 import styles from "./LabPage.module.css";
 import { ReadingStage } from "./ReadingStage";
 import type {
   ContactPayload,
   DocumentIdentity,
-  DocumentKind,
   LabStatus,
   PublicFormField,
   Session,
@@ -30,12 +22,11 @@ import { UploadStage } from "./UploadStage";
 /**
  * The public document lab at `/lab`.
  *
- * Up to four stages on one page: upload, read the document, render the
- * document's own page-one fields as a form, and capture contact. The form
- * stage appears only when the file carries named fields, so a scan skips it.
- * The session credential lives in memory for the life of the tab, never in
- * storage, and the file is shown from a browser object URL that is revoked
- * when the page unmounts.
+ * Three stages on one page: upload, read the document with the form it implies
+ * beside it, and capture contact. The form replaces the file preview, appears in
+ * the reading stage once the upload resolves, and is skipped when the file
+ * carries no named fields. The session credential lives in memory for the life
+ * of the tab, never in storage.
  *
  * This component must render on the server (the build prerenders `/lab`), so
  * there is no `window` access at module scope or during render. Everything
@@ -43,8 +34,6 @@ import { UploadStage } from "./UploadStage";
  */
 export const LabPage = (): React.JSX.Element => {
   const [file, setFile] = useState<File | null>(null);
-  const [kind, setKind] = useState<DocumentKind>("pdf");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [identity, setIdentity] = useState<DocumentIdentity | null>(null);
@@ -52,19 +41,6 @@ export const LabPage = (): React.JSX.Element => {
   const [status, setStatus] = useState<LabStatus>("empty");
   const [error, setError] = useState<string | null>(null);
   const [contactVisible, setContactVisible] = useState(false);
-  const previewUrlRef = useRef<string | null>(null);
-
-  const releasePreview = useCallback(() => {
-    if (previewUrlRef.current) {
-      URL.revokeObjectURL(previewUrlRef.current);
-      previewUrlRef.current = null;
-    }
-    setPreviewUrl(null);
-  }, []);
-
-  // Revoke the last object URL on unmount. The ref is still null when React
-  // runs the simulated unmount in StrictMode, so this cannot revoke a live URL.
-  useEffect(() => releasePreview, [releasePreview]);
 
   const run = useCallback(
     async (nextFile: File, activeSession: Session | null) => {
@@ -106,16 +82,11 @@ export const LabPage = (): React.JSX.Element => {
 
   const handleFile = useCallback(
     (nextFile: File) => {
-      releasePreview();
-      const url = URL.createObjectURL(nextFile);
-      previewUrlRef.current = url;
-      setPreviewUrl(url);
-      setKind(nextFile.type === "application/pdf" ? "pdf" : "image");
       setFile(nextFile);
       setSession(null);
       void run(nextFile, null);
     },
-    [releasePreview, run],
+    [run],
   );
 
   const handleRetry = useCallback(() => {
@@ -123,7 +94,6 @@ export const LabPage = (): React.JSX.Element => {
   }, [file, session, run]);
 
   const handleStartOver = useCallback(() => {
-    releasePreview();
     setFile(null);
     setSession(null);
     setDocumentId(null);
@@ -132,7 +102,7 @@ export const LabPage = (): React.JSX.Element => {
     setError(null);
     setStatus("empty");
     setContactVisible(false);
-  }, [releasePreview]);
+  }, []);
 
   const handleLadderComplete = useCallback(() => {
     setContactVisible(true);
@@ -190,7 +160,7 @@ export const LabPage = (): React.JSX.Element => {
           </section>
         )}
 
-        {file && previewUrl && (
+        {file && (
           <section className={styles.stage} aria-labelledby="lab-reading">
             <header className={styles.stageHead}>
               <span className={styles.stageLabel}>
@@ -203,12 +173,11 @@ export const LabPage = (): React.JSX.Element => {
             <ReadingStage
               fileName={file.name}
               fileSize={file.size}
-              kind={kind}
-              previewUrl={previewUrl}
               documentId={documentId}
               status={status}
               identity={identity}
               error={error}
+              form={form}
               onRetry={handleRetry}
               onStartOver={handleStartOver}
               onLadderComplete={handleLadderComplete}
@@ -216,29 +185,10 @@ export const LabPage = (): React.JSX.Element => {
           </section>
         )}
 
-        {form && (
-          <section className={styles.stage} aria-labelledby="lab-form">
-            <header className={styles.stageHead}>
-              <span className={styles.stageLabel}>03 / The form</span>
-              <h2 id="lab-form" className={styles.stageTitle}>
-                {form.template.title}
-              </h2>
-              <p className={styles.stageLead}>{form.template.description}</p>
-            </header>
-            <LightFormView
-              key={form.template.id}
-              template={form.template}
-              initialValues={form.values}
-            />
-          </section>
-        )}
-
         {contactVisible && session && (
           <section className={styles.stage} aria-labelledby="lab-contact">
             <header className={styles.stageHead}>
-              <span className={styles.stageLabel}>
-                {form ? "04 / Contact" : "03 / Contact"}
-              </span>
+              <span className={styles.stageLabel}>03 / Contact</span>
               <h2 id="lab-contact" className={styles.stageTitle}>
                 Where should we follow up?
               </h2>

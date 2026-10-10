@@ -30,6 +30,7 @@ const RENDERER = read("src/lab/form/LightForm.tsx");
 const ADAPTER = read("src/lab/form/document.ts");
 const PAGE = read("src/lab/form/FormLabPage.tsx");
 const LAB_PAGE = read("src/lab/LabPage.tsx");
+const READING = read("src/lab/ReadingStage.tsx");
 const APP = read("src/App.tsx");
 const PRERENDER = read("scripts/prerender.mjs");
 
@@ -126,21 +127,42 @@ test("the sample set exercises the wider field mix", () => {
 });
 
 test("the document flow renders fields with the shared renderer", () => {
+  // The page derives the form through the one adapter, and the reading stage
+  // draws it with the one renderer, where the file preview used to be.
+  assert.match(
+    LAB_PAGE,
+    /buildLightFormFromDocument/,
+    "LabPage.tsx must derive the form through the shared adapter",
+  );
   for (const [name, source] of [
-    ["LabPage.tsx", LAB_PAGE],
+    ["ReadingStage.tsx", READING],
     ["FormLabPage.tsx", PAGE],
   ]) {
     assert.match(
       source,
-      /buildLightFormFromDocument/,
-      `${name} must derive its form through the shared adapter`,
-    );
-    assert.match(
-      source,
       /<LightFormView/,
-      `${name} must draw it with the one shared renderer`,
+      `${name} must draw the form with the one shared renderer`,
     );
   }
+  assert.match(
+    PAGE,
+    /buildLightFormFromDocument/,
+    "FormLabPage.tsx must derive its form through the shared adapter",
+  );
+});
+
+test("the reading stage replaces the file preview with the form", () => {
+  assert.doesNotMatch(
+    READING,
+    /<iframe/,
+    "the embedded PDF preview is replaced by the generated form, which is the " +
+      "thing the visitor cannot already see",
+  );
+  assert.match(
+    READING,
+    /<LightFormView/,
+    "the reading stage shows the document's own fields as a form",
+  );
 });
 
 test("the renderer and the adapter stay pure", () => {
