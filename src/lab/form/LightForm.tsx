@@ -448,7 +448,7 @@ export const LightFormView = ({
       {groupedFields.map(({ section, order, byGroup }) => (
         <section className={styles.section} key={section.id}>
           <header className={styles.sectionHead}>
-            <h3 className={styles.sectionTitle}>{section.title}</h3>
+            <h2 className={styles.sectionTitle}>{section.title}</h2>
             {section.description && (
               <p className={styles.sectionNote}>{section.description}</p>
             )}
@@ -465,7 +465,7 @@ export const LightFormView = ({
             }
             return (
               <div className={styles.groupBlock} key={`${section.id}-${group}`}>
-                <h4 className={styles.groupTitle}>{group}</h4>
+                <h3 className={styles.groupTitle}>{group}</h3>
                 <div className={styles.fieldList}>
                   {fields.map((field) => renderField(field, field.name))}
                 </div>
