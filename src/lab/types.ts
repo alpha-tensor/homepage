@@ -52,6 +52,10 @@ export interface PublicFormField {
   subsection?: string | null;
   /** Choices for a radio or select field. */
   options?: string[] | null;
+  /** The form marks this a multiline text box, so it should render as a text area. */
+  multiline?: boolean;
+  /** Reserved fields, such as a USCIS PDF417 barcode, are not user fields. */
+  reserved?: boolean;
 }
 
 /** The session credential. Held in memory only, never in storage. */

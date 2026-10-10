@@ -60,6 +60,7 @@ export const humanize = (segment: string): string => {
 export const mapFieldType = (
   fieldType: string,
   options: LightOption[] | undefined,
+  multiline = false,
 ): LightFieldType => {
   switch (fieldType) {
     case "checkbox":
@@ -69,8 +70,9 @@ export const mapFieldType = (
     case "select":
       return options ? "select" : "text";
     default:
-      // text, signature, button, and unknown all render as a text box.
-      return "text";
+      // A multiline text box is a text area. Signature, button, and unknown
+      // all render as a text box.
+      return multiline ? "textarea" : "text";
   }
 };
 
@@ -101,6 +103,10 @@ export const buildLightFormFromDocument = (
   const values: Record<string, string> = {};
 
   for (const field of fields) {
+    // A reserved field is a machine field, e.g. the USCIS PDF417 barcode, and
+    // must not be shown as something a person fills in.
+    if (field.reserved) continue;
+
     const sectionKey = field.section || "Page 1";
     if (!bySection.has(sectionKey)) {
       bySection.set(sectionKey, []);
@@ -117,7 +123,7 @@ export const buildLightFormFromDocument = (
       label: field.label,
       // A subsection becomes the renderer's group, which draws the sub-heading.
       group: field.subsection ?? undefined,
-      type: mapFieldType(field.field_type, options),
+      type: mapFieldType(field.field_type, options, field.multiline),
       options,
     });
     values[field.name] = field.value;

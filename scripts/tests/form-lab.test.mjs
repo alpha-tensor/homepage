@@ -188,3 +188,17 @@ test("the adapter groups by the section the backend reported", () => {
       "instead of rendering an empty form",
   );
 });
+
+test("the adapter drops reserved fields and draws multiline as a text area", () => {
+  assert.match(
+    ADAPTER,
+    /if \(field\.reserved\) continue;/,
+    "a reserved machine field such as the USCIS PDF417 barcode must never " +
+      "render as something a person fills in",
+  );
+  assert.match(
+    ADAPTER,
+    /return multiline \? "textarea" : "text";/,
+    "a multiline text box read off a form must render as a text area",
+  );
+});
