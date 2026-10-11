@@ -171,12 +171,14 @@ export const LabPage = (): React.JSX.Element => {
               </h2>
             </header>
             <ReadingStage
+              file={file}
               fileName={file.name}
               fileSize={file.size}
               documentId={documentId}
               status={status}
               identity={identity}
               error={error}
+              fields={fields}
               form={form}
               onRetry={handleRetry}
               onStartOver={handleStartOver}

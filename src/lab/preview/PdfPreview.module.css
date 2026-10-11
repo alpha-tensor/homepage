@@ -1,0 +1,70 @@
+.preview {
+    width: 100%;
+    min-width: 0;
+}
+
+/* The page is the positioning context for the overlay. `fit-content` keeps the
+   overlay exactly the rendered page, so a percentage box lands where the
+   backend said it did. */
+.page {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    background: var(--surface-card);
+    line-height: 0;
+}
+
+/* Boxes sit above the canvas and take no pointer events themselves; the SVG
+   connector layer is the only other thing over the page. */
+.overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.box {
+    position: absolute;
+    border: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    cursor: pointer;
+}
+
+.box:hover,
+.boxActive {
+    border: 2px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
+.boxActive {
+    z-index: 1;
+}
+
+/* The connector spans the whole stage, so it paints in stage-relative pixels
+   and no transformed ancestor can skew it. It never intercepts the pointer. */
+.connectorLayer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.connectorPath {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+}
+
+.state {
+    margin: 0;
+    padding: var(--space-6) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}

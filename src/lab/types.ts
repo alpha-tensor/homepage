@@ -62,6 +62,12 @@ export interface PublicFormField {
   multiline?: boolean;
   /** Reserved fields, such as a USCIS PDF417 barcode, are not user fields. */
   reserved?: boolean;
+  /**
+   * The field's widget on page one as a normalized `[x, y, width, height]` box
+   * with a top-left origin. Present only when the form carries drawable
+   * geometry for it, so the page overlay skips a box rather than guessing one.
+   */
+  bbox?: number[] | null;
 }
 
 /** The session credential. Held in memory only, never in storage. */

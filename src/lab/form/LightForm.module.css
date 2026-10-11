@@ -69,6 +69,13 @@
     border: 0;
 }
 
+/* The field the page preview is pointing at. An outline rather than a border or
+   a background, so the row does not reflow when the pointer moves. */
+.fieldActive {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 .label {
     display: block;
     padding: 0;

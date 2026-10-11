@@ -111,18 +111,52 @@ interface LightFormProps {
    * prefill the form with the values already read off the file.
    */
   initialValues?: Record<string, string>;
+  /**
+   * The field the page preview is pointing at, by name. The document flow sets
+   * it while a box on the page or a row here is hovered, so the two stay in
+   * step. The sample sandbox leaves it unset and behaves exactly as before.
+   */
+  activeField?: string | null;
+  /** Called with a field name, or null, when a row is hovered or focused. */
+  onActivateField?: (name: string | null) => void;
 }
 
 /** Renders one section's fields and reports every answer back as it is typed. */
 export const LightFormView = ({
   template,
   initialValues,
+  activeField,
+  onActivateField,
 }: LightFormProps): React.JSX.Element => {
   const [values, setValues] = useState<Record<string, unknown>>(() => ({
     ...(initialValues ?? {}),
   }));
   const [rowCounts, setRowCounts] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState<string | null>(null);
+
+  /**
+   * The page-preview hook for one field.
+   *
+   * `data-lab-field` is the field's own name, so the connector layer can find
+   * this row from the box on the page without a second registry. The handlers
+   * are only attached when someone is listening, which keeps the sample-driven
+   * sandbox free of hover work it does not use.
+   */
+  const link = (
+    name: string,
+  ): React.HTMLAttributes<HTMLElement> & { "data-lab-field": string } => ({
+    "data-lab-field": name,
+    onMouseEnter: onActivateField ? () => onActivateField(name) : undefined,
+    onMouseLeave: onActivateField ? () => onActivateField(null) : undefined,
+    onFocus: onActivateField ? () => onActivateField(name) : undefined,
+    onBlur: onActivateField ? () => onActivateField(null) : undefined,
+  });
+
+  /** The field wrapper class, marked when the page preview is pointing here. */
+  const fieldClass = (name: string): string =>
+    activeField === name
+      ? `${styles.field} ${styles.fieldActive}`
+      : styles.field;
 
   const setValue = (path: string, value: unknown) => {
     setSubmitted(null);
@@ -348,7 +382,7 @@ export const LightFormView = ({
 
     if (field.type === "checkbox_group") {
       return (
-        <fieldset className={styles.field} key={path}>
+        <fieldset className={fieldClass(path)} key={path} {...link(path)}>
           <legend className={styles.label}>{field.label}</legend>
           <div className={styles.options}>
             {(field.fields ?? []).map((child) =>
@@ -361,7 +395,7 @@ export const LightFormView = ({
 
     if (field.type === "checkbox") {
       return (
-        <div className={styles.field} key={path}>
+        <div className={fieldClass(path)} key={path} {...link(path)}>
           <label className={styles.check} htmlFor={`lab-field-${path}`}>
             <input
               id={`lab-field-${path}`}
@@ -384,7 +418,7 @@ export const LightFormView = ({
       const selectedList = field.type === "multi_select" ? listValue(path) : [];
       const inputType = field.type === "radio" ? "radio" : "checkbox";
       return (
-        <fieldset className={styles.field} key={path}>
+        <fieldset className={fieldClass(path)} key={path} {...link(path)}>
           <legend className={styles.label}>
             {field.label} {renderLabelPill(field)}
           </legend>
@@ -420,7 +454,7 @@ export const LightFormView = ({
     }
 
     return (
-      <div className={styles.field} key={path}>
+      <div className={fieldClass(path)} key={path} {...link(path)}>
         <label className={styles.label} htmlFor={`lab-field-${path}`}>
           {field.label} {renderLabelPill(field)}
         </label>
