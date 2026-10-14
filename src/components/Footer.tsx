@@ -13,53 +13,60 @@ export const Footer = (): React.JSX.Element => {
   };
 
   return (
-    <footer className={styles.footer}>
-      <div className={styles.documentContainer}>
-        <div className={styles.topRow}>
-          <div className={styles.brand}>
-            <AlphaMark className={styles.logoIcon} />
-            <span className={styles.companyName}>AlphaTensor</span>
+    <>
+      {/* The doc's one gradient, full bleed and text free, directly above the
+       * footer, on every page that renders one. */}
+      <div className={styles.sunsetStripe} aria-hidden="true" />
+      <footer className={styles.footer}>
+        <div className={styles.documentContainer}>
+          <div className={styles.topRow}>
+            <div className={styles.brand}>
+              <AlphaMark className={styles.logoIcon} />
+              <span className={styles.companyName}>AlphaTensor</span>
+            </div>
+            <p className={styles.tagline}>
+              {landingPageContent.footer.tagline}
+            </p>
           </div>
-          <p className={styles.tagline}>{landingPageContent.footer.tagline}</p>
-        </div>
 
-        <div className={styles.bottomRow}>
-          <ul className={styles.linkList}>
-            {landingPageContent.footer.links.map((link) => (
-              <li key={link.label}>
-                {link.href.startsWith("http") ? (
-                  <a
-                    className={styles.link}
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => handleExternalClick(link.label)}
-                  >
-                    {link.label}
-                  </a>
-                ) : (
-                  <a className={styles.link} href={link.href}>
-                    {link.label}
-                  </a>
-                )}
+          <div className={styles.bottomRow}>
+            <ul className={styles.linkList}>
+              {landingPageContent.footer.links.map((link) => (
+                <li key={link.label}>
+                  {link.href.startsWith("http") ? (
+                    <a
+                      className={styles.link}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => handleExternalClick(link.label)}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <a className={styles.link} href={link.href}>
+                      {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+              <li>
+                <button
+                  type="button"
+                  className={styles.linkButton}
+                  onClick={openConsentPreferences}
+                >
+                  Cookie settings
+                </button>
               </li>
-            ))}
-            <li>
-              <button
-                type="button"
-                className={styles.linkButton}
-                onClick={openConsentPreferences}
-              >
-                Cookie settings
-              </button>
-            </li>
-          </ul>
-          <p className={styles.copyright}>
-            © {currentYear} {landingPageContent.footer.copyright}. All rights
-            reserved.
-          </p>
+            </ul>
+            <p className={styles.copyright}>
+              © {currentYear} {landingPageContent.footer.copyright}. All rights
+              reserved.
+            </p>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   );
 };

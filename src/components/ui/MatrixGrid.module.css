@@ -2,7 +2,7 @@
     --mx-size: 4px;
     --mx-gap: 5px;
     --mx-off: 1px;
-    --mx-dot: rgba(16, 21, 34, 0.45);
+    --mx-dot: rgba(31, 31, 31, 0.45);
     --mx-exc: var(--accent);
 
     display: grid;

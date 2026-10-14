@@ -433,14 +433,14 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: rgba(16, 21, 34, 0.28);
+    background: rgba(31, 31, 31, 0.28);
     transform: translate(-50%, -50%);
     left: var(--sx);
     top: var(--sy);
 }
 
 .alignKeep {
-    background: rgba(16, 21, 34, 0.15);
+    background: rgba(31, 31, 31, 0.15);
 }
 
 .alignExc {
@@ -473,7 +473,7 @@
 }
 
 .stage[data-active="1"] .alignExc {
-    box-shadow: 0 0 0 3px rgba(199, 90, 27, 0.12);
+    box-shadow: 0 0 0 3px rgba(250, 82, 15, 0.12);
     transition: box-shadow 0.3s ease 0.55s;
 }
 
@@ -564,7 +564,7 @@
     left: 46%;
     width: 20%;
     height: 1px;
-    background: rgba(199, 90, 27, 0.65);
+    background: rgba(250, 82, 15, 0.65);
     transform: translateY(-50%);
 }
 

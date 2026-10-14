@@ -22,7 +22,7 @@
 /* Orange is the review and attention signal. Nothing else uses it as a status. */
 .review {
     background: var(--accent-wash);
-    border-color: rgba(199, 90, 27, 0.5);
+    border-color: rgba(250, 82, 15, 0.5);
     color: var(--accent-strong);
 }
 
