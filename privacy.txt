@@ -2,56 +2,122 @@ Privacy Policy
 
 Effective date: October 31, 2026
 
-1. Who we are
+1. Who we are and what this policy covers
 
-Alpha Tensor LLC ("Alpha Tensor", "we", "us") operates this website, alphatensor.com, and provides document preparation services to law firms and, through our platform, to the clients they serve. This policy explains what information we collect through this website and our consultation process, how we use it, and the choices you have.
+Alpha Tensor LLC ("Alpha Tensor", "we", "us") operates this website, alphatensor.com, and is the controller of the personal information processed for the website and our own business enquiries. Contact us at support@alphatensor.com about this policy or your personal information.
 
-Work we perform for a client under a signed engagement is governed by that engagement's terms, including its confidentiality provisions. This policy covers the website and pre-engagement communications. Where an engagement agreement says something different, the agreement controls for that work.
+This policy covers this website and our pre-engagement communications: enquiries, emails, and consultation bookings. Work we perform for a client under a signed engagement is governed by that engagement's terms, including its confidentiality and data processing provisions. Where an engagement agreement says something different, the agreement controls for that work.
+
+Where we process personal information solely on a client firm's instructions, that firm determines the purposes of processing and is generally the controller. Requests about that information should be directed to the firm. You may also contact us for help identifying the appropriate contact.
 
 2. Information we collect
 
-    Contact information: your name, email address, phone number, and firm or company name, when you book a consultation, email us, or otherwise contact us.
+We receive information directly from you, from the browser that connects to the website, and from providers that help handle your enquiries.
+
+    Contact and enquiry information: your name, work email, company or firm, booking details, and the information you include in an email, consultation request, or other communication.
     Consultation information: the details you choose to share about your practice, your cases, and your document workflows, so we can assess whether we can help.
-    Technical information: when you visit the website, our hosting provider automatically records standard log data such as your IP address, browser type, and the pages requested, and may set strictly necessary cookies for security and load balancing. This website does not use advertising or cross-site tracking cookies.
-    We do not ask for client documents or other confidential case materials before an engagement is in place, and you should not send them to us before we have agreed on a secure transfer method.
+    Technical information: your IP address, browser and operating system, requested pages, and request times, recorded automatically by our hosting infrastructure to deliver the website and investigate security incidents. External font services can receive technical information when your browser loads the page.
 
-3. How we use information
+3. Information you choose to provide
 
-    To respond to your inquiry, and to schedule and conduct consultations.
-    To provide, operate, and improve our services and this website.
-    To communicate with you about your inquiry or engagement.
-    To meet legal, accounting, and security obligations.
+You do not have to provide contact details to read this website. If you request a reply or a consultation, we need sufficient contact information to respond. Without it, we may not be able to handle your request.
+
+Please do not send passwords, payment details, immigration documents, medical information, or other sensitive client or case information through a general enquiry or a consultation booking. We do not ask for client documents or other confidential case materials before an engagement is in place, and you should not send them until we have agreed on a secure transfer method.
+
+4. How we use information and our legal bases
+
+Where the GDPR or similar laws apply, the legal basis depends on the purpose of the processing.
+
+    Answering enquiries and arranging consultations: our legitimate interest in responding to business contacts. Where you personally request steps toward a contract with us, processing necessary for those steps is based on that request.
+    Delivering and securing the website: our legitimate interests in operating a reliable website, diagnosing problems, preventing abuse, and protecting our systems and users, balanced against your rights and interests.
+    Business records, legal requests, and disputes: compliance with applicable legal obligations, or our legitimate interest in establishing, exercising, or defending legal claims, as appropriate.
 
 We do not sell personal information, and we do not use it for third-party advertising.
 
-4. Client documents and model training
+5. Cookies and your choices
+
+This website does not use advertising, analytics, or cross-site tracking cookies, and it does not run a consent banner because there are no optional cookies to consent to. Our hosting provider may set strictly necessary cookies for security and load balancing; those do not track you across sites and cannot be switched off without affecting the delivery of the website.
+
+One exception to "only us" is typography: this website loads fonts from Google Fonts, which exposes technical request information, including your IP address, to Google when the page loads. Section 6 covers this.
+
+If we ever add optional analytics or marketing technologies, we will update this policy first and ask for your consent before they run.
+
+6. Service providers and external websites
+
+Providers involved in this website include our hosting infrastructure (Cloudflare), Google for font delivery, and Cal.com for consultation bookings. They receive the information needed for the relevant service. Their role as a processor or an independent controller depends on the service and applicable terms.
+
+Google Fonts is loaded from Google servers when the page loads. This exposes technical request information, including your IP address and browser information, to Google.
+
+The consultation button opens Cal.com rather than an embedded booking form. If you follow that link, Cal.com receives your request and any booking information you submit. Its privacy notice applies on its website. We also process the booking information we receive to arrange and follow up on your consultation.
+
+Links to other external websites do not extend this policy to those services. Review the notice and settings on each service you use.
+
+    Google privacy policy: https://policies.google.com/privacy
+    Google Fonts privacy information: https://developers.google.com/fonts/faq/privacy
+    Cal.com privacy policy: https://cal.com/privacy
+
+7. Other disclosures of information
+
+We do not sell your personal information or provide enquiry content to third parties for their own advertising or marketing.
+
+We may disclose relevant information where required by law, in response to a valid legal request, or where necessary to protect rights, investigate fraud or abuse, and protect safety. We may also disclose information in connection with a proposed or completed merger, acquisition, financing, or sale of business assets, subject to applicable confidentiality and data protection requirements.
+
+8. Client documents and model training
 
 Documents and data provided to us under an engagement are used only to perform that engagement. We do not use one client's documents to train models for other clients, and we do not disclose engagement materials except as the engagement requires and the client directs.
 
-5. How we share information
+9. International processing
 
-We share information only as needed to run the business:
+Using this website and its providers can involve processing outside your country, including in the United States. Privacy laws in those locations may differ from those where you live.
 
-    Service providers: companies that host this website and our email, provide scheduling (our booking page is operated by Cal.com), and provide the infrastructure our services run on. They process information on our behalf under their own security and privacy commitments.
-    Legal and safety: when required by law or court order, or to protect our rights or the safety of others.
-    Business transfers: in connection with a financing, merger, or sale of the company, subject to confidentiality.
+Transfers subject to European or United Kingdom data protection law require an applicable transfer mechanism, such as a relevant adequacy decision or contractual safeguards with any additional measures required by law. A provider's location alone does not establish that a transfer is protected. Contact us for information about the destinations and safeguards applicable to your information, or to request a copy of relevant safeguards where available under applicable law.
 
-6. Retention
+10. How long information is kept
 
-We keep contact and consultation information for as long as needed to respond to you, maintain our business records, and meet legal obligations. Engagement materials are retained or deleted as the engagement agreement provides.
+We retain personal information for the purpose for which it was collected, taking into account the nature of the information, our relationship with you, applicable recordkeeping duties, and the need to resolve disputes or investigate security incidents.
 
-7. Security
+Enquiries and booking correspondence are retained as needed to answer your request, manage related business discussions, and maintain records required for legal obligations or claims. Technical records are retained as needed for website operation, security, and incident investigation. We do not specify a fixed period here that has not been verified for the relevant system. Engagement materials are retained or deleted as the engagement agreement provides.
 
-We use administrative and technical measures appropriate to the nature of the information, including access controls and encryption in transit. No system is perfectly secure, and we cannot guarantee absolute security.
+Deleting information from an active system may not immediately remove copies in backups. Any retained copies remain subject to applicable safeguards and deletion processes. Information may need to be retained longer where a legal obligation or a legal claim requires it.
 
-8. Your choices and rights
+11. Security
 
-You may ask us to access, correct, or delete the personal information we hold about you, and you may opt out of non-essential communications at any time, by writing to support@alphatensor.com. We respond to requests as required by applicable law. Our services are directed to law firms and to adults. We do not knowingly collect information from children under 13.
+We use administrative and technical measures appropriate to the nature of the information, including access controls and encryption in transit. Protecting personal information requires measures appropriate to the risks of processing, and no website, transmission method, or storage system can guarantee absolute security. Contact us if you believe personal information connected with this website has been exposed or misused.
 
-9. Changes to this policy
+12. Your privacy rights
 
-We may update this policy as our services change. The current version will always be posted on this page with its effective date.
+Depending on the law that applies and the circumstances, you may have the following rights. These rights are not absolute, and legal exceptions can apply.
 
-10. Contact
+    Request access to your personal information and a copy of it.
+    Ask for inaccurate information to be corrected and incomplete information to be completed.
+    Request deletion, or ask us to restrict processing in applicable circumstances.
+    Object, on grounds relating to your situation, to processing based on legitimate interests. You may object to direct marketing at any time.
+    Receive information you provided in a structured, commonly used, machine readable format, and request its transfer where processing is automated and based on consent or a contract.
+    Withdraw consent at any time, as easily as giving it, without affecting the lawfulness of earlier processing.
+    Lodge a complaint with a competent data protection authority.
+
+13. How to exercise your rights or make a complaint
+
+Email support@alphatensor.com with your request and enough context to locate the relevant information. We may ask for proportionate information to verify your identity or authority, but please do not send identity documents unless we request them through an appropriate channel.
+
+For requests covered by the GDPR, we normally respond within one month of receipt. If a permitted extension of up to two further months is necessary because of complexity or the number of requests, we will explain the extension within the first month. Requests are normally free. Where the law permits a fee or refusal, we will explain why.
+
+You can complain directly to the supervisory authority in the European country where you habitually live, work, or believe an infringement occurred. In France, this is the Commission nationale de l'informatique et des libertés, CNIL. You do not have to contact us before making a complaint. In the United Kingdom, you can contact the Information Commissioner's Office.
+
+    Make a complaint to the CNIL: https://www.cnil.fr/fr/plaintes
+    Find a European data protection authority: https://www.edpb.europa.eu/about-edpb/about-edpb/members_en
+    Contact the UK Information Commissioner's Office: https://ico.org.uk/make-a-complaint/
+
+14. Children and automated decisions
+
+This website is intended for business audiences, not children. We do not knowingly collect information from children under 13. If you believe a child has provided personal information through this website, contact support@alphatensor.com so we can investigate and address it.
+
+We do not use website enquiries or consultation bookings to make solely automated decisions about you that produce legal or similarly significant effects.
+
+15. Changes to this policy
+
+We may revise this policy as the website, our practices, or legal requirements change. The current version will always be posted on this page with its effective date. We will provide additional notice or request fresh consent where applicable law requires it.
+
+16. Contact
 
 Questions about this policy or your information: support@alphatensor.com. Alpha Tensor LLC, Georgia, USA.
