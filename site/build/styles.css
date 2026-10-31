@@ -696,10 +696,10 @@ body {
 }
 
 .form-ink-note {
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 550;
   color: var(--ink-muted);
-  padding: 14px 28px 0;
+  padding: 8px 18px 0;
   margin: 0;
 }
 
@@ -712,8 +712,8 @@ body {
 
 .form-rule {
   grid-column: 1 / -1;
-  border-top: 1px solid var(--hairline-strong);
-  margin: 2px 0 -4px;
+  border-top: 1.5px solid #16161A;
+  margin: 1px 0 -2px;
 }
 
 .form-foot {
@@ -721,9 +721,9 @@ body {
   justify-content: space-between;
   gap: 16px;
   border-top: 1px solid var(--hairline);
-  margin: 4px 28px 0;
-  padding: 12px 0 18px;
-  font-size: 10.5px;
+  margin: 2px 18px 0;
+  padding: 8px 0 12px;
+  font-size: 9.5px;
   letter-spacing: 0.4px;
   color: var(--ink-muted);
 }
@@ -756,8 +756,9 @@ body {
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
-  font-size: 12.5px;
+  font-size: 10.5px;
   color: var(--ink-2);
+  margin-bottom: 3px;
 }
 
 /* The checkbox rows: G-28 attached, Apt. Ste. Flr. */
@@ -765,11 +766,11 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px 24px;
+  gap: 8px 16px;
   background: var(--panel);
   border: 1px solid var(--hairline-strong);
-  padding: 10px 14px;
-  font-size: 13.5px;
+  padding: 6px 10px;
+  font-size: 11.5px;
 }
 
 .chk-unit {
@@ -779,14 +780,14 @@ body {
 }
 
 .chk {
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
   flex: none;
   border: 2px solid var(--ink-2);
   background: #FFFFFF;
   display: inline-grid;
   place-items: center;
-  font-size: 13px;
+  font-size: 11px;
   line-height: 1;
   color: var(--ink);
 }
@@ -802,7 +803,7 @@ body {
 
 .chkrow .fbox.apt-no {
   margin-left: auto;
-  min-width: 104px;
+  min-width: 76px;
   text-align: center;
   background: #FFFFFF;
 }
@@ -896,9 +897,9 @@ body {
   flex-wrap: wrap;
   background: var(--ink-deep);
   color: #FFFFFF;
-  padding: 14px 28px;
+  padding: 9px 18px;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 12.5px;
 }
 
 .form-panel-note {
@@ -913,8 +914,8 @@ body {
 .form-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 16px 12px;
-  padding: 28px;
+  gap: 9px 8px;
+  padding: 16px 18px;
 }
 
 .field label {
@@ -931,9 +932,9 @@ body {
   background: var(--panel);
   border: 1px solid var(--hairline-soft);
   border-radius: 0;
-  min-height: 40px;
-  padding: 9px 12px;
-  font-size: 15.5px;
+  min-height: 27px;
+  padding: 4px 8px;
+  font-size: 11.5px;
   font-weight: 500;
 }
 
@@ -953,16 +954,16 @@ body {
 .dob-boxes {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .dob-seg {
-  width: 54px;
+  width: 38px;
   text-align: center;
 }
 
 .dob-seg4 {
-  width: 78px;
+  width: 54px;
   text-align: center;
 }
 
@@ -981,13 +982,14 @@ body {
 
 .a-prefix {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 12px;
   margin-right: 4px;
 }
 
 .abox {
-  width: 32px;
-  height: 40px;
+  width: 22px;
+  height: 28px;
+  font-size: 12px;
   background: var(--panel);
   border: 1px solid var(--hairline-soft);
   border-radius: 0;
@@ -1344,18 +1346,18 @@ body {
 
   .form-panel-head,
   .form-grid {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .form-ink-note {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .form-foot {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin-left: 12px;
+    margin-right: 12px;
   }
 
   .wm-steps {
@@ -1368,12 +1370,12 @@ body {
   }
 
   .aboxes {
-    gap: 4px;
+    gap: 3px;
   }
 
   .abox {
-    width: 28px;
-    height: 36px;
+    width: 20px;
+    height: 26px;
   }
 }
 
