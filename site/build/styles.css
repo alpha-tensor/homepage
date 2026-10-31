@@ -6,20 +6,20 @@
    ============================================================ */
 :root {
   --paper: #FFFFFF;
-  --cream: #FFF8E0;
-  --cream-soft: #FFFAEB;
-  --beige-deep: #E6D5A8;
+  --surface: #FAFAFA;
+  --panel: #F4F4F4;
   --ink: #201A1A;
   --ink-deep: #121215;
   --ink-muted: rgba(32, 26, 26, 0.66);
   --hairline: rgba(0, 0, 0, 0.2);
+  --hairline-soft: rgba(0, 0, 0, 0.1);
   --accent: #F06E00;
 
   --radius-card: 12px;
   --radius-button: 8px;
 
   --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
 
   --content-width: 1280px;
@@ -53,6 +53,34 @@ main {
   max-width: var(--content-width);
   margin: 0 auto;
   padding: 0 var(--gutter);
+}
+
+/* Ruled page frame: vertical hairlines at the content edges,
+   the structural line motif from Mistral's index pages. */
+main::before,
+main::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(128, 128, 128, 0.22);
+  pointer-events: none;
+}
+
+main::before {
+  left: calc(50% - 640px);
+}
+
+main::after {
+  right: calc(50% - 640px);
+}
+
+@media (max-width: 1320px) {
+  main::before,
+  main::after {
+    display: none;
+  }
 }
 
 a {
@@ -97,11 +125,21 @@ button:focus-visible {
 .header-inner {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: 26px var(--gutter);
+  padding: 17px var(--gutter);
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 40px;
   flex-wrap: wrap;
+}
+
+.site-header .wordmark {
+  font-size: 17.5px;
+  gap: 9px;
+}
+
+.site-header .brand-mark {
+  width: 24px;
+  height: 24px;
 }
 
 .wordmark {
@@ -130,7 +168,7 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 30px;
+  gap: 34px;
   flex-wrap: wrap;
 }
 
@@ -151,13 +189,13 @@ button:focus-visible {
 }
 
 .header-cta {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 550;
   text-decoration: none;
   background: var(--accent);
   color: #FFFFFF;
   border-radius: var(--radius-button);
-  padding: 11px 20px;
+  padding: 9px 16px;
   white-space: nowrap;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -182,17 +220,16 @@ button:focus-visible {
 }
 
 .hero-title {
-  font-family: var(--font-body);
-  font-weight: 620;
-  font-size: clamp(44px, 6.4vw, 80px);
-  line-height: 1.04;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(46px, 6.6vw, 84px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   margin: 0 auto;
   max-width: 15em;
 }
 
 .hero-sub {
-  font-family: var(--font-body);
   font-size: 21px;
   line-height: 1.55;
   font-weight: 400;
@@ -275,7 +312,7 @@ button:focus-visible {
   margin-top: 76px;
   display: grid;
   grid-template-columns: 290px 1fr;
-  column-gap: 56px;
+  column-gap: 48px;
   align-items: start;
 }
 
@@ -288,6 +325,11 @@ button:focus-visible {
   max-width: 12em;
 }
 
+.section-body {
+  border-left: 1px solid var(--hairline-soft);
+  padding-left: 48px;
+}
+
 .section-body p {
   max-width: 44rem;
 }
@@ -298,7 +340,7 @@ button:focus-visible {
 
 /* Not another tool: the manifesto section runs as a full-width band. */
 .section--not-another-tool {
-  background: var(--cream);
+  background: var(--panel);
   width: 100vw;
   position: relative;
   left: 50%;
@@ -336,15 +378,20 @@ body {
   margin-bottom: 8px;
 }
 
-/* Proof: a cream panel with the motif dot raster as texture. */
+/* Proof: a flat gray panel with a hairline border. */
 .section--proof-stated-plainly {
   grid-template-columns: 1fr;
-  background-color: var(--cream);
-  background-image: radial-gradient(rgba(32, 26, 26, 0.055) 1px, transparent 1.4px);
-  background-size: 14px 14px;
-  border: 1px solid var(--beige-deep);
+  background: var(--panel);
+  border: 1px solid var(--hairline-soft);
   border-radius: var(--radius-card);
   padding: 52px 48px;
+}
+
+.section--proof-stated-plainly .section-body,
+.section--talk-to-us .section-body,
+.section--the-work-in-order .section-body {
+  border-left: none;
+  padding-left: 0;
 }
 
 .section--proof-stated-plainly .section-title {
@@ -355,11 +402,11 @@ body {
   margin-bottom: 0;
 }
 
-/* Talk to us: the closing call to action as a cream banner. */
+/* Talk to us: the closing call to action as a gray panel. */
 .section--talk-to-us {
   grid-template-columns: 1fr;
-  background: var(--cream);
-  border: 1px solid var(--beige-deep);
+  background: var(--panel);
+  border: 1px solid var(--hairline-soft);
   border-radius: var(--radius-card);
   padding: 52px 48px;
 }
@@ -397,15 +444,15 @@ body {
 
 /* ============================================================
    SUNSET STRIPE + FOOTER
-   The stripe closes every page; the footer sits on cream.
+   The stripe closes every page; the footer sits on white.
    ============================================================ */
 .sunset-stripe {
   height: 18px;
-  background: linear-gradient(90deg, #FA520F 0%, #FF8105 30%, #FFA110 52%, #FFD900 76%, #FFF8E0 100%);
+  background: linear-gradient(90deg, #FA520F 0%, #FF8105 30%, #FFA110 52%, #FFD900 76%, #FFFFFF 100%);
 }
 
 .site-footer {
-  background: var(--cream);
+  background: var(--paper);
 }
 
 .footer-inner {
@@ -471,6 +518,11 @@ body {
     grid-template-columns: 1fr;
     row-gap: 16px;
     margin-top: 56px;
+  }
+
+  .section-body {
+    border-left: none;
+    padding-left: 0;
   }
 
   .section--the-work-in-order .section-body {
