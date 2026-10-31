@@ -136,6 +136,7 @@ def build():
     hero_tpl = load_template("partials/hero.html")
     motif_tpl = load_template("partials/packet.html")
     form_demo_tpl = load_template("partials/form-demo.html")
+    talk_cat_tpl = load_template("partials/talk-cat.html")
     cta_tpl = load_template("partials/cta.html")
     section_tpl = load_template("partials/section.html")
 
@@ -166,6 +167,11 @@ def build():
                 == "section--one-fact-every-format-the-form-asks-for"
             ):
                 body += "\n" + form_demo_tpl
+            if (
+                kind == "home"
+                and section_slug(s["title"]) == "section--talk-to-us"
+            ):
+                body += "\n" + talk_cat_tpl
             rendered_sections.append(
                 render(
                     section_tpl,

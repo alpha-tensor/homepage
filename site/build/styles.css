@@ -396,21 +396,21 @@ button:focus-visible {
   border-top: 1px solid var(--hairline-strong);
   margin-top: 14px;
   padding-top: 12px;
-  padding-right: 54px;
 }
 
 /* Squigglevision: three displacement seeds of the same cat,
-   cycled slowly, so the line boils like a hand tracing. */
-.hero-cat {
+   cycled slowly, so the line boils like a hand tracing. The
+   cat lives in the orange Talk block, top right corner. */
+.talk-cat {
   position: absolute;
-  right: 12px;
-  bottom: 8px;
-  width: 40px;
-  height: 40px;
+  top: 84px;
+  right: max(var(--gutter), calc(50vw - 616px));
+  width: 80px;
+  height: 67px;
   pointer-events: none;
 }
 
-.hero-cat img {
+.talk-cat img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -418,18 +418,18 @@ button:focus-visible {
   opacity: 0;
 }
 
-.hero-cat img.f1 {
+.talk-cat img.f1 {
   filter: url(#boil1);
   animation: boil 1.5s linear infinite;
 }
 
-.hero-cat img.f2 {
+.talk-cat img.f2 {
   filter: url(#boil2);
   animation: boil 1.5s linear infinite;
   animation-delay: -0.5s;
 }
 
-.hero-cat img.f3 {
+.talk-cat img.f3 {
   filter: url(#boil3);
   animation: boil 1.5s linear infinite;
   animation-delay: -1s;
@@ -1298,16 +1298,16 @@ body {
     animation: none;
   }
 
-  .hero-cat img {
+  .talk-cat img {
     animation: none;
   }
 
-  .hero-cat img.f1 {
+  .talk-cat img.f1 {
     opacity: 1;
   }
 
-  .hero-cat img.f2,
-  .hero-cat img.f3 {
+  .talk-cat img.f2,
+  .talk-cat img.f3 {
     display: none;
   }
 }
