@@ -1,15 +1,18 @@
 <figure class="form-demo">
   <div class="demo-sources">
-    <div class="doc-card tint-green">
+    <div class="doc-card" data-doc="mxbc" tabindex="0">
+      <div class="doc-authority">Estados Unidos Mexicanos &#183; Registro Civil</div>
       <div class="doc-code">MXBC</div>
       <div class="doc-name">Laura María Fernanda Itandehui</div>
       <div class="doc-facts">
-        <div><span class="df-key">Born</span> 14/03/1992</div>
+        <div><span class="df-key">Fecha</span> 14/03/1992</div>
+        <div><span class="df-key">Lugar</span> Oaxaca de Juárez</div>
       </div>
       <div class="doc-line"></div>
       <div class="doc-tag">Birth certificate &#183; Mexico</div>
     </div>
-    <div class="doc-card tint-pink">
+    <div class="doc-card" data-doc="usbc" tabindex="0">
+      <div class="doc-authority">State of California &#183; Department of Public Health</div>
       <div class="doc-code">USABC</div>
       <div class="doc-name">Gerard Moody</div>
       <div class="doc-facts">
@@ -18,14 +21,16 @@
       <div class="doc-line"></div>
       <div class="doc-tag">Birth certificate &#183; USA</div>
     </div>
-    <div class="doc-card">
-      <div class="doc-code">USA GADL</div>
+    <div class="doc-card" data-doc="dl-him" tabindex="0">
+      <div class="doc-authority">State of California &#183; Department of Motor Vehicles</div>
+      <div class="doc-code">USA CADL</div>
       <div class="doc-name">Gerard Smith Moody</div>
       <div class="doc-line"></div>
       <div class="doc-line short"></div>
-      <div class="doc-tag">Driver license &#183; Georgia</div>
+      <div class="doc-tag">Driver license &#183; California</div>
     </div>
-    <div class="doc-card tint-blue">
+    <div class="doc-card" data-doc="dl-her" tabindex="0">
+      <div class="doc-authority">State of California &#183; Department of Motor Vehicles</div>
       <div class="doc-code">USA CADL</div>
       <div class="doc-name">Laura María Fernanda Itandehui</div>
       <div class="doc-line"></div>
@@ -45,15 +50,15 @@
     <div class="form-grid">
       <div class="field f5">
         <label>Family Name (Last Name)</label>
-        <div class="fbox from-mx">ITANDEHUI</div>
+        <div class="fbox" data-src="mxbc" tabindex="0">ITANDEHUI</div>
       </div>
       <div class="field f5">
         <label>Given Name (First Name)</label>
-        <div class="fbox from-mx">LAURA</div>
+        <div class="fbox" data-src="mxbc" tabindex="0">LAURA</div>
       </div>
       <div class="field f2">
         <label>Middle Initial</label>
-        <div class="fbox from-mx">M</div>
+        <div class="fbox" data-src="mxbc" tabindex="0">M</div>
       </div>
       <div class="field f12">
         <label>A-Number (if any)</label>
@@ -65,42 +70,42 @@
       <div class="field f5">
         <label>Date of Birth</label>
         <div class="dob-boxes">
-          <span class="fbox dob-seg from-mx">03</span><span class="dob-sep">/</span><span class="fbox dob-seg from-mx">14</span><span class="dob-sep">/</span><span class="fbox dob-seg4 from-mx">1992</span>
+          <span class="fbox dob-seg" data-src="mxbc" tabindex="0">03</span><span class="dob-sep">/</span><span class="fbox dob-seg" data-src="mxbc" tabindex="0">14</span><span class="dob-sep">/</span><span class="fbox dob-seg4" data-src="mxbc" tabindex="0">1992</span>
         </div>
         <div class="dob-hint">mm / dd / yyyy</div>
       </div>
       <div class="field f2">
         <label>Age</label>
-        <div class="fbox from-mx">34</div>
+        <div class="fbox" data-src="mxbc" tabindex="0">34</div>
       </div>
       <div class="field f5">
         <label>Country of Birth</label>
-        <div class="fbox from-mx">Mexico</div>
+        <div class="fbox" data-src="mxbc" tabindex="0">Mexico</div>
       </div>
       <div class="field f12">
         <label>Street Number and Name</label>
-        <div class="fbox from-ca">820 S Grand Ave</div>
+        <div class="fbox" data-src="dl-her" tabindex="0">820 S Grand Ave</div>
       </div>
       <div class="field f5">
         <label>City or Town</label>
-        <div class="fbox from-ca">Los Angeles</div>
+        <div class="fbox" data-src="dl-her" tabindex="0">Los Angeles</div>
       </div>
       <div class="field f2">
         <label>State</label>
-        <div class="fbox from-ca">CA</div>
+        <div class="fbox" data-src="dl-her" tabindex="0">CA</div>
       </div>
       <div class="field f2">
         <label>ZIP Code</label>
-        <div class="fbox from-ca">90017</div>
+        <div class="fbox" data-src="dl-her" tabindex="0">90017</div>
       </div>
       <div class="field f3">
         <label>Country</label>
-        <div class="fbox from-ca">USA</div>
+        <div class="fbox" data-src="dl-her" tabindex="0">USA</div>
       </div>
     </div>
   </div>
 
-  <figcaption class="demo-caption">The same facts, collected once from the documents above, decomposed into exactly the fields the form asks for: a middle initial taken from the first of her middle names, an age calculated from the birth certificate, and every value colored by the document it came from. All names and values are samples.</figcaption>
+  <figcaption class="demo-caption">The same facts, collected once from the documents above, decomposed into exactly the fields the form asks for: a middle initial taken from the first of her middle names, an age calculated from the birth certificate. Hover or tap any value to see the document it came from. All names and values are samples.</figcaption>
 </figure>
 
 <div class="world-model">

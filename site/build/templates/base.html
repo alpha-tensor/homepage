@@ -32,6 +32,29 @@
   }, { threshold: 0.1 });
   document.querySelectorAll(".section, .form-demo, .world-model").forEach(function (el) { io.observe(el); });
 })();
+
+/* Demo provenance: hover or tap a value to light its source. */
+(function () {
+  var demo = document.querySelector(".form-demo");
+  if (!demo) return;
+  var pinned = null;
+  function light(id) {
+    demo.querySelectorAll(".hl").forEach(function (el) { el.classList.remove("hl"); });
+    if (!id) return;
+    demo.querySelectorAll('[data-doc="' + id + '"], [data-src="' + id + '"]').forEach(function (el) { el.classList.add("hl"); });
+  }
+  demo.querySelectorAll("[data-src], [data-doc]").forEach(function (el) {
+    var id = el.getAttribute("data-src") || el.getAttribute("data-doc");
+    el.addEventListener("mouseenter", function () { if (!pinned) light(id); });
+    el.addEventListener("mouseleave", function () { if (!pinned) light(null); });
+    el.addEventListener("focus", function () { light(id); });
+    el.addEventListener("blur", function () { if (!pinned) light(null); });
+    el.addEventListener("click", function () {
+      if (pinned === id) { pinned = null; light(null); }
+      else { pinned = id; light(id); }
+    });
+  });
+})();
 </script>
 </body>
 </html>
