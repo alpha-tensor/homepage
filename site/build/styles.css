@@ -1186,37 +1186,46 @@ body {
   left: 50%;
   margin-left: -50vw;
   margin-top: 88px;
-  padding: 76px max(var(--gutter), calc(50vw - 616px)) 84px;
+  padding: 96px max(var(--gutter), calc(50vw - 616px)) 92px;
   background: #FA520F;
   color: #FFFFFF;
 }
 
+/* Mistral's color-block pattern: a small label, then the
+   statement set large, then a white rounded button. */
 .section--talk-to-us .section-title {
-  color: #FFFFFF;
-  font-size: clamp(36px, 4.2vw, 54px);
-  max-width: 12em;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
 }
 
 .section--talk-to-us .section-body p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 19px;
-  line-height: 1.6;
-  max-width: 36em;
+  color: #FFFFFF;
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.28;
+  font-weight: 500;
+  max-width: 24em;
 }
 
 .section--talk-to-us .cta {
   display: flex;
   justify-content: flex-end;
-  margin-top: 28px;
+  margin-top: 30px;
 }
 
 .section--talk-to-us .cta-button {
   background: #FFFFFF;
   border-color: #FFFFFF;
   color: var(--ink);
-  border-radius: 999px;
-  padding: 14px 28px;
-  font-size: 15.5px;
+  border-radius: 8px;
+  padding: 13px 20px;
+  font-size: 15px;
+}
+
+.section--talk-to-us .cta-button::after {
+  content: " \2192";
 }
 
 @media (prefers-reduced-motion: reduce) {
