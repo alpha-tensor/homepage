@@ -2,17 +2,17 @@
 
 ## Alpha Tensor was built where the paperwork decides the outcome. If your industry runs on regulated documents, the same machinery applies.
 
-Immigration is where the system works today, live, on real cases. It was never the only place it fits. Anywhere a file has to be assembled correctly, against rules that change, from documents that arrive messy and incomplete, the work is the same shape.
+Immigration is where the system works today, live, on real cases. It was never the only place it fits. Strip away the vocabulary of any one industry and the work underneath is the same: a person has to get through a real-world process, and the process is a maze of documents, conditions, and routes. Our work is mapping that maze, and walking the person through it.
 
 [Book a free consultation](https://cal.com/alphatensor/free-consultation)
 
-### What transfers
+### Paths, not packets
 
-Determination: given the facts of a case, which process, which packet, which forms, in which order. Preparation: the facts pulled from the client's own documents and rendered into every format each form demands, a full name here, initials there, one field or nine separate boxes. And the world of the case: a living picture of the matter that changes every time a document arrives, so the packet is built from the case as it stands, not as it stood when the file was opened. A responsible professional reviews before anything is filed. None of that structure is specific to immigration. Immigration is simply where we proved it.
+For every matter, the facts decide the route. Who the person is, who they are related to, what has already happened, what they already hold: those facts open some paths and close others, and each path demands its own forms, its own evidence, in its own order. Alpha Tensor builds a model of that world, the person, their relationships, and their information, and works out the paths through it, every combination the rules allow. Then it prepares the documents the right path requires, drawn from the person's own documents and rendered in every format each form demands. When a new document arrives, the model changes, and the path is checked again. A responsible professional reviews before anything is filed. None of that structure is specific to immigration. Immigration is simply where we proved it.
 
 ### Where the pattern repeats
 
-Benefits and claims files, where eligibility turns on documents issued across decades. Licensing and credentialing, where the same facts are proved again to every board and agency. Government contracting, where a completed packet decides whether a person can start work. Financial onboarding, where identity and eligibility documents decide whether an account opens. If a wrong field means a denial, a delay, or a compliance failure, the pattern applies.
+Benefits and claims files, where eligibility turns on documents issued across decades. Licensing and credentialing, where the same facts are proved again to every board and agency. Government contracting, where a completed file decides whether a person can start work. Financial onboarding, where identity and eligibility documents decide whether an account opens. If a wrong field means a denial, a delay, or a compliance failure, the pattern applies.
 
 ### How it starts
 

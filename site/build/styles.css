@@ -480,7 +480,7 @@ button:focus-visible {
   padding-top: 52px;
 }
 
-.section--not-another-tool,
+.section--stop-retyping-what-you-already-have,
 .section--proof-stated-plainly,
 .section--talk-to-us {
   border-top: none;
@@ -516,11 +516,11 @@ button:focus-visible {
 }
 
 /* Not another tool: the manifesto section runs as a full-width band. */
-.section.section--not-another-tool {
+.section.section--stop-retyping-what-you-already-have {
   margin-top: 0;
 }
 
-.section--not-another-tool {
+.section--stop-retyping-what-you-already-have {
   background: var(--panel);
   width: 100vw;
   position: relative;
@@ -1336,7 +1336,7 @@ body {
     padding: 36px 26px;
   }
 
-  .section--not-another-tool {
+  .section--stop-retyping-what-you-already-have {
     padding: 52px calc(var(--gutter) + 12px);
   }
 
