@@ -385,7 +385,7 @@ button:focus-visible {
   position: relative;
   left: 50%;
   margin-left: -50vw;
-  padding: 72px max(var(--gutter), calc(50vw - 616px));
+  padding: 72px max(calc(var(--gutter) + 28px), calc(50vw - 588px));
 }
 
 html,
@@ -834,7 +834,7 @@ body {
   }
 
   .section--not-another-tool {
-    padding: 48px var(--gutter);
+    padding: 52px calc(var(--gutter) + 12px);
   }
 
   .footer-inner {

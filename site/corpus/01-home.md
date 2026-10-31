@@ -6,7 +6,7 @@
 
 ### Not another tool
 
-Every other system hands the work back to you in a different view. You still type the facts, then type every variation of them again. We do the preparation itself. Your staff stop typing and start checking.
+Every other system hands the work back to you in a different view. You still type the facts, then type every variation of them again. We do the preparation itself. It starts from whatever you already have: feed in a completed form, a G-28, and the facts on it move into every other form that needs them. Your staff stop typing and start checking.
 
 ### One fact, every format the form asks for
 

@@ -14,6 +14,8 @@ The client answers plain-language questions and provides their documents. Like T
 
 Facts the documents already answer are filled in before a question is asked. A fact is asked once, then used everywhere it belongs.
 
+Completed forms count as documents. Feed in a G-28 the firm already filed, or any finished form from an existing case, and the facts on it are extracted and carried into every other form that needs them. An existing case does not start from zero.
+
 ### Step 3. We determine the packet
 
 Alpha Tensor works out which packet the case needs, under the firm's approved rules. It shows why: which facts drove the decision, and what is missing.
