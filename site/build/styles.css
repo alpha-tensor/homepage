@@ -10,6 +10,7 @@
   --panel: #F4F4F4;
   --ink: #201A1A;
   --ink-deep: #121215;
+  --header-bg: #1E1E22;
   --ink-muted: rgba(32, 26, 26, 0.66);
   --hairline: rgba(0, 0, 0, 0.2);
   --hairline-soft: rgba(0, 0, 0, 0.1);
@@ -115,7 +116,7 @@ button:focus-visible {
    HEADER / NAV
    ============================================================ */
 .site-header {
-  background: var(--ink-deep);
+  background: var(--header-bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
@@ -126,10 +127,10 @@ button:focus-visible {
 .header-inner {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: 13px var(--gutter);
+  padding: 9px var(--gutter);
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 28px;
   flex-wrap: wrap;
 }
 
@@ -139,8 +140,8 @@ button:focus-visible {
 }
 
 .site-header .brand-mark {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
 }
 
 .wordmark {
@@ -169,11 +170,17 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 34px;
+  gap: 0;
   flex-wrap: wrap;
 }
 
+.site-nav li {
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+}
+
 .site-nav a {
+  display: block;
+  padding: 4px 16px;
   text-decoration: none;
   font-size: 14px;
   font-weight: 400;
@@ -196,7 +203,7 @@ button:focus-visible {
   background: var(--accent);
   color: #FFFFFF;
   border-radius: var(--radius-button);
-  padding: 7px 13px;
+  padding: 6px 12px;
   white-space: nowrap;
   transition: background 0.15s ease, color 0.15s ease;
 }
