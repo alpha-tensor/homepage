@@ -205,6 +205,13 @@ def build():
     shutil.copyfile(HERE / "styles.css", assets_dir / "styles.css")
     print("copied assets/styles.css")
 
+    static_dir = HERE / "static"
+    if static_dir.exists():
+        for f in sorted(static_dir.iterdir()):
+            if f.is_file():
+                shutil.copyfile(f, assets_dir / f.name)
+        print("copied static assets")
+
     not_found = render(
         article_tpl,
         {
