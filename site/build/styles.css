@@ -403,11 +403,11 @@ button:focus-visible {
    the three tracings cycled. No filters, just frames. The
    cat lives in the orange Talk block, top right corner. */
 .talk-cat {
-  position: absolute;
-  top: 84px;
-  right: max(var(--gutter), calc(50vw - 616px));
+  float: right;
+  position: relative;
   width: 80px;
   height: 67px;
+  margin: 2px 0 12px 24px;
   pointer-events: none;
 }
 

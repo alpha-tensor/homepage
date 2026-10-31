@@ -167,11 +167,8 @@ def build():
                 == "section--one-fact-every-format-the-form-asks-for"
             ):
                 body += "\n" + form_demo_tpl
-            if (
-                kind == "home"
-                and section_slug(s["title"]) == "section--talk-to-us"
-            ):
-                body += "\n" + talk_cat_tpl
+            if section_slug(s["title"]) == "section--talk-to-us":
+                body = talk_cat_tpl + "\n" + body
             rendered_sections.append(
                 render(
                     section_tpl,
@@ -243,7 +240,8 @@ def build():
             "eyebrow": "404",
             "headline": "Page not found",
             "subhead": "The page you were looking for is not here.",
-            "lead_html": '<p><a href="index.html">Return to the home page</a></p>',
+            "lead_html": talk_cat_tpl
+            + '\n<p><a href="index.html">Return to the home page</a></p>',
             "sections": "",
         },
     )
