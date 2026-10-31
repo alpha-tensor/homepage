@@ -134,7 +134,7 @@ def build():
     nav_tpl = load_template("partials/nav.html")
     footer_tpl = load_template("partials/footer.html")
     hero_tpl = load_template("partials/hero.html")
-    motif_tpl = load_template("partials/motif.html")
+    motif_tpl = load_template("partials/packet.html")
     form_demo_tpl = load_template("partials/form-demo.html")
     cta_tpl = load_template("partials/cta.html")
     section_tpl = load_template("partials/section.html")

@@ -291,6 +291,119 @@ button:focus-visible {
   animation-delay: 0.2s;
 }
 
+/* The hero artifact is the finished packet, at a glance. */
+.hero-artifact {
+  animation: hero-in 0.7s ease-out 0.25s both;
+}
+
+.packet-card {
+  background: #FFFFFF;
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 22px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  text-align: left;
+}
+
+.packet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.packet-kind {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.packet-status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #B4530A;
+  background: #FDF0E1;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.packet-case {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 12px 0 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.packet-forms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.packet-forms li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.pf-name {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.pf-state {
+  font-size: 12px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.pf-state::before {
+  content: "\2713  ";
+  color: var(--ink);
+}
+
+.packet-evidence {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 12px 0 0;
+}
+
+.packet-flag {
+  font-size: 13px;
+  line-height: 1.55;
+  background: #FBF3E4;
+  border-left: 3px solid var(--accent);
+  padding: 12px 14px;
+  margin: 14px 0 0;
+}
+
+.packet-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  border-top: 1px solid var(--hairline-strong);
+  margin-top: 14px;
+  padding-top: 12px;
+}
+
+.packet-caption {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  margin: 14px 0 0;
+  text-align: left;
+}
+
 .hero-more {
   margin: 20px 0 0;
   font-size: 16px;
@@ -1110,7 +1223,8 @@ body {
     transition: none;
   }
 
-  .hero-text > * {
+  .hero-text > *,
+  .hero-artifact {
     animation: none;
   }
 }
