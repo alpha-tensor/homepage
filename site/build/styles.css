@@ -1112,7 +1112,9 @@ body {
   left: 50%;
   margin-left: -50vw;
   padding: 76px max(var(--gutter), calc(50vw - 616px)) 84px;
-  background: var(--surface);
+  /* The research page's green, taken properly this time:
+     Mistral's green block, #44BA82, with dark green label. */
+  background: #44BA82;
 }
 
 .section--built-ai-first-and-built-now .section-title {
@@ -1120,7 +1122,7 @@ body {
   font-weight: 600;
   letter-spacing: 1.6px;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: #055737;
 }
 
 .section--built-ai-first-and-built-now .section-body {
@@ -1134,6 +1136,7 @@ body {
   font-weight: 450;
   max-width: 30em;
   margin-top: 22px;
+  color: #12211A;
 }
 
 .section--proof-stated-plainly {
