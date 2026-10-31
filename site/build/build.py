@@ -40,6 +40,7 @@ PAGES = [
     ("02-what-we-do.md", "what-we-do.html", "What we do", "What we do", "article"),
     ("03-solutions.md", "solutions.html", "Solutions", "Solutions", "article"),
     ("04-how-it-works.md", "how-it-works.html", "How it works", "How it works", "article"),
+    ("06-industries.md", "industries.html", "Industries", "Industries", "article"),
     ("05-history.md", "history.html", "History", "History", "article"),
 ]
 
