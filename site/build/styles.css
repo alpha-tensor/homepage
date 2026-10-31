@@ -418,40 +418,13 @@ button:focus-visible {
   height: 100%;
 }
 
-.talk-cat .bf {
-  opacity: 0;
-}
-
-.talk-cat .bf.f1 {
-  animation: boil 1.5s linear infinite;
-}
-
-.talk-cat .bf.f2 {
-  animation: boil 1.5s linear infinite;
-  animation-delay: -0.5s;
-}
-
+/* Frame visibility is driven by SMIL inside the SVG (the CSS
+   animation engine on mobile WebKit dropped the frames
+   intermittently, leaving no cat at all). Frame 1 is the
+   fail-safe: visible unless SMIL hides it in turn. */
+.talk-cat .bf.f2,
 .talk-cat .bf.f3 {
-  animation: boil 1.5s linear infinite;
-  animation-delay: -1s;
-}
-
-@keyframes boil {
-  0% {
-    opacity: 1;
-  }
-
-  33.3% {
-    opacity: 1;
-  }
-
-  33.4% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 0;
-  }
+  opacity: 0;
 }
 
 .packet-caption {
@@ -1299,16 +1272,13 @@ body {
     animation: none;
   }
 
-  .talk-cat .bf {
-    animation: none;
-  }
-
   .talk-cat .bf.f1 {
-    opacity: 1;
+    opacity: 1 !important;
   }
 
   .talk-cat .bf.f2,
   .talk-cat .bf.f3 {
+    opacity: 0 !important;
     display: none;
   }
 }
