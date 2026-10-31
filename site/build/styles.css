@@ -516,6 +516,22 @@ body {
   margin-top: 10px;
 }
 
+.doc-facts {
+  margin-top: 12px;
+  display: grid;
+  gap: 4px;
+  font-size: 13.5px;
+}
+
+.df-key {
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-right: 7px;
+}
+
 .doc-line {
   height: 6px;
   background: #E7E7E7;
