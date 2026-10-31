@@ -115,9 +115,23 @@ button:focus-visible {
 /* ============================================================
    HEADER / NAV
    ============================================================ */
+/* The header settles down into place on load, Mistral-style. */
+@keyframes header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .site-header {
   background: var(--header-bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  animation: header-in 0.6s ease-out both;
 }
 
 .site-header .wordmark {
@@ -180,11 +194,28 @@ button:focus-visible {
 
 .site-nav a {
   display: block;
+  position: relative;
   padding: 4px 16px;
   text-decoration: none;
   font-size: 14px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.82);
+}
+
+/* Mistral's strip: a line that fills under the item on hover. */
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.45s ease;
+}
+
+.site-nav a:hover::after {
+  width: calc(100% - 32px);
 }
 
 .site-nav a:hover {
@@ -861,6 +892,15 @@ body {
   transform: none;
 }
 
+/* One green area at the bottom, after Mistral's research
+   pages: their green is #44BA82, used here as a soft field
+   with a solid strip of the same green on top. */
+.section--talk-to-us .cta-panel {
+  background: rgba(68, 186, 130, 0.13);
+  border-color: rgba(5, 87, 55, 0.35);
+  border-top: 3px solid #44BA82;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .js-reveal .section,
   .js-reveal .form-demo,
@@ -868,6 +908,10 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .site-header {
+    animation: none;
   }
 }
 
