@@ -82,3 +82,53 @@
 
   <figcaption class="demo-caption">The same facts, collected once from the documents above, decomposed into exactly the fields the form asks for. All names and values are samples.</figcaption>
 </figure>
+
+<div class="world-model">
+  <p class="wm-intro">The model of the case is rebuilt every time a document arrives. The form follows the facts.</p>
+
+  <div class="wm-step">
+    <div class="wm-doc">
+      <div class="doc-code">MXBC ADDED</div>
+      <div class="doc-name">Laura Itandehui</div>
+      <div class="doc-line"></div>
+      <div class="doc-line short"></div>
+    </div>
+    <div class="wm-state">
+      <div class="wm-row"><span class="wm-key">Marital status</span><span class="wm-val">Single</span></div>
+      <div class="wm-row"><span class="wm-key">Household</span><span class="wm-val">1 person</span></div>
+      <div class="wm-row"><span class="wm-key">Form carries</span><span class="wm-val">Beneficiary alone</span></div>
+    </div>
+  </div>
+
+  <div class="demo-flow" aria-hidden="true">&#8595;</div>
+
+  <div class="wm-step">
+    <div class="wm-doc">
+      <div class="doc-code">MARRIAGE CERTIFICATE ADDED</div>
+      <div class="doc-name">Moody &#183; Itandehui</div>
+      <div class="doc-line"></div>
+      <div class="doc-line short"></div>
+    </div>
+    <div class="wm-state">
+      <div class="wm-row"><span class="wm-key">Marital status</span><span class="wm-val changed">Married</span></div>
+      <div class="wm-row"><span class="wm-key">Household</span><span class="wm-val changed">2 people</span></div>
+      <div class="wm-row"><span class="wm-key">Form carries</span><span class="wm-val changed">Petitioner section appears, pre-filled</span></div>
+    </div>
+  </div>
+
+  <div class="demo-flow" aria-hidden="true">&#8595;</div>
+
+  <div class="wm-step">
+    <div class="wm-doc">
+      <div class="doc-code">USABC ADDED</div>
+      <div class="doc-name">Child of the couple</div>
+      <div class="doc-line"></div>
+      <div class="doc-line short"></div>
+    </div>
+    <div class="wm-state">
+      <div class="wm-row"><span class="wm-key">Marital status</span><span class="wm-val">Married</span></div>
+      <div class="wm-row"><span class="wm-key">Household</span><span class="wm-val changed">3 people</span></div>
+      <div class="wm-row"><span class="wm-key">Form carries</span><span class="wm-val changed">Child added as a derivative applicant, and to the household count the forms test against income</span></div>
+    </div>
+  </div>
+</div>

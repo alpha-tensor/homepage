@@ -19,7 +19,7 @@
   --radius-button: 8px;
 
   --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-mono: "Inter", "Helvetica Neue", Arial, sans-serif;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
 
   --content-width: 1280px;
@@ -318,7 +318,7 @@ button:focus-visible {
 
 .section-title {
   font-size: 36px;
-  font-weight: 420;
+  font-weight: 400;
   line-height: 1.18;
   letter-spacing: -0.01em;
   margin: 0;
@@ -598,6 +598,64 @@ body {
   max-width: 44rem;
 }
 
+/* World model: each new document rebuilds the case model,
+   and the form changes to match. Static, settled states. */
+.world-model {
+  margin-top: 56px;
+}
+
+.wm-intro {
+  font-size: 19px;
+  font-weight: 550;
+  max-width: 36em;
+}
+
+.wm-step {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 14px;
+  align-items: stretch;
+  margin-top: 22px;
+}
+
+.wm-doc {
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-button);
+  padding: 16px;
+}
+
+.wm-state {
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--radius-button);
+  padding: 8px 20px;
+}
+
+.wm-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--hairline-soft);
+  font-size: 15.5px;
+}
+
+.wm-row:last-child {
+  border-bottom: none;
+}
+
+.wm-key {
+  color: var(--ink-muted);
+  font-weight: 550;
+}
+
+.wm-val.changed {
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--accent);
+  padding-left: 12px;
+  margin-left: -12px;
+}
+
 /* ============================================================
    SUNSET STRIPE + FOOTER
    The stripe closes every page; the footer sits on white.
@@ -715,6 +773,14 @@ body {
   .form-grid {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .wm-step {
+    grid-template-columns: 1fr;
+  }
+
+  .wm-row {
+    grid-template-columns: 120px 1fr;
   }
 }
 
