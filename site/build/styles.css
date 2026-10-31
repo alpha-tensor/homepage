@@ -331,13 +331,13 @@ button:focus-visible {
 }
 
 .section {
-  margin-top: 92px;
+  margin-top: 64px;
   display: grid;
   grid-template-columns: 290px 1fr;
   column-gap: 48px;
   align-items: start;
   border-top: 1px solid var(--hairline-soft);
-  padding-top: 52px;
+  padding-top: 44px;
 }
 
 .section--not-another-tool,
@@ -866,6 +866,15 @@ body {
   .wm-arrow {
     transform: rotate(90deg);
     justify-self: center;
+  }
+
+  .aboxes {
+    gap: 4px;
+  }
+
+  .abox {
+    width: 28px;
+    height: 36px;
   }
 }
 
