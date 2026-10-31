@@ -223,7 +223,7 @@ button:focus-visible {
   position: relative;
   left: 50%;
   margin-left: -50vw;
-  padding: 84px max(var(--gutter), calc(50vw - 616px)) 72px;
+  padding: 96px max(var(--gutter), calc(50vw - 616px)) 84px;
   text-align: left;
 }
 
@@ -439,6 +439,13 @@ body {
    the demo beneath it at container width. */
 .section--one-fact-every-format-the-form-asks-for {
   grid-template-columns: 1fr;
+  border-top: none;
+}
+
+/* Mistral order: the title sits above its hairline. */
+.section--one-fact-every-format-the-form-asks-for .section-head {
+  border-bottom: 1px solid var(--hairline-strong);
+  padding-bottom: 22px;
 }
 
 .section--proof-stated-plainly .section-title {
@@ -547,6 +554,38 @@ body {
   color: var(--ink-muted);
   padding: 14px 28px 0;
   margin: 0;
+}
+
+/* Form realism: numbered items, group rules, a page footer. */
+.field label .ino {
+  color: var(--ink-muted);
+  font-weight: 400;
+  margin-right: 5px;
+}
+
+.form-rule {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--hairline-strong);
+  margin: 2px 0 -4px;
+}
+
+.form-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--hairline);
+  margin: 4px 28px 0;
+  padding: 12px 0 18px;
+  font-size: 10.5px;
+  letter-spacing: 0.4px;
+  color: var(--ink-muted);
+}
+
+.doc-address {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-top: 8px;
 }
 
 .doc-code {
@@ -949,6 +988,16 @@ body {
   .form-grid {
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .form-ink-note {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .form-foot {
+    margin-left: 16px;
+    margin-right: 16px;
   }
 
   .wm-steps {
