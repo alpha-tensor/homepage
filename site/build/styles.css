@@ -18,9 +18,9 @@
   --radius-card: 12px;
   --radius-button: 8px;
 
-  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Outfit", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Outfit", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Outfit", "Helvetica Neue", Arial, sans-serif;
 
   --content-width: 1280px;
   --measure: 38rem;
@@ -125,21 +125,21 @@ button:focus-visible {
 .header-inner {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: 17px var(--gutter);
+  padding: 13px var(--gutter);
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 36px;
   flex-wrap: wrap;
 }
 
 .site-header .wordmark {
-  font-size: 17.5px;
+  font-size: 16.5px;
   gap: 9px;
 }
 
 .site-header .brand-mark {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
 }
 
 .wordmark {
@@ -174,8 +174,8 @@ button:focus-visible {
 
 .site-nav a {
   text-decoration: none;
-  font-size: 15px;
-  font-weight: 450;
+  font-size: 14px;
+  font-weight: 400;
   color: rgba(255, 255, 255, 0.82);
 }
 
@@ -189,13 +189,13 @@ button:focus-visible {
 }
 
 .header-cta {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 550;
   text-decoration: none;
   background: var(--accent);
   color: #FFFFFF;
   border-radius: var(--radius-button);
-  padding: 9px 16px;
+  padding: 7px 13px;
   white-space: nowrap;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -215,18 +215,25 @@ button:focus-visible {
   position: relative;
   left: 50%;
   margin-left: -50vw;
-  padding: 104px max(var(--gutter), calc(50vw - 616px)) 96px;
-  text-align: center;
+  padding: 88px max(var(--gutter), calc(50vw - 616px)) 88px;
+  text-align: left;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px;
+  align-items: center;
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(46px, 6.6vw, 84px);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin: 0 auto;
-  max-width: 15em;
+  font-weight: 500;
+  font-size: clamp(44px, 6.2vw, 78px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 13em;
 }
 
 .hero-sub {
@@ -234,15 +241,15 @@ button:focus-visible {
   line-height: 1.55;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.72);
-  margin: 26px auto 0;
-  max-width: 38em;
+  margin: 26px 0 0;
+  max-width: 34em;
 }
 
 .hero-lead {
   font-size: 17.5px;
   color: rgba(255, 255, 255, 0.85);
   max-width: 640px;
-  margin: 24px auto 0;
+  margin: 24px 0 0;
 }
 
 .hero-lead .cta {
@@ -263,8 +270,7 @@ button:focus-visible {
 }
 
 .motif {
-  margin: 68px auto 0;
-  max-width: 880px;
+  margin: 0;
 }
 
 .motif svg {
@@ -281,10 +287,10 @@ button:focus-visible {
 }
 
 .page-title {
-  font-weight: 380;
+  font-weight: 500;
   font-size: clamp(38px, 4.6vw, 54px);
   line-height: 1.1;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   margin: 0 0 26px;
 }
 
@@ -314,13 +320,27 @@ button:focus-visible {
   grid-template-columns: 290px 1fr;
   column-gap: 48px;
   align-items: start;
+  border-top: 1px solid var(--hairline-soft);
+  padding-top: 44px;
+}
+
+.section--not-another-tool,
+.section--proof-stated-plainly,
+.section--talk-to-us {
+  border-top: none;
+}
+
+/* Each step ruled like a row of the grid. */
+.section--the-work-in-order .section-body > p {
+  border-top: 1px solid var(--hairline-soft);
+  padding-top: 18px;
 }
 
 .section-title {
   font-size: 36px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.18;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin: 0;
   max-width: 12em;
 }
@@ -431,15 +451,15 @@ body {
   background: var(--accent);
   color: #FFFFFF;
   font-weight: 600;
-  font-size: 16.5px;
+  font-size: 14.5px;
   text-decoration: none;
-  padding: 14px 26px;
+  padding: 10px 20px;
   border-radius: var(--radius-button);
   transition: background 0.15s ease;
 }
 
 .cta-button:hover {
-  background: var(--ink);
+  background: #FF8105;
 }
 
 /* ============================================================
@@ -796,6 +816,15 @@ body {
 
   .hero {
     padding: 64px var(--gutter) 60px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .motif {
+    max-width: 560px;
   }
 
   .hero-sub {
