@@ -635,6 +635,10 @@ body {
 
 .form-panel .field label {
   font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
 }
 
 /* The checkbox rows: G-28 attached, Apt. Ste. Flr. */
@@ -656,14 +660,14 @@ body {
 }
 
 .chk {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   flex: none;
-  border: 1.5px solid var(--ink-2);
+  border: 2px solid var(--ink-2);
   background: #FFFFFF;
   display: inline-grid;
   place-items: center;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1;
   color: var(--ink);
 }
@@ -694,6 +698,7 @@ body {
 
 .chkrow--bare .fbox.apt-no {
   min-width: 76px;
+  margin-left: 6px;
 }
 
 .doc-code {
@@ -816,6 +821,7 @@ body {
 .f2 { grid-column: span 2; }
 .f3 { grid-column: span 3; }
 .f5 { grid-column: span 5; }
+.f7 { grid-column: span 7; }
 .f12 { grid-column: span 12; }
 
 .aboxes {
