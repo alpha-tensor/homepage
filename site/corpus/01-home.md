@@ -26,7 +26,7 @@ Built AI-first, and built now. The thousand small judgment calls inside a packet
 
 ### Proof, stated plainly
 
-Live in a working immigration practice, on real cases, under the firm's own rules. Intake that took about an hour takes about five minutes. The longer record, the VA's veteran claims intake pipeline, is on the History page.
+Live in a working immigration practice, on real cases, under the firm's own rules. A backlog of 1,100+ cases, worked to completion. Intake that took about an hour takes about five minutes. The longer record, the VA's veteran claims intake pipeline, is on the History page.
 
 ### Where this goes next
 
