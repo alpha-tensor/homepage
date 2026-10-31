@@ -505,7 +505,8 @@ body {
   flex-direction: column;
 }
 
-/* Faint national document colors: pale green, pale pink. */
+/* Faint national document colors: pale green, pale pink, pale blue.
+   The text on each card takes the deep shade of its tint. */
 .tint-green {
   background: #F3F7F1;
   border-color: rgba(70, 110, 70, 0.35);
@@ -514,6 +515,49 @@ body {
 .tint-pink {
   background: #FAF2F3;
   border-color: rgba(150, 90, 100, 0.3);
+}
+
+.tint-blue {
+  background: #EEF2F9;
+  border-color: rgba(50, 90, 160, 0.3);
+}
+
+.tint-green .doc-code,
+.tint-green .doc-name,
+.tint-green .doc-facts {
+  color: #2E6B33;
+}
+
+.tint-pink .doc-code,
+.tint-pink .doc-name,
+.tint-pink .doc-facts {
+  color: #A83A52;
+}
+
+.tint-blue .doc-code,
+.tint-blue .doc-name {
+  color: #1F4E9C;
+}
+
+/* Form values carry the color of the document they came from. */
+.fbox.from-mx {
+  background: #EDF4EA;
+  border-color: rgba(70, 110, 70, 0.35);
+  color: #2E6B33;
+}
+
+.fbox.from-ca {
+  background: #EAF0F8;
+  border-color: rgba(50, 90, 160, 0.3);
+  color: #1F4E9C;
+}
+
+.form-ink-note {
+  font-size: 11.5px;
+  font-weight: 550;
+  color: var(--ink-muted);
+  padding: 14px 28px 0;
+  margin: 0;
 }
 
 .doc-code {
@@ -587,9 +631,9 @@ body {
   align-items: baseline;
   gap: 16px;
   flex-wrap: wrap;
-  background: var(--surface);
-  border-bottom: 1px solid var(--hairline);
-  padding: 16px 28px;
+  background: var(--ink-deep);
+  color: #FFFFFF;
+  padding: 14px 28px;
   font-weight: 600;
   font-size: 15px;
 }
@@ -600,7 +644,7 @@ body {
   font-weight: 400;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .form-grid {
