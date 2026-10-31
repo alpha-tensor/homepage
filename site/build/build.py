@@ -134,6 +134,7 @@ def build():
     footer_tpl = load_template("partials/footer.html")
     hero_tpl = load_template("partials/hero.html")
     motif_tpl = load_template("partials/motif.html")
+    form_demo_tpl = load_template("partials/form-demo.html")
     cta_tpl = load_template("partials/cta.html")
     section_tpl = load_template("partials/section.html")
 
@@ -155,17 +156,26 @@ def build():
         if headline is None or subhead is None:
             raise SystemExit(f"{src}: missing H1 headline or H2 subhead")
 
-        sections_html = "\n".join(
-            render(
-                section_tpl,
-                {
-                    "section_class": section_slug(s["title"]),
-                    "section_title": html.escape(s["title"]),
-                    "section_body": render_blocks(s["blocks"], cta_tpl),
-                },
-            ).strip()
-            for s in sections
-        )
+        rendered_sections = []
+        for s in sections:
+            body = render_blocks(s["blocks"], cta_tpl)
+            if (
+                kind == "home"
+                and section_slug(s["title"])
+                == "section--one-fact-every-format-the-form-asks-for"
+            ):
+                body += "\n" + form_demo_tpl
+            rendered_sections.append(
+                render(
+                    section_tpl,
+                    {
+                        "section_class": section_slug(s["title"]),
+                        "section_title": html.escape(s["title"]),
+                        "section_body": body,
+                    },
+                ).strip()
+            )
+        sections_html = "\n".join(rendered_sections)
         lead_html = render_blocks(lead, cta_tpl)
 
         if kind == "home":
