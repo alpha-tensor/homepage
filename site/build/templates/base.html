@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=12">
+<link rel="stylesheet" href="assets/styles.css?v=13">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -54,6 +54,52 @@
       else { pinned = id; light(id); }
     });
   });
+})();
+
+/* Mobile menu: the disc that grows from the toggle to fill the
+   screen, ported from the tagline lab. The disc scale is measured
+   from the toggle to the furthest viewport corner, never fixed. */
+(function () {
+  var header = document.querySelector(".site-header");
+  var toggle = document.getElementById("menu-toggle");
+  var backdrop = document.querySelector(".menu-backdrop");
+  var panel = document.getElementById("mobile-nav");
+  if (!header || !toggle || !backdrop || !panel) return;
+  var open = false;
+  function measure() {
+    var r = toggle.getBoundingClientRect();
+    var cx = r.left + r.width / 2;
+    var cy = r.top + r.height / 2;
+    backdrop.style.left = cx + "px";
+    backdrop.style.top = cy + "px";
+    var size = backdrop.offsetWidth || r.width;
+    var furthest = 0;
+    [[0, 0], [window.innerWidth, 0], [0, window.innerHeight], [window.innerWidth, window.innerHeight]].forEach(function (c) {
+      furthest = Math.max(furthest, Math.hypot(c[0] - cx, c[1] - cy));
+    });
+    backdrop.style.setProperty("--disc-scale", ((furthest * 2 / size) * 1.06).toFixed(3));
+  }
+  function setOpen(next) {
+    open = next;
+    header.setAttribute("data-open", String(open));
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    document.documentElement.style.overflow = open ? "hidden" : "";
+    var main = document.querySelector("main");
+    if (main) main.inert = open;
+    var footer = document.querySelector("footer");
+    if (footer) footer.inert = open;
+    if (open) { measure(); }
+    else { backdrop.style.setProperty("--disc-scale", "1"); }
+  }
+  toggle.addEventListener("click", function () { setOpen(!open); });
+  panel.addEventListener("click", function (e) {
+    if (e.target.closest("a")) setOpen(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && open) { setOpen(false); toggle.focus(); }
+  });
+  window.addEventListener("resize", function () { if (open) measure(); });
 })();
 </script>
 </body>

@@ -1,4 +1,4 @@
-<header class="site-header">
+<header class="site-header" data-open="false">
   <div class="header-inner">
     <a class="wordmark" href="index.html"><img class="brand-mark" src="assets/alpha-tensor-mark-orange-fill.svg" alt="" width="26" height="26">Alpha Tensor</a>
     <nav class="site-nav" aria-label="Site">
@@ -7,5 +7,29 @@
       </ul>
     </nav>
     <a class="header-cta" href="{{cta_url}}">Book a free consultation</a>
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+      <span class="menu-disc" aria-hidden="true">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </span>
+    </button>
+  </div>
+  <div class="menu-overlay">
+    <span class="menu-backdrop" aria-hidden="true"></span>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Menu">
+      <div class="mnav-columns">
+        <ul class="mnav-list">
+{{nav_items}}
+        </ul>
+        <ul class="mnav-list">
+          <li><a href="{{cta_url}}">Book a free consultation</a></li>
+          <li><a href="mailto:hello@alphatensor.com">hello@alphatensor.com</a></li>
+        </ul>
+      </div>
+      <div class="mnav-info">
+        <p class="mnav-label">Currently</p>
+        <p class="mnav-value">Live in a working immigration practice, on real cases, under the firm&rsquo;s own rules.</p>
+      </div>
+    </nav>
   </div>
 </header>
