@@ -133,6 +133,7 @@ def build():
     nav_tpl = load_template("partials/nav.html")
     footer_tpl = load_template("partials/footer.html")
     hero_tpl = load_template("partials/hero.html")
+    motif_tpl = load_template("partials/motif.html")
     cta_tpl = load_template("partials/cta.html")
     section_tpl = load_template("partials/section.html")
 
@@ -175,6 +176,7 @@ def build():
                     "headline": html.escape(headline),
                     "subhead": html.escape(subhead),
                     "lead_html": lead_html,
+                    "motif": motif_tpl,
                 },
             )
             content = render(home_tpl, {"hero": hero, "sections": sections_html})
