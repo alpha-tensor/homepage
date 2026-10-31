@@ -576,6 +576,12 @@ body {
   box-shadow: 0 0 0 1px var(--accent);
 }
 
+.form-demo .aboxes.hl .abox {
+  background: #FDF0E1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
 .form-ink-note {
   font-size: 11.5px;
   font-weight: 550;

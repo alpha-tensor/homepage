@@ -1,83 +1,57 @@
 Privacy Policy
 
-Effective date: August 6, 2026
-1. Introduction
+Effective date: October 31, 2026
 
-AlphaTensor, Inc. ("we", "us", or "our") operates the Pioneer platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+1. Who we are
 
-Pioneer is built to be privacy-forward by design. In particular:
+Alpha Tensor LLC ("Alpha Tensor", "we", "us") operates this website, alphatensor.com, and provides document preparation services to law firms and, through our platform, to the clients they serve. This policy explains what information we collect through this website and our consultation process, how we use it, and the choices you have.
 
-    We do not sell your personal information, and we do not use your prompts, inputs, or datasets to serve advertising.
-    Your team can enable Zero Data Retention (ZDR) so your inference requests are not stored and, on supported gateways, upstream providers are instructed not to retain your prompts or completions.
-    On eligible plans, you can opt out of having your content used to train our platform-wide models.
-    We minimize what we collect and how long we keep it, and you can request deletion of your data at any time.
+Work we perform for a client under a signed engagement is governed by that engagement's terms, including its confidentiality provisions. This policy covers the website and pre-engagement communications. Where an engagement agreement says something different, the agreement controls for that work.
 
-2. Information We Collect
+2. Information we collect
 
-We may collect the following types of information:
+    Contact information: your name, email address, phone number, and firm or company name, when you book a consultation, email us, or otherwise contact us.
+    Consultation information: the details you choose to share about your practice, your cases, and your document workflows, so we can assess whether we can help.
+    Technical information: when you visit the website, our hosting provider automatically records standard log data such as your IP address, browser type, and the pages requested, and may set strictly necessary cookies for security and load balancing. This website does not use advertising or cross-site tracking cookies.
+    We do not ask for client documents or other confidential case materials before an engagement is in place, and you should not send them to us before we have agreed on a secure transfer method.
 
-    Account Information: Name, email address, company name, and authentication credentials when you sign up or join the waitlist.
-    Usage Data: Information about how you interact with our platform, including pages visited, features used, and actions taken.
-    Technical Data: Browser type, operating system, IP address, device information, and cookies.
-    User Content: Datasets, models, and other content you upload or create on the platform.
+3. How we use information
 
-3. How We Use Your Information
+    To respond to your inquiry, and to schedule and conduct consultations.
+    To provide, operate, and improve our services and this website.
+    To communicate with you about your inquiry or engagement.
+    To meet legal, accounting, and security obligations.
 
-We use collected information to:
+We do not sell personal information, and we do not use it for third-party advertising.
 
-    Provide, maintain, and improve the Pioneer platform.
-    Process and manage your account registration and waitlist status.
-    Communicate with you about updates, features, and support.
-    Monitor and analyze usage patterns to improve user experience.
-    Ensure security and prevent fraud or abuse.
+4. Client documents and model training
 
-4. Data Sharing
+Documents and data provided to us under an engagement are used only to perform that engagement. We do not use one client's documents to train models for other clients, and we do not disclose engagement materials except as the engagement requires and the client directs.
 
-We do not sell your personal information, and we do not share it with third parties for their own advertising or marketing. We share information only in these limited circumstances:
+5. How we share information
 
-    Subprocessors: Service providers that help us operate the platform, such as cloud hosting, model inference gateways and providers, analytics, and email. We share only the information they need to perform their function on our behalf, and we do not authorize them to use it for their own purposes. A current list of our subprocessors is available at docs.pioneer.ai/trust-safety.
-    Inference providers: To generate model outputs, your prompts are routed to upstream inference providers. When Zero Data Retention is enabled for your team, requests sent to supported providers carry a no-retention instruction, so those providers do not store your prompts or completions. See Data Retention below.
-    Legal Requirements: When required by law or to protect our rights and safety.
-    Business Transfers: In connection with a merger, acquisition, or sale of assets.
+We share information only as needed to run the business:
 
-5. Data Security
+    Service providers: companies that host this website and our email, provide scheduling (our booking page is operated by Cal.com), and provide the infrastructure our services run on. They process information on our behalf under their own security and privacy commitments.
+    Legal and safety: when required by law or court order, or to protect our rights or the safety of others.
+    Business transfers: in connection with a financing, merger, or sale of the company, subject to confidentiality.
 
-We implement industry-standard security measures to protect your data, including encryption in transit and at rest, access controls, and regular security assessments. However, no method of electronic storage is 100% secure.
-6. Data Retention
+6. Retention
 
-We keep personal data only for as long as we need it for the purposes described in this policy, and we apply data minimization to each category of data we hold.
-A. Retention by data type
+We keep contact and consultation information for as long as needed to respond to you, maintain our business records, and meet legal obligations. Engagement materials are retained or deleted as the engagement agreement provides.
 
-    Account information is retained while your account is active and for a limited period afterward as needed for legal, tax, and security purposes.
-    Inference data (the prompts you send and the completions you receive) is retained in your history to provide the service and is deleted when you delete your account. If Zero Data Retention is enabled, this data is not stored at all (see below).
-    Uploaded datasets and models are retained while your account is active or until you delete them, whichever comes first.
-    Technical and usage logs are retained for a limited period for security, abuse prevention, and billing, then deleted or aggregated.
+7. Security
 
-B. Zero Data Retention (ZDR)
+We use administrative and technical measures appropriate to the nature of the information, including access controls and encryption in transit. No system is perfectly secure, and we cannot guarantee absolute security.
 
-Team owners, admins, and billing managers can enable Zero Data Retention in team settings. When ZDR is enabled, your inference requests are not stored in Pioneer's history, and on supported gateways the upstream provider is instructed not to retain your prompts or completions. ZDR applies to everyone on the team and takes effect prospectively; some models may be unavailable while ZDR is enabled. Because ZDR prevents your inference data from being stored, that data is also never used to train or improve our models.
-C. Training and your data
+8. Your choices and rights
 
-By default we may use your content to provide and improve the platform, as described in our Terms of Service. Where the feature is available for your plan, you may opt out of having your content used to train our platform-wide models; the account-specific models we train and serve on your behalf are unaffected. See Section 6 of the Terms of Service for details.
-D. Deletion
+You may ask us to access, correct, or delete the personal information we hold about you, and you may opt out of non-essential communications at any time, by writing to support@alphatensor.com. We respond to requests as required by applicable law. Our services are directed to law firms and to adults. We do not knowingly collect information from children under 13.
 
-You can delete your account and associated data at any time using the Delete Account option in your account settings, or by contacting us at support@AlphaTensor.com. When you delete data or your account, we remove it from our production systems. Residual copies in encrypted backups are removed in the ordinary course of our backup rotation.
-7. Your Rights
+9. Changes to this policy
 
-Depending on your jurisdiction, you may have the right to:
+We may update this policy as our services change. The current version will always be posted on this page with its effective date.
 
-    Access, correct, or delete your personal data.
-    Object to or restrict processing of your data.
-    Data portability.
-    Withdraw consent at any time.
+10. Contact
 
-8. Cookies
-
-We use essential cookies to maintain your session and preferences. We do not use third-party advertising cookies. Analytics cookies may be used to understand platform usage patterns.
-9. Changes to This Policy
-
-We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the updated policy on this page with a revised effective date.
-10. Contact Us
-
-If you have questions about this Privacy Policy, contact us at support@AlphaTensor.com.
-© 2026 AlphaTensor, Inc.. All rights reserved.
+Questions about this policy or your information: support@alphatensor.com. Alpha Tensor LLC, Georgia, USA.
