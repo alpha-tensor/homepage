@@ -115,23 +115,9 @@ button:focus-visible {
 /* ============================================================
    HEADER / NAV
    ============================================================ */
-/* The header settles down into place on load, Mistral-style. */
-@keyframes header-in {
-  from {
-    opacity: 0;
-    transform: translateY(-14px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .site-header {
   background: var(--header-bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  animation: header-in 0.6s ease-out both;
 }
 
 .site-header .wordmark {
@@ -200,22 +186,6 @@ button:focus-visible {
   font-size: 14px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.82);
-}
-
-/* Mistral's strip: a line that fills under the item on hover. */
-.site-nav a::after {
-  content: "";
-  position: absolute;
-  left: 16px;
-  bottom: 0;
-  height: 2px;
-  width: 0;
-  background: var(--accent);
-  transition: width 0.45s ease;
-}
-
-.site-nav a:hover::after {
-  width: calc(100% - 32px);
 }
 
 .site-nav a:hover {
@@ -295,6 +265,32 @@ button:focus-visible {
   margin-top: 32px;
 }
 
+/* Hero text settles in on load, staggered, the way the
+   research page hero does it. Header stays still. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-text > * {
+  animation: hero-in 0.7s ease-out both;
+}
+
+.hero-text > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.hero-text > *:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
 .hero-more {
   margin: 20px 0 0;
   font-size: 16px;
@@ -362,7 +358,7 @@ button:focus-visible {
 }
 
 .section {
-  margin-top: 64px;
+  margin-top: 72px;
   display: grid;
   grid-template-columns: 290px 1fr;
   column-gap: 48px;
@@ -617,6 +613,63 @@ body {
   line-height: 1.55;
   color: var(--ink-2);
   margin-top: 8px;
+}
+
+/* Entered values on the form sit in Courier Prime, the
+   typewriter face of filled government forms. It applies
+   only inside the form panel, nowhere else on the site. */
+.form-panel .fbox,
+.form-panel .abox {
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* The checkbox rows: G-28 attached, Apt. Ste. Flr. */
+.chkrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  background: var(--panel);
+  border: 1px solid var(--hairline-strong);
+  padding: 10px 14px;
+  font-size: 13.5px;
+}
+
+.chk-unit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chk {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border: 1.5px solid var(--ink-2);
+  background: #FFFFFF;
+  display: inline-grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.form-demo .chk-unit.hl {
+  color: #B4530A;
+}
+
+.form-demo .chk-unit.hl .chk {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.chkrow .fbox.apt-no {
+  margin-left: auto;
+  min-width: 104px;
+  text-align: center;
+  background: #FFFFFF;
 }
 
 .doc-code {
@@ -892,13 +945,48 @@ body {
   transform: none;
 }
 
-/* One green area at the bottom, after Mistral's research
-   pages: their green is #44BA82, used here as a soft field
-   with a solid strip of the same green on top. */
-.section--talk-to-us .cta-panel {
-  background: rgba(68, 186, 130, 0.13);
-  border-color: rgba(5, 87, 55, 0.35);
-  border-top: 3px solid #44BA82;
+/* Bottom variation, after the orange blocks on Mistral's
+   pages: the closing section is a full-bleed orange field,
+   big white text, and a white pill button. */
+.section--talk-to-us {
+  grid-template-columns: 1fr;
+  border-top: none;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  margin-top: 88px;
+  padding: 76px max(var(--gutter), calc(50vw - 616px)) 84px;
+  background: #FA520F;
+  color: #FFFFFF;
+}
+
+.section--talk-to-us .section-title {
+  color: #FFFFFF;
+  font-size: clamp(36px, 4.2vw, 54px);
+  max-width: 12em;
+}
+
+.section--talk-to-us .section-body p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 19px;
+  line-height: 1.6;
+  max-width: 36em;
+}
+
+.section--talk-to-us .cta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 28px;
+}
+
+.section--talk-to-us .cta-button {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 15.5px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -910,7 +998,7 @@ body {
     transition: none;
   }
 
-  .site-header {
+  .hero-text > * {
     animation: none;
   }
 }

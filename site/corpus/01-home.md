@@ -1,4 +1,4 @@
-# Documents in. Review-ready immigration packets out.
+# Documents in. Ready immigration packets out.
 
 ## Alpha Tensor does the preparation work other systems only give you tools for.
 
