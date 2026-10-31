@@ -358,13 +358,13 @@ button:focus-visible {
 }
 
 .section {
-  margin-top: 72px;
+  margin-top: 88px;
   display: grid;
   grid-template-columns: 290px 1fr;
   column-gap: 48px;
   align-items: start;
   border-top: 1px solid var(--hairline-soft);
-  padding-top: 44px;
+  padding-top: 52px;
 }
 
 .section--not-another-tool,
@@ -376,7 +376,8 @@ button:focus-visible {
 /* Each step ruled like a row of the grid. */
 .section--the-work-in-order .section-body > p {
   border-top: 1px solid var(--hairline-soft);
-  padding-top: 18px;
+  padding-top: 22px;
+  padding-bottom: 10px;
 }
 
 .section-title {
@@ -615,14 +616,25 @@ body {
   margin-top: 8px;
 }
 
-/* Entered values on the form sit in Courier Prime, the
-   typewriter face of filled government forms. It applies
-   only inside the form panel, nowhere else on the site. */
+/* The whole form panel speaks in Courier Prime, labels
+   included: accurate to the filled government form, not
+   prettied up. Nowhere else on the site uses it. */
+.form-panel {
+  font-family: "Courier Prime", "Courier New", monospace;
+}
+
 .form-panel .fbox,
 .form-panel .abox {
-  font-family: "Courier Prime", "Courier New", monospace;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+
+.form-panel .form-panel-note {
+  font-family: "Courier Prime", "Courier New", monospace;
+}
+
+.form-panel .field label {
+  font-weight: 400;
 }
 
 /* The checkbox rows: G-28 attached, Apt. Ste. Flr. */
@@ -672,6 +684,18 @@ body {
   background: #FFFFFF;
 }
 
+/* The apartment row stands on its own, no gray box,
+   and shares the street line. */
+.chkrow--bare {
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+}
+
+.chkrow--bare .fbox.apt-no {
+  min-width: 76px;
+}
+
 .doc-code {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -683,6 +707,9 @@ body {
   font-weight: 600;
   font-size: 15px;
   margin-top: 10px;
+  /* Two lines reserved on every card, so names and the
+     facts under them align across the row. */
+  min-height: 42px;
 }
 
 .doc-facts {
@@ -943,6 +970,79 @@ body {
 .js-reveal .world-model.in {
   opacity: 1;
   transform: none;
+}
+
+/* Bottom breakup: no two adjacent sections share a shape.
+   Built AI-first becomes a full-bleed band carrying one big
+   statement. Proof becomes a quiet gray block. Where this
+   goes next is a single line with air around it. Then the
+   orange close. */
+.section--built-ai-first-and-built-now {
+  grid-template-columns: 1fr;
+  border-top: none;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  padding: 76px max(var(--gutter), calc(50vw - 616px)) 84px;
+  background: var(--surface);
+}
+
+.section--built-ai-first-and-built-now .section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.section--built-ai-first-and-built-now .section-body {
+  border-left: none;
+  padding-left: 0;
+}
+
+.section--built-ai-first-and-built-now .section-body p {
+  font-size: clamp(21px, 2.4vw, 27px);
+  line-height: 1.5;
+  font-weight: 450;
+  max-width: 30em;
+  margin-top: 22px;
+}
+
+.section--proof-stated-plainly {
+  grid-template-columns: 1fr;
+}
+
+.section--proof-stated-plainly .section-body {
+  border-left: none;
+  padding: 36px 38px;
+  background: var(--panel);
+  margin-top: 24px;
+}
+
+.section--proof-stated-plainly .section-body p {
+  font-size: 18.5px;
+  line-height: 1.65;
+  max-width: 44em;
+  margin: 0;
+}
+
+.section--where-this-goes-next {
+  grid-template-columns: 1fr;
+  margin-top: 104px;
+}
+
+.section--where-this-goes-next .section-body {
+  border-left: none;
+  padding-left: 0;
+}
+
+.section--where-this-goes-next .section-body p {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 34em;
+  margin-top: 16px;
 }
 
 /* Bottom variation, after the orange blocks on Mistral's
