@@ -82,6 +82,7 @@ function buildPrivacy() {
   const sectionsHtml = sections
     .map((s) =>
       fill(sectionTpl, {
+        section_class: "",
         section_title: esc(s.title),
         section_body: s.blocks.join("\n"),
       }).trim()

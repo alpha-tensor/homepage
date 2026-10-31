@@ -99,6 +99,11 @@ def render_blocks(blocks, cta_template):
     return "\n".join(parts)
 
 
+def section_slug(title):
+    slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+    return "section--" + slug if slug else ""
+
+
 def nav_items(active_output):
     items = []
     for _src, output, label, _eyebrow, _kind in PAGES:
@@ -153,6 +158,7 @@ def build():
             render(
                 section_tpl,
                 {
+                    "section_class": section_slug(s["title"]),
                     "section_title": html.escape(s["title"]),
                     "section_body": render_blocks(s["blocks"], cta_tpl),
                 },

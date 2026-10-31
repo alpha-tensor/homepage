@@ -6,6 +6,7 @@
    ============================================================ */
 :root {
   --paper: #FFFFFF;
+  --sand: #FBF9F7;
   --ink: #201A1A;
   --ink-muted: rgba(32, 26, 26, 0.66);
   --hairline: rgba(0, 0, 0, 0.2);
@@ -16,10 +17,10 @@
 
   --font-body: "Funnel Sans", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
 
   --content-width: 1120px;
-  --measure: 52rem;
+  --measure: 38rem;
   --gutter: 24px;
 }
 
@@ -40,7 +41,7 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 17px;
-  line-height: 1.6;
+  line-height: 1.65;
   font-weight: 400;
 }
 
@@ -59,6 +60,26 @@ p {
   margin: 0 0 1.1em;
 }
 
+::selection {
+  background: rgba(240, 110, 0, 0.25);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Display type shares optical sizing wherever it appears. */
+.hero-title,
+.hero-sub,
+.page-title,
+.lede,
+.section-title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
 /* ============================================================
    HEADER / NAV
    ============================================================ */
@@ -69,27 +90,27 @@ p {
 .header-inner {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: 20px var(--gutter);
+  padding: 22px var(--gutter);
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 44px;
   flex-wrap: wrap;
 }
 
 .wordmark {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
 }
 
 .brand-mark {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   display: block;
 }
 
@@ -102,13 +123,13 @@ p {
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 28px;
+  gap: 30px;
   flex-wrap: wrap;
 }
 
 .site-nav a {
   text-decoration: none;
-  font-size: 15px;
+  font-size: 15.5px;
   color: var(--ink-muted);
 }
 
@@ -130,8 +151,9 @@ p {
   text-decoration: none;
   border: 1px solid var(--ink);
   border-radius: var(--radius-button);
-  padding: 7px 14px;
+  padding: 9px 16px;
   white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .header-cta:hover {
@@ -143,33 +165,31 @@ p {
    HERO (home)
    ============================================================ */
 .hero {
-  padding: 88px 0 64px;
+  padding: 104px 0 84px;
 }
 
 .hero-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 54px;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-weight: 350;
+  font-size: clamp(46px, 6.2vw, 78px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
   margin: 0;
-  max-width: 20em;
+  max-width: 16em;
 }
 
 .hero-rule {
-  width: 56px;
-  height: 3px;
+  width: 72px;
+  height: 4px;
   background: var(--accent);
-  margin: 36px 0;
+  margin: 42px 0;
 }
 
 .hero-sub {
-  font-family: var(--font-display);
-  font-size: 25px;
-  line-height: 1.45;
-  font-weight: 400;
-  margin: 0 0 20px;
-  max-width: 34em;
+  font-size: 26px;
+  line-height: 1.5;
+  font-weight: 340;
+  margin: 0 0 22px;
+  max-width: 32em;
 }
 
 .hero-lead {
@@ -178,32 +198,30 @@ p {
 }
 
 .hero-lead .cta {
-  margin-top: 28px;
+  margin-top: 30px;
 }
 
 /* ============================================================
    PAGE HEAD (article pages)
    ============================================================ */
 .page-head {
-  padding: 72px 0 8px;
+  padding: 88px 0 8px;
 }
 
 .page-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 44px;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  margin: 0 0 24px;
+  font-weight: 380;
+  font-size: clamp(38px, 4.6vw, 54px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0 0 26px;
 }
 
 .lede {
-  font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 23px;
   line-height: 1.5;
-  font-weight: 400;
-  max-width: 36em;
-  margin: 0 0 20px;
+  font-weight: 340;
+  max-width: 34em;
+  margin: 0 0 22px;
 }
 
 .page-head p {
@@ -212,22 +230,27 @@ p {
 
 /* ============================================================
    SECTIONS
+   Two-column on desktop: title rail on the left, body right.
    ============================================================ */
 .sections {
-  padding-bottom: 88px;
+  padding-bottom: 96px;
 }
 
 .section {
-  margin-top: 64px;
+  margin-top: 76px;
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  column-gap: 56px;
+  align-items: start;
 }
 
 .section-title {
-  font-size: 27px;
-  font-weight: 650;
-  line-height: 1.25;
+  font-size: 31px;
+  font-weight: 420;
+  line-height: 1.2;
   letter-spacing: -0.01em;
-  margin: 0 0 20px;
-  max-width: 30em;
+  margin: 0;
+  max-width: 12em;
 }
 
 .section-body p {
@@ -236,6 +259,47 @@ p {
 
 .section-body strong {
   font-weight: 650;
+}
+
+/* The work, in order: three steps side by side under the title. */
+.section--the-work-in-order {
+  grid-template-columns: 1fr;
+}
+
+.section--the-work-in-order .section-title {
+  margin-bottom: 30px;
+}
+
+.section--the-work-in-order .section-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.section--the-work-in-order .section-body p {
+  margin: 0;
+}
+
+.section--the-work-in-order .section-body strong {
+  display: block;
+  font-size: 17.5px;
+  margin-bottom: 8px;
+}
+
+/* Proof: the one tonal band on the page, a sand panel. */
+.section--proof-stated-plainly {
+  grid-template-columns: 1fr;
+  background: var(--sand);
+  border-radius: var(--radius-card);
+  padding: 52px 48px;
+}
+
+.section--proof-stated-plainly .section-title {
+  margin-bottom: 22px;
+}
+
+.section--proof-stated-plainly .section-body p:last-child {
+  margin-bottom: 0;
 }
 
 /* ============================================================
@@ -250,10 +314,11 @@ p {
   background: var(--accent);
   color: #FFFFFF;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 16.5px;
   text-decoration: none;
-  padding: 12px 22px;
+  padding: 14px 26px;
   border-radius: var(--radius-button);
+  transition: background 0.15s ease;
 }
 
 .cta-button:hover {
@@ -270,11 +335,11 @@ p {
 .footer-inner {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: 28px var(--gutter) 36px;
+  padding: 30px var(--gutter) 40px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 24px;
+  gap: 16px 32px;
   flex-wrap: wrap;
 }
 
@@ -300,6 +365,23 @@ p {
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 860px) {
+  .section {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+    margin-top: 56px;
+  }
+
+  .section--the-work-in-order .section-body {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .section--proof-stated-plainly {
+    padding: 36px 26px;
+  }
+}
+
 @media (max-width: 760px) {
   .header-inner {
     gap: 16px 24px;
@@ -311,30 +393,26 @@ p {
   }
 
   .hero {
-    padding: 56px 0 44px;
+    padding: 60px 0 52px;
   }
 
-  .hero-title {
-    font-size: 38px;
+  .hero-rule {
+    margin: 30px 0;
   }
 
   .hero-sub {
-    font-size: 20px;
+    font-size: 21px;
   }
 
   .page-head {
-    padding: 48px 0 4px;
-  }
-
-  .page-title {
-    font-size: 34px;
+    padding: 52px 0 4px;
   }
 
   .lede {
-    font-size: 19px;
+    font-size: 20px;
   }
 
-  .section {
-    margin-top: 44px;
+  .section-title {
+    font-size: 27px;
   }
 }
