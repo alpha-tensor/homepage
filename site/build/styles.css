@@ -429,9 +429,16 @@ body {
 
 .section--proof-stated-plainly .section-body,
 .section--talk-to-us .section-body,
-.section--the-work-in-order .section-body {
+.section--the-work-in-order .section-body,
+.section--one-fact-every-format-the-form-asks-for .section-body {
   border-left: none;
   padding-left: 0;
+}
+
+/* The example gets the full width: title on its own row,
+   the demo beneath it at container width. */
+.section--one-fact-every-format-the-form-asks-for {
+  grid-template-columns: 1fr;
 }
 
 .section--proof-stated-plainly .section-title {
@@ -505,11 +512,13 @@ body {
   flex-direction: column;
 }
 
-/* Faint national document colors: pale green, pale pink, pale blue.
-   The text on each card takes the deep shade of its tint. */
+/* Document colors, muted to sit with the monochrome and orange
+   theme: sage green, dusty rose, slate blue, and the brand
+   orange itself for the marriage certificate. The text on each
+   card takes the deep shade of its tint. */
 .tint-green {
-  background: #F3F7F1;
-  border-color: rgba(70, 110, 70, 0.35);
+  background: #EDF3EC;
+  border-color: rgba(62, 107, 79, 0.35);
 }
 
 .tint-pink {
@@ -518,38 +527,60 @@ body {
 }
 
 .tint-blue {
-  background: #EEF2F9;
-  border-color: rgba(50, 90, 160, 0.3);
+  background: #EBEFF5;
+  border-color: rgba(61, 90, 128, 0.32);
+}
+
+.tint-orange {
+  background: #FBF0E3;
+  border-color: rgba(199, 91, 18, 0.4);
 }
 
 .tint-green .doc-code,
 .tint-green .doc-name,
 .tint-green .doc-facts {
-  color: #2E6B33;
+  color: #3E6B4F;
 }
 
 .tint-pink .doc-code,
 .tint-pink .doc-name,
 .tint-pink .doc-facts {
-  color: #A83A52;
+  color: #A34A5A;
 }
 
 .tint-blue .doc-code,
 .tint-blue .doc-name {
-  color: #1F4E9C;
+  color: #3D5A80;
+}
+
+.tint-orange .doc-code,
+.tint-orange .doc-name {
+  color: #B4530A;
+}
+
+.doc-name--second {
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-top: 4px;
 }
 
 /* Form values carry the color of the document they came from. */
 .fbox.from-mx {
-  background: #EDF4EA;
-  border-color: rgba(70, 110, 70, 0.35);
-  color: #2E6B33;
+  background: #EDF3EC;
+  border-color: rgba(62, 107, 79, 0.35);
+  color: #3E6B4F;
 }
 
 .fbox.from-ca {
-  background: #EAF0F8;
-  border-color: rgba(50, 90, 160, 0.3);
-  color: #1F4E9C;
+  background: #EBEFF5;
+  border-color: rgba(61, 90, 128, 0.32);
+  color: #3D5A80;
+}
+
+.fbox.from-mc {
+  background: #FBF0E3;
+  border-color: rgba(199, 91, 18, 0.4);
+  color: #B4530A;
 }
 
 .form-ink-note {
