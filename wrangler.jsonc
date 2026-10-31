@@ -29,5 +29,5 @@
   // existing DNS record for alphatensor.com stays exactly as it is, pointing at
   // the tunnel, so rollback is deleting the route rather than restoring DNS.
   //
-  // "routes": [{ "pattern": "alphatensor.com/*", "zone_name": "alphatensor.com" }]
+  "routes": [{ "pattern": "alphatensor.com/*", "zone_name": "alphatensor.com" }]
 }
