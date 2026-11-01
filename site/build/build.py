@@ -190,7 +190,12 @@ def build():
                     "headline": html.escape(headline),
                     "subhead": html.escape(subhead),
                     "lead_html": lead_html,
-                    "motif": motif_tpl,
+                    "motif": motif_tpl.replace(
+                        "{{hero_cat}}",
+                        '<div class="hero-cat" aria-hidden="true">'
+                        + talk_cat_tpl
+                        + "</div>",
+                    ),
                 },
             )
             content = render(home_tpl, {"hero": hero, "sections": sections_html})

@@ -589,6 +589,49 @@ button:focus-visible {
 /* The hero artifact is the finished packet, at a glance. */
 .hero-artifact {
   animation: hero-in 0.7s ease-out 0.25s both;
+  position: relative;
+}
+
+/* The cat's one cameo: after the hero settles, it rises
+   from behind the packet card's top edge, holds a beat,
+   and withdraws. Once, never on a loop, and never under
+   reduced motion. */
+.hero-cat {
+  position: absolute;
+  right: 30px;
+  bottom: 100%;
+  margin-bottom: -4px;
+  width: 54px;
+  z-index: 1;
+  pointer-events: none;
+  animation: cat-peek 3.8s ease-in-out 1.25s both;
+}
+
+.hero-cat .talk-cat {
+  float: none;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+@keyframes cat-peek {
+  0%, 12% {
+    transform: translateY(106%);
+  }
+
+  30%, 62% {
+    transform: translateY(0);
+  }
+
+  80%, 100% {
+    transform: translateY(106%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cat {
+    display: none;
+  }
 }
 
 .packet-card {
@@ -600,6 +643,7 @@ button:focus-visible {
   box-shadow: 0 18px 44px rgba(18, 18, 21, 0.10);
   text-align: left;
   position: relative;
+  z-index: 2;
 }
 
 .packet-head {
