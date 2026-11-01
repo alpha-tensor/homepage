@@ -6,15 +6,17 @@
 <meta name="color-scheme" content="light dark">
 <script>
 /* Theme, the way Mistral does it: the stored preference is
-   'system', 'light' or 'dark'; 'system' (and no stored
-   preference) follows the operating system. Resolved before
-   the stylesheet loads so there is no flash of the wrong
-   theme. */
+   'system', 'light' or 'dark'; 'system' follows the operating
+   system. With no stored preference the site now defaults to
+   dark, whatever the operating system says; a stored 'light'
+   or 'system' keeps its old behavior. Resolved before the
+   stylesheet loads so there is no flash of the wrong theme. */
 (function () {
-  var pref = "system";
-  try { pref = localStorage.getItem("at-theme") || "system"; } catch (e) {}
+  var stored = null;
+  try { stored = localStorage.getItem("at-theme"); } catch (e) {}
+  var pref = stored || "dark";
   var dark = pref === "dark" ||
-    (pref !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.dataset.theme = dark ? "dark" : "light";
   document.documentElement.dataset.themePref = pref;
 })();
@@ -24,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=33">
+<link rel="stylesheet" href="assets/styles.css?v=34">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">

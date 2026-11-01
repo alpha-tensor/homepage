@@ -31,9 +31,11 @@
 }
 
 /* Dark theme. The inline script in the head resolves the
-   stored preference ('system', 'light', 'dark') against the
-   operating system and sets data-theme before first paint;
-   the media query below covers the no-script case. Only the
+   stored preference ('system', 'light', 'dark') and sets
+   data-theme before first paint; with no stored preference
+   the default is dark. The :root:not([data-theme]) rules
+   below cover the no-script case with the same default:
+   dark, whatever the operating system says. Only the
    tokens change: documents stay paper in both themes, the
    packet card, the source cards and the form panel keep
    their white ground and ink text, and the color bands
@@ -50,18 +52,16 @@ html[data-theme="dark"] {
   --hairline-strong: rgba(255, 255, 255, 0.34);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --paper: #121215;
-    --surface: #17171B;
-    --panel: #1D1D22;
-    --ink: #F2EFE9;
-    --ink-muted: rgba(242, 239, 233, 0.66);
-    --ink-strong: rgba(242, 239, 233, 0.85);
-    --hairline: rgba(255, 255, 255, 0.22);
-    --hairline-soft: rgba(255, 255, 255, 0.12);
-    --hairline-strong: rgba(255, 255, 255, 0.34);
-  }
+:root:not([data-theme]) {
+  --paper: #121215;
+  --surface: #17171B;
+  --panel: #1D1D22;
+  --ink: #F2EFE9;
+  --ink-muted: rgba(242, 239, 233, 0.66);
+  --ink-strong: rgba(242, 239, 233, 0.85);
+  --hairline: rgba(255, 255, 255, 0.22);
+  --hairline-soft: rgba(255, 255, 255, 0.12);
+  --hairline-strong: rgba(255, 255, 255, 0.34);
 }
 
 html[data-theme="dark"] .sunset-stripe {
@@ -72,14 +72,12 @@ html[data-theme="dark"] .packet-card {
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .sunset-stripe {
-    background: linear-gradient(90deg, #FA520F 0%, #FF8105 30%, #FFA110 52%, #FFD900 76%, #121215 100%);
-  }
+:root:not([data-theme]) .sunset-stripe {
+  background: linear-gradient(90deg, #FA520F 0%, #FF8105 30%, #FFA110 52%, #FFD900 76%, #121215 100%);
+}
 
-  :root:not([data-theme]) .packet-card {
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
-  }
+:root:not([data-theme]) .packet-card {
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
 }
 
 /* Documents stay paper in both themes. The packet card, the
@@ -2308,6 +2306,70 @@ body {
 
   .chkrow--units .fbox.apt-no {
     min-width: 96px;
+  }
+
+  /* Mobile demo order: the evidence rail rides above the
+     form, so a thumb scrolling through the documents does
+     not shove the form around; the extraction strip sits
+     below the form, never between rail and form. CSS order
+     only: the DOM keeps form, strip, rail, and focus and
+     reading order still follow the DOM. */
+  .form-demo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .demo-scroller {
+    order: 1;
+  }
+
+  .form-panel {
+    order: 2;
+  }
+
+  .demo-extracts {
+    order: 3;
+  }
+
+  .demo-caption {
+    order: 4;
+  }
+
+  /* Uniform evidence slots: every document gets the same
+     A4 slot, the full width of the rail's container and
+     1.414 times as tall, and the snap scroller pages one
+     slot at a time. Horizontal padding and margins come
+     off the scroller so the slot is exactly the visible
+     container width, flush with the form below it. */
+  .demo-sources {
+    padding: 12px 0 18px;
+    margin: -12px 0 0;
+  }
+
+  .demo-rail .doc-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 1 / 1.414;
+    background: #FFFFFF;
+    transform: none;
+  }
+
+  /* The document itself spans the slot's width, centred,
+     on the slot's white ground: a landscape license sits
+     mid-slot with white above and below, portrait pages
+     fill the slot nearly edge to edge. No captions under
+     the previews on mobile; the item alone. */
+  .demo-rail .doc-slide-img {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+    background: #FFFFFF;
+  }
+
+  .demo-rail .doc-slide-cap {
+    display: none;
   }
 }
 
