@@ -1935,3 +1935,53 @@ body {
     font-size: 27px;
   }
 }
+
+/* Specimen tiles (mobile, second pass at Brandon's word):
+   no text at all. Each tile is drawn, not written: a ground,
+   a title bar and a stack of text lines in background
+   layers, over the per-document color chrome, so it reads
+   as a tiny specimen of the document itself. */
+@media (max-width: 640px) {
+  .doc-card .doc-authority,
+  .doc-card .doc-name,
+  .doc-card .doc-facts,
+  .doc-card .doc-address,
+  .doc-card .doc-tag,
+  .doc-card .doc-line {
+    display: none;
+  }
+
+  .doc-card {
+    background-repeat: no-repeat;
+  }
+
+  .doc-card[data-doc="mxbc"] {
+    background-image:
+      linear-gradient(rgba(47, 125, 79, 0.9), rgba(47, 125, 79, 0.9)),
+      radial-gradient(circle, rgba(47, 125, 79, 0.45) 0 8px, rgba(47, 125, 79, 0.15) 9px 12px, transparent 13px),
+      linear-gradient(rgba(32, 26, 26, 0.30), rgba(32, 26, 26, 0.30)),
+      repeating-linear-gradient(180deg, rgba(32, 26, 26, 0.15) 0 4px, transparent 4px 13px);
+    background-size: 100% 11%, 26px 26px, 52% 5px, 76% 40%;
+    background-position: 50% 0, 82% 88%, 12% 36%, 12% 88%;
+  }
+
+  .doc-card[data-doc="g28"],
+  .doc-card[data-doc="anum"] {
+    background-image:
+      linear-gradient(rgba(32, 26, 26, 0.30), rgba(32, 26, 26, 0.30)),
+      repeating-linear-gradient(180deg, rgba(32, 26, 26, 0.15) 0 4px, transparent 4px 13px);
+    background-size: 52% 5px, 76% 46%;
+    background-position: 12% 30%, 12% 86%;
+  }
+
+  .doc-card[data-doc="dl-her"] {
+    background-image:
+      linear-gradient(rgba(29, 78, 137, 0.55), rgba(29, 78, 137, 0.55)),
+      linear-gradient(rgba(190, 40, 32, 0.60), rgba(190, 40, 32, 0.60)),
+      linear-gradient(rgba(120, 150, 165, 0.80), rgba(120, 150, 165, 0.80)),
+      repeating-linear-gradient(180deg, rgba(32, 26, 26, 0.22) 0 4px, transparent 4px 12px),
+      linear-gradient(155deg, #D9EDF7 0%, #F6EFD3 55%, #F2D7C9 100%);
+    background-size: 62% 6px, 34% 5px, 36px 46px, 44% 38%, 100% 100%;
+    background-position: 8% 5%, 92% 20%, 8% 32%, 92% 82%, 0 0;
+  }
+}
