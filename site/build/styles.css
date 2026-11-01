@@ -282,10 +282,6 @@ button:focus-visible {
   transform: translateY(-3px);
 }
 
-.site-header[data-open="true"] .icon-bar {
-  background: var(--ink-deep);
-}
-
 .site-header[data-open="true"] .icon-bar:nth-child(1) {
   transform: rotate(-45deg);
 }
