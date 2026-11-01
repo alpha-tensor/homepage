@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=31">
+<link rel="stylesheet" href="assets/styles.css?v=32">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -150,18 +150,19 @@
 })();
 </script>
 <script>
-/* Form demo: the form first, the documents in a rail
-   directly beneath it, the extraction strip under the
-   rail. One selection state drives everything: the strip,
-   the rail, the dots, and the highlight on the form group
+/* Form demo: the form first, the extraction strip
+   directly under it, then the documents in a rail. One
+   selection state drives everything: the strip, the
+   rail, the dots, and the highlight on the form group
    the active document feeds. Clicking a rail slide or a
    dot selects it; scrolling the rail selects whichever
    document settles at the start. Selection never enlarges
    a document: the large view exists only inside the
    intro. When the form panel reaches the top of the
    screen, an intro runs once: each document in turn
-   hovers large over the form as an overlay, then drops
-   into the group it fills while that group fills; when
+   grows out of its rail thumbnail into a large copy
+   floating over the form panel while the group it feeds
+   fills around it, then fades away where it hangs; when
    the intro ends the overlay is gone and no space is
    left for it. Any touch cancels to the end state. */
 (function () {
@@ -179,9 +180,9 @@
   var next = demo.querySelector(".paddle-next");
   var replay = demo.querySelector(".demo-replay");
   var groups = Array.prototype.slice.call(demo.querySelectorAll(".fgroup"));
-  var drop = demo.querySelector(".demo-drop");
-  var dropImg = drop ? drop.querySelector(".demo-drop-img") : null;
-  if (!panel || !scroller || slides.length !== 4 || groups.length !== 4 || !drop || !dropImg) return;
+  var overlay = demo.querySelector(".demo-overlay");
+  var overlayImg = overlay ? overlay.querySelector(".demo-overlay-img") : null;
+  if (!panel || !scroller || slides.length !== 4 || groups.length !== 4 || !overlay || !overlayImg) return;
 
   var sources = slides.map(function (s) { return s.getAttribute("data-doc"); });
   var groupsFor = {
@@ -195,7 +196,7 @@
   var timers = [];
   var running = false;
   var played = false;
-  var STEP = 1600;
+  var STEP = 1800;
 
   slides.forEach(function (s) {
     demo.querySelectorAll('[data-src="' + s.getAttribute("data-doc") + '"]').forEach(function (el) {
@@ -219,13 +220,13 @@
   function slideFor(id) {
     return slides[sources.indexOf(id)];
   }
-  function scrollToSlide(id) {
+  function scrollToSlide(id, instant) {
     var s = slideFor(id);
     if (!s) return;
     programmaticUntil = Date.now() + 900;
     scroller.scrollTo({
       left: Math.max(0, s.offsetLeft - 6),
-      behavior: reduced ? "auto" : "smooth"
+      behavior: (reduced || instant) ? "auto" : "smooth"
     });
   }
   function updatePaddles() {
@@ -252,7 +253,7 @@
     if (opts.openGroup && isMobile() && groupsFor[id] && groupsFor[id][0]) {
       openOnly(groupsFor[id][0]);
     }
-    if (opts.scroll) scrollToSlide(id);
+    if (opts.scroll) scrollToSlide(id, opts.instant);
     updatePaddles();
   }
 
@@ -269,66 +270,76 @@
     });
   }
 
-  /* The drop overlay: one reusable element, filled from
-     the rail slide's own image and caption, positioned
-     absolutely over the form panel. It takes no layout
-     space and is removed from view the moment the intro
-     ends. */
-  function showDrop(id) {
+  /* The intro overlay: one reusable element, filled from
+     the rail slide's own image and caption. Per step it
+     grows out of the document's thumbnail into a large
+     copy floating over the form panel, hangs there while
+     the group it feeds fills around it, then fades away
+     where it hangs. It is positioned absolutely inside
+     the demo, so it takes no layout space, and it is
+     hidden again the moment the intro ends. */
+  function growOverlay(id) {
     var s = slideFor(id);
     if (!s) return;
     var img = s.querySelector("img");
     var type = s.querySelector(".doc-slide-type");
     var name = s.querySelector(".doc-slide-name");
-    dropImg.src = img ? img.src : "";
-    drop.querySelector(".doc-slide-type").textContent = type ? type.textContent : "";
-    drop.querySelector(".doc-slide-name").textContent = name ? name.textContent : "";
+    overlayImg.src = img ? img.src : "";
+    overlay.querySelector(".doc-slide-type").textContent = type ? type.textContent : "";
+    overlay.querySelector(".doc-slide-name").textContent = name ? name.textContent : "";
+    var fig = demo.getBoundingClientRect();
     var pr = panel.getBoundingClientRect();
-    var fr = demo.getBoundingClientRect();
-    var w = pr.width * (id === "dl-her" ? 0.8 : (isMobile() ? 0.88 : 0.62));
-    drop.style.transition = "none";
-    drop.style.transform = "translateY(16px)";
-    drop.style.opacity = "0";
-    drop.style.width = w + "px";
-    drop.hidden = false;
-    var h = drop.offsetHeight;
-    drop.style.left = (pr.left - fr.left + (pr.width - w) / 2) + "px";
-    drop.style.top = (pr.top - fr.top + (pr.height - h) / 2) + "px";
-    void drop.offsetWidth;
-    drop.style.transition = "opacity 300ms ease, transform 300ms ease";
-    drop.style.transform = "translateY(0px)";
-    drop.style.opacity = "1";
+    var head = panel.querySelector(".form-panel-head");
+    var headH = head ? head.offsetHeight : 0;
+    var w = pr.width * (id === "dl-her" ? 0.78 : (isMobile() ? 0.88 : 0.6));
+    /* Resting geometry first: centred over the panel, its
+       top just under the panel's title band. A tall page
+       may run past the panel's bottom edge; the demo
+       figure is the positioning context, so that is fine. */
+    overlay.style.transition = "none";
+    overlay.style.left = (pr.left - fig.left + (pr.width - w) / 2) + "px";
+    overlay.style.top = (pr.top - fig.top + headH + 10) + "px";
+    overlay.style.width = w + "px";
+    overlay.style.opacity = "1";
+    overlay.style.transform = "";
+    overlay.hidden = false;
+    /* Then the FLIP: measure the resting rect, offset the
+       overlay onto its thumbnail's rect, and let the
+       transition carry it up to size. Centres are matched,
+       so the scale runs about the shared centre. */
+    var t = overlay.getBoundingClientRect();
+    var r = s.getBoundingClientRect();
+    if (!t.width || !r.width) { hideOverlay(); return; }
+    var dx = (r.left + r.width / 2) - (t.left + t.width / 2);
+    var dy = (r.top + r.height / 2) - (t.top + t.height / 2);
+    overlay.style.transform = "translate(" + dx + "px, " + dy + "px) scale(" + (r.width / t.width) + ", " + (r.height / t.height) + ")";
+    void overlay.offsetWidth;
+    overlay.style.transition = "transform 560ms cubic-bezier(0.45, 0.02, 0.25, 1)";
+    overlay.style.transform = "translate(0px, 0px) scale(1, 1)";
   }
 
-  /* The drop itself: the overlay travels to the centre of
-     the group its document fills and shrinks into it,
-     fading as it is absorbed. Rects are measured now, at
-     drop time, so accordion moves earlier in the step are
-     already settled. */
-  function dropInto(id) {
-    if (drop.hidden) return;
-    var group = (groupsFor[id] || [])[0];
-    if (!group) { hideDrop(); return; }
-    var o = drop.getBoundingClientRect();
-    var g = group.getBoundingClientRect();
-    if (!o.width || !g.width || !g.height) { hideDrop(); return; }
-    var dx = (g.left + g.width / 2) - (o.left + o.width / 2);
-    var dy = (g.top + g.height / 2) - (o.top + o.height / 2);
-    drop.style.transition = "transform 620ms cubic-bezier(0.45, 0.02, 0.25, 1), opacity 240ms ease 400ms";
-    drop.style.transform = "translate(" + dx + "px, " + dy + "px) scale(0.13)";
-    drop.style.opacity = "0";
+  /* The overlay clears in place: a plain fade where it
+     hangs. It never shrinks into the form and never
+     flies back down to the rail. */
+  function fadeOverlay() {
+    if (overlay.hidden) return;
+    overlay.style.transition = "opacity 280ms ease";
+    overlay.style.opacity = "0";
   }
 
-  function hideDrop() {
-    drop.hidden = true;
-    drop.style.transition = "none";
-    drop.style.transform = "";
-    drop.style.opacity = "";
+  function hideOverlay() {
+    overlay.hidden = true;
+    overlay.style.transition = "none";
+    overlay.style.transform = "";
+    overlay.style.opacity = "";
+    overlay.style.left = "";
+    overlay.style.top = "";
+    overlay.style.width = "";
   }
 
   function settle(returnToFirst) {
     clearTimers();
-    hideDrop();
+    hideOverlay();
     running = false;
     played = true;
     sources.forEach(function (id) {
@@ -346,26 +357,28 @@
   }
   function playStep(id) {
     if (!running) return;
-    setActive(id, { scroll: true, openGroup: true });
+    setActive(id, { scroll: true, instant: true, openGroup: true });
     var owned = groupsFor[id] || [];
     owned.forEach(function (g) { g.classList.add("seq-lit"); });
     light(id, true);
-    showDrop(id);
+    growOverlay(id);
     if (isMobile() && id === "mxbc") {
-      later(function () { if (running) openOnly(groups[2]); }, 450);
+      later(function () { if (running) openOnly(groups[2]); }, 700);
     }
-    later(function () { if (running) dropInto(id); }, 480);
-    later(function () { demo.classList.add("filled-" + id); }, 560);
+    /* The flight lands at about 560ms; the fill starts as
+       the document arrives at size, so the values land
+       while it hangs over the form. */
+    later(function () { if (running) demo.classList.add("filled-" + id); }, 560);
     later(function () {
       owned.forEach(function (g) { g.classList.remove("seq-lit"); });
       light(id, false);
-    }, 1150);
-    later(function () { if (running) hideDrop(); }, 1300);
+    }, 1500);
+    later(function () { if (running) fadeOverlay(); }, 1520);
   }
   function startCycle() {
     if (reduced || !hasIO) return;
     clearTimers();
-    hideDrop();
+    hideOverlay();
     running = true;
     played = false;
     demo.classList.add("seq-armed", "seq-running");

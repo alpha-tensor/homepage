@@ -89,7 +89,6 @@ html[data-theme="dark"] .packet-card {
    ground) resolves the light value whatever the page theme
    is. */
 .packet-card,
-.demo-drop,
 .form-panel {
   --paper: #FFFFFF;
   --surface: #FAFAFA;
@@ -1021,8 +1020,8 @@ body {
    ============================================================ */
 .form-demo {
   margin: 44px 0 0;
-  /* The positioning context for the drop overlay, which
-     hovers over the form panel during the intro. */
+  /* The positioning context for the intro overlay, which
+     floats over the form panel while the sequence runs. */
   position: relative;
 }
 
@@ -1223,7 +1222,7 @@ body {
    contributes, in plain label and value rows. Exactly one
    strip shows, the active document's. */
 .demo-extracts {
-  margin-top: 2px;
+  margin-top: 14px;
 }
 
 .demo-extract {
@@ -1278,14 +1277,17 @@ body {
   font-weight: 550;
 }
 
-/* The drop overlay: during the intro (and on Replay) a
-   large copy of the document being read hovers over the
-   form panel, then drops into the group it fills. It is
-   absolutely positioned inside the demo, so it never
-   takes layout space; the script sets its position, size
-   and transform inline and hides it when the intro ends.
-   Outside the intro it does not exist on the page. */
-.demo-drop {
+/* The intro overlay: while the sequence runs (and on
+   Replay), a large copy of the document being read grows
+   out of its rail thumbnail and floats over the form
+   panel, image and caption bar together, an enlarged
+   twin of the rail slide, while the group it feeds fills
+   around it. It is absolutely positioned inside the demo,
+   so it never takes layout space; the script sets its
+   position, size and transform inline and hides it when
+   the intro ends. Outside the intro it does not exist on
+   the page. */
+.demo-overlay {
   position: absolute;
   z-index: 60;
   display: flex;
@@ -1298,11 +1300,11 @@ body {
   will-change: transform, opacity;
 }
 
-.demo-drop[hidden] {
+.demo-overlay[hidden] {
   display: none;
 }
 
-.demo-drop-img {
+.demo-overlay-img {
   display: block;
   width: 100%;
   height: auto;
@@ -1993,7 +1995,7 @@ body {
     transition: none;
   }
 
-  .demo-drop {
+  .demo-overlay {
     display: none;
   }
 
