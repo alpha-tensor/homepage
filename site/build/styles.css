@@ -1515,7 +1515,7 @@ body {
 .section--talk-to-us .cta-button {
   background: #FFFFFF;
   border-color: #FFFFFF;
-  color: var(--ink);
+  color: var(--ink-deep);
   border-radius: 8px;
   padding: 13px 20px;
   font-size: 15px;
