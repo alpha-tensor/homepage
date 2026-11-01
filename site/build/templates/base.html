@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=20">
+<link rel="stylesheet" href="assets/styles.css?v=21">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -116,6 +116,40 @@
     if (e.key === "Escape" && open) { setOpen(false); toggle.focus(); }
   });
   window.addEventListener("resize", function () { if (open) measure(); });
+})();
+</script>
+<script>
+/* Form demo groups. On mobile the stylesheet collapses each
+   group behind its head; this wires the accordion (one open
+   at a time) and opens the group holding a source's values
+   when that source is tapped. On desktop the heads are
+   hidden and every group shows, so this changes nothing. */
+(function () {
+  var groups = Array.prototype.slice.call(document.querySelectorAll(".fgroup"));
+  if (!groups.length) return;
+  function setOpen(g, open) {
+    g.classList.toggle("open", open);
+    var head = g.querySelector(".fgroup-head");
+    if (head) head.setAttribute("aria-expanded", String(open));
+  }
+  groups.forEach(function (g) {
+    var head = g.querySelector(".fgroup-head");
+    if (!head) return;
+    head.addEventListener("click", function () {
+      var willOpen = !g.classList.contains("open");
+      groups.forEach(function (o) { setOpen(o, false); });
+      if (willOpen) setOpen(g, true);
+    });
+  });
+  document.querySelectorAll(".doc-card").forEach(function (card) {
+    card.addEventListener("click", function () {
+      var target = document.querySelector('.form-panel [data-src="' + card.dataset.doc + '"]');
+      if (!target) return;
+      var g = target.closest(".fgroup");
+      if (!g) return;
+      groups.forEach(function (o) { setOpen(o, o === g); });
+    });
+  });
 })();
 </script>
 <script>

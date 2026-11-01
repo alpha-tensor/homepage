@@ -46,86 +46,106 @@
     </div>
     <p class="form-ink-note">Type or print in black ink.</p>
     <div class="form-grid">
-      <div class="field f12">
-        <label>Attorney or Accredited Representative</label>
-        <div class="chkrow">
-          <span class="chk-unit" data-src="g28" tabindex="0"><span class="chk on">&#10005;</span> Select this box if Form G-28 is attached</span>
-          <span class="chk-unit"><span class="chk"></span> Form G-28I is attached</span>
+      <div class="fgroup open">
+        <button type="button" class="fgroup-head" aria-expanded="true">Attorney</button>
+        <div class="fgroup-body">
+          <div class="field f12">
+            <label>Attorney or Accredited Representative</label>
+            <div class="chkrow">
+              <span class="chk-unit" data-src="g28" tabindex="0"><span class="chk on">&#10005;</span> Select this box if Form G-28 is attached</span>
+              <span class="chk-unit"><span class="chk"></span> Form G-28I is attached</span>
+            </div>
+          </div>
+          <div class="field f7">
+            <label>Attorney Name</label>
+            <div class="fbox" data-src="g28" tabindex="0">Daniel R. Reyes</div>
+          </div>
+          <div class="field f5">
+            <label>State Bar Number</label>
+            <div class="fbox" data-src="g28" tabindex="0">CA 214538</div>
+          </div>
         </div>
-      </div>
-      <div class="field f7">
-        <label>Attorney Name</label>
-        <div class="fbox" data-src="g28" tabindex="0">Daniel R. Reyes</div>
-      </div>
-      <div class="field f5">
-        <label>State Bar Number</label>
-        <div class="fbox" data-src="g28" tabindex="0">CA 214538</div>
       </div>
       <div class="form-rule"></div>
-      <div class="field f5">
-        <label><span class="ino">1.a.</span>Family Name (Last Name)</label>
-        <div class="fbox" data-src="mxbc" tabindex="0">ITANDEHUI</div>
-      </div>
-      <div class="field f5">
-        <label><span class="ino">1.b.</span>Given Name (First Name)</label>
-        <div class="fbox" data-src="mxbc" tabindex="0">LAURA</div>
-      </div>
-      <div class="field f2">
-        <label><span class="ino">1.c.</span>Middle Initial</label>
-        <div class="fbox" data-src="mxbc" tabindex="0">M</div>
+      <div class="fgroup">
+        <button type="button" class="fgroup-head" aria-expanded="false">Name</button>
+        <div class="fgroup-body">
+          <div class="field f5">
+            <label><span class="ino">1.a.</span>Family Name (Last Name)</label>
+            <div class="fbox" data-src="mxbc" tabindex="0">ITANDEHUI</div>
+          </div>
+          <div class="field f5">
+            <label><span class="ino">1.b.</span>Given Name (First Name)</label>
+            <div class="fbox" data-src="mxbc" tabindex="0">LAURA</div>
+          </div>
+          <div class="field f2">
+            <label><span class="ino">1.c.</span>Middle Initial</label>
+            <div class="fbox" data-src="mxbc" tabindex="0">M</div>
+          </div>
+        </div>
       </div>
       <div class="form-rule"></div>
-      <div class="field f12">
-        <label><span class="ino">2.</span>A-Number (if any)</label>
-        <div class="aboxes" data-src="anum" tabindex="0">
-          <span class="a-prefix">A</span>
-          <span class="abox">1</span><span class="abox">2</span><span class="abox">3</span><span class="abox">4</span><span class="abox">5</span><span class="abox">6</span><span class="abox">7</span><span class="abox">8</span><span class="abox">9</span>
+      <div class="fgroup">
+        <button type="button" class="fgroup-head" aria-expanded="false">A-Number and birth</button>
+        <div class="fgroup-body">
+          <div class="field f12">
+            <label><span class="ino">2.</span>A-Number (if any)</label>
+            <div class="aboxes" data-src="anum" tabindex="0">
+              <span class="a-prefix">A</span>
+              <span class="abox">1</span><span class="abox">2</span><span class="abox">3</span><span class="abox">4</span><span class="abox">5</span><span class="abox">6</span><span class="abox">7</span><span class="abox">8</span><span class="abox">9</span>
+            </div>
+          </div>
+          <div class="field f5">
+            <label><span class="ino">3.</span>Date of Birth</label>
+            <div class="dob-boxes">
+              <span class="fbox dob-seg" data-src="mxbc" tabindex="0">03</span><span class="dob-sep">/</span><span class="fbox dob-seg" data-src="mxbc" tabindex="0">14</span><span class="dob-sep">/</span><span class="fbox dob-seg4" data-src="mxbc" tabindex="0">1992</span>
+            </div>
+            <div class="dob-hint">mm / dd / yyyy</div>
+          </div>
+          <div class="field f2">
+            <label><span class="ino">4.</span>Age</label>
+            <div class="fbox" data-src="mxbc" tabindex="0">34</div>
+          </div>
+          <div class="field f5">
+            <label><span class="ino">5.</span>Country of Birth</label>
+            <div class="fbox" data-src="mxbc" tabindex="0">Mexico</div>
+          </div>
         </div>
-      </div>
-      <div class="field f5">
-        <label><span class="ino">3.</span>Date of Birth</label>
-        <div class="dob-boxes">
-          <span class="fbox dob-seg" data-src="mxbc" tabindex="0">03</span><span class="dob-sep">/</span><span class="fbox dob-seg" data-src="mxbc" tabindex="0">14</span><span class="dob-sep">/</span><span class="fbox dob-seg4" data-src="mxbc" tabindex="0">1992</span>
-        </div>
-        <div class="dob-hint">mm / dd / yyyy</div>
-      </div>
-      <div class="field f2">
-        <label><span class="ino">4.</span>Age</label>
-        <div class="fbox" data-src="mxbc" tabindex="0">34</div>
-      </div>
-      <div class="field f5">
-        <label><span class="ino">5.</span>Country of Birth</label>
-        <div class="fbox" data-src="mxbc" tabindex="0">Mexico</div>
       </div>
       <div class="form-rule"></div>
-      <div class="field f7">
-        <label><span class="ino">6.a.</span>Street Number and Name</label>
-        <div class="fbox" data-src="dl-her" tabindex="0">820 S Grand Ave</div>
-      </div>
-      <div class="field f5">
-        <label><span class="ino">6.b.</span>Apt., Ste., or Flr.</label>
-        <div class="chkrow chkrow--bare">
-          <span class="chk-unit" data-src="dl-her" tabindex="0"><span class="chk on">&#10005;</span> Apt.</span>
-          <span class="chk-unit"><span class="chk"></span> Ste.</span>
-          <span class="chk-unit"><span class="chk"></span> Flr.</span>
-          <span class="fbox apt-no" data-src="dl-her" tabindex="0">2104</span>
+      <div class="fgroup">
+        <button type="button" class="fgroup-head" aria-expanded="false">Address</button>
+        <div class="fgroup-body">
+          <div class="field f7">
+            <label><span class="ino">6.a.</span>Street Number and Name</label>
+            <div class="fbox" data-src="dl-her" tabindex="0">820 S Grand Ave</div>
+          </div>
+          <div class="field f5">
+            <label><span class="ino">6.b.</span>Apt., Ste., or Flr.</label>
+            <div class="chkrow chkrow--bare">
+              <span class="chk-unit" data-src="dl-her" tabindex="0"><span class="chk on">&#10005;</span> Apt.</span>
+              <span class="chk-unit"><span class="chk"></span> Ste.</span>
+              <span class="chk-unit"><span class="chk"></span> Flr.</span>
+              <span class="fbox apt-no" data-src="dl-her" tabindex="0">2104</span>
+            </div>
+          </div>
+          <div class="field f5">
+            <label><span class="ino">6.c.</span>City or Town</label>
+            <div class="fbox" data-src="dl-her" tabindex="0">Los Angeles</div>
+          </div>
+          <div class="field f2">
+            <label><span class="ino">6.d.</span>State</label>
+            <div class="fbox" data-src="dl-her" tabindex="0">CA</div>
+          </div>
+          <div class="field f2">
+            <label><span class="ino">6.e.</span>ZIP Code</label>
+            <div class="fbox" data-src="dl-her" tabindex="0">90017</div>
+          </div>
+          <div class="field f3">
+            <label><span class="ino">6.f.</span>Country</label>
+            <div class="fbox" data-src="dl-her" tabindex="0">USA</div>
+          </div>
         </div>
-      </div>
-      <div class="field f5">
-        <label><span class="ino">6.c.</span>City or Town</label>
-        <div class="fbox" data-src="dl-her" tabindex="0">Los Angeles</div>
-      </div>
-      <div class="field f2">
-        <label><span class="ino">6.d.</span>State</label>
-        <div class="fbox" data-src="dl-her" tabindex="0">CA</div>
-      </div>
-      <div class="field f2">
-        <label><span class="ino">6.e.</span>ZIP Code</label>
-        <div class="fbox" data-src="dl-her" tabindex="0">90017</div>
-      </div>
-      <div class="field f3">
-        <label><span class="ino">6.f.</span>Country</label>
-        <div class="fbox" data-src="dl-her" tabindex="0">USA</div>
       </div>
     </div>
     <div class="form-foot"><span>Sample data throughout &#183; not a government form</span><span>Page 2</span></div>

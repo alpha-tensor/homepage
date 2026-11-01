@@ -1037,9 +1037,8 @@ body {
 }
 
 .form-rule {
-  grid-column: 1 / -1;
   border-top: 1.5px solid #16161A;
-  margin: 1px 0 -2px;
+  margin: 2px 18px 0;
 }
 
 .form-foot {
@@ -1238,10 +1237,18 @@ body {
 }
 
 .form-grid {
+  padding: 8px 0 12px;
+}
+
+.fgroup-body {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 9px 8px;
-  padding: 16px 18px;
+  padding: 12px 18px 14px;
+}
+
+.fgroup-head {
+  display: none;
 }
 
 .field label {
@@ -1738,8 +1745,107 @@ body {
 }
 
 @media (max-width: 640px) {
+  /* On mobile the sources become document tiles: A4-ratio
+     miniatures carrying each document's own colors, the way
+     the uploads he shared look. Facts hide; the name, the
+     authority and the tag carry the tile. */
   .doc-card {
-    flex-basis: 238px;
+    flex-basis: 158px;
+    aspect-ratio: 1 / 1.414;
+    padding: 12px;
+    overflow: hidden;
+  }
+
+  .doc-card .doc-facts,
+  .doc-card .doc-address {
+    display: none;
+  }
+
+  .doc-card .doc-name {
+    font-size: 14px;
+    min-height: 0;
+    margin-top: 8px;
+  }
+
+  .doc-card .doc-tag {
+    font-size: 8.5px;
+  }
+
+  .doc-card[data-doc="mxbc"] {
+    border: 2px solid #2F7D4F;
+    box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 5px #2F7D4F;
+  }
+
+  .doc-card[data-doc="mxbc"] .doc-authority {
+    color: #2F7D4F;
+  }
+
+  .doc-card[data-doc="g28"] {
+    border-top: 9px solid #16161A;
+  }
+
+  .doc-card[data-doc="anum"] {
+    border-top: 9px solid #C7CDD4;
+  }
+
+  .doc-card[data-doc="dl-her"] {
+    background: linear-gradient(155deg, #D9EDF7 0%, #F6EFD3 55%, #F2D7C9 100%);
+  }
+
+  .doc-card[data-doc="dl-her"] .doc-authority {
+    color: #1D4E89;
+  }
+
+  /* The form's groups collapse behind their heads; one open
+     at a time, the first by default. */
+  .form-rule {
+    display: none;
+  }
+
+  .fgroup-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 11px 18px;
+    background: var(--surface);
+    border: 0;
+    border-top: 1px solid var(--hairline);
+    font-family: "Courier Prime", "Courier New", monospace;
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .fgroup:first-child .fgroup-head {
+    border-top: 0;
+  }
+
+  .fgroup-head::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    flex: 0 0 auto;
+    margin-left: 10px;
+  }
+
+  .fgroup.open .fgroup-head::after {
+    transform: rotate(-135deg);
+  }
+
+  .fgroup-body {
+    display: none;
+  }
+
+  .fgroup.open .fgroup-body {
+    display: grid;
   }
 
   .form-grid .field {
