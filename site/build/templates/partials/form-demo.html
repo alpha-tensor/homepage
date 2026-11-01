@@ -120,25 +120,42 @@
     <div class="form-foot"><span>Sample data throughout &#183; not a government form</span><span>Page 2</span></div>
   </div>
 
-  <div class="demo-flow" aria-hidden="true">&#8593;</div>
+  <!-- The drop overlay: during the intro (and only then) a
+       large copy of the document being read hovers over the
+       form, then drops into the group it fills. The script
+       fills it per document; it never takes layout space. -->
+  <div class="demo-drop" hidden aria-hidden="true">
+    <img class="demo-drop-img" alt="" draggable="false">
+    <span class="doc-slide-cap"><span class="doc-slide-type"></span><span class="doc-slide-name"></span></span>
+  </div>
 
-  <div class="demo-stage">
-    <div class="stage-doc on" data-doc="mxbc">
-      <img class="stage-doc-img" src="assets/doc-acta.jpg" alt="Acta de Nacimiento, Mexican birth certificate for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
+  <div class="demo-scroller">
+  <div class="demo-controls">
+    <div class="demo-dots" role="group" aria-label="Choose a document"><button type="button" class="demo-dot active" data-dot="mxbc" aria-label="Show the birth certificate"></button><button type="button" class="demo-dot" data-dot="g28" aria-label="Show the G-28"></button><button type="button" class="demo-dot" data-dot="anum" aria-label="Show the notice of action"></button><button type="button" class="demo-dot" data-dot="dl-her" aria-label="Show the driver license"></button></div>
+    <div class="demo-paddles">
+      <button type="button" class="demo-replay" hidden>Replay</button>
+      <button type="button" class="paddle paddle-prev" aria-label="Previous document" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M16.5 3.5L8 12l8.5 8.5"/></svg></button>
+      <button type="button" class="paddle paddle-next" aria-label="Next document" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M7.5 3.5L16 12l-8.5 8.5"/></svg></button>
+    </div>
+  </div>
+  <div class="demo-sources demo-rail" role="group" aria-label="Source documents">
+    <button type="button" class="doc-slide active" data-doc="mxbc" aria-pressed="true">
+      <img class="doc-slide-img" src="assets/doc-acta.jpg" alt="Acta de Nacimiento, Mexican birth certificate for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
       <span class="doc-slide-cap"><span class="doc-slide-type">Acta de Nacimiento &#183; Mexico</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
-    </div>
-    <div class="stage-doc" data-doc="g28">
-      <img class="stage-doc-img" src="assets/doc-g28.jpg" alt="Form G-28, notice of entry of appearance naming attorney Daniel R. Reyes. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
+    </button>
+    <button type="button" class="doc-slide" data-doc="g28" aria-pressed="false">
+      <img class="doc-slide-img" src="assets/doc-g28.jpg" alt="Form G-28, notice of entry of appearance naming attorney Daniel R. Reyes. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
       <span class="doc-slide-cap"><span class="doc-slide-type">Form G-28 &#183; USCIS</span><span class="doc-slide-name">Daniel R. Reyes</span></span>
-    </div>
-    <div class="stage-doc" data-doc="anum">
-      <img class="stage-doc-img" src="assets/doc-i797c.jpg" alt="Form I-797C, notice of action for the I-130 petition. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
+    </button>
+    <button type="button" class="doc-slide" data-doc="anum" aria-pressed="false">
+      <img class="doc-slide-img" src="assets/doc-i797c.jpg" alt="Form I-797C, notice of action for the I-130 petition. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
       <span class="doc-slide-cap"><span class="doc-slide-type">I-797C &#183; Notice of Action</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
-    </div>
-    <div class="stage-doc stage-doc--wide" data-doc="dl-her">
-      <img class="stage-doc-img" src="assets/doc-license.jpg" alt="California driver license for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="1000" height="631" loading="eager" decoding="async" draggable="false">
+    </button>
+    <button type="button" class="doc-slide doc-slide--wide" data-doc="dl-her" aria-pressed="false">
+      <img class="doc-slide-img" src="assets/doc-license.jpg" alt="California driver license for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="1000" height="631" loading="eager" decoding="async" draggable="false">
       <span class="doc-slide-cap"><span class="doc-slide-type">Driver License &#183; California</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
-    </div>
+    </button>
+  </div>
   </div>
 
   <div class="demo-extracts" aria-live="polite">
@@ -173,35 +190,6 @@
         <div><dt>City</dt><dd data-src="dl-her" tabindex="0">Los Angeles, CA 90017</dd></div>
       </dl>
     </div>
-  </div>
-
-  <div class="demo-scroller">
-  <div class="demo-controls">
-    <div class="demo-dots" role="group" aria-label="Choose a document"><button type="button" class="demo-dot active" data-dot="mxbc" aria-label="Show the birth certificate"></button><button type="button" class="demo-dot" data-dot="g28" aria-label="Show the G-28"></button><button type="button" class="demo-dot" data-dot="anum" aria-label="Show the notice of action"></button><button type="button" class="demo-dot" data-dot="dl-her" aria-label="Show the driver license"></button></div>
-    <div class="demo-paddles">
-      <button type="button" class="demo-replay" hidden>Replay</button>
-      <button type="button" class="paddle paddle-prev" aria-label="Previous document" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M16.5 3.5L8 12l8.5 8.5"/></svg></button>
-      <button type="button" class="paddle paddle-next" aria-label="Next document" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M7.5 3.5L16 12l-8.5 8.5"/></svg></button>
-    </div>
-  </div>
-  <div class="demo-sources demo-rail" role="group" aria-label="Source documents">
-    <button type="button" class="doc-slide active" data-doc="mxbc" aria-pressed="true">
-      <img class="doc-slide-img" src="assets/doc-acta.jpg" alt="Acta de Nacimiento, Mexican birth certificate for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">Acta de Nacimiento &#183; Mexico</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
-    </button>
-    <button type="button" class="doc-slide" data-doc="g28" aria-pressed="false">
-      <img class="doc-slide-img" src="assets/doc-g28.jpg" alt="Form G-28, notice of entry of appearance naming attorney Daniel R. Reyes. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">Form G-28 &#183; USCIS</span><span class="doc-slide-name">Daniel R. Reyes</span></span>
-    </button>
-    <button type="button" class="doc-slide" data-doc="anum" aria-pressed="false">
-      <img class="doc-slide-img" src="assets/doc-i797c.jpg" alt="Form I-797C, notice of action for the I-130 petition. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">I-797C &#183; Notice of Action</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
-    </button>
-    <button type="button" class="doc-slide doc-slide--wide" data-doc="dl-her" aria-pressed="false">
-      <img class="doc-slide-img" src="assets/doc-license.jpg" alt="California driver license for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="1000" height="631" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">Driver License &#183; California</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
-    </button>
-  </div>
   </div>
 
   <figcaption class="demo-caption">The same facts, collected once from the documents above, decomposed into exactly the fields the form asks for: a middle initial taken from the first of her middle names, an age calculated from the birth certificate. Hover or tap any value to see the document it came from. All names and values are samples.</figcaption>

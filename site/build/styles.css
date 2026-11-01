@@ -89,7 +89,7 @@ html[data-theme="dark"] .packet-card {
    ground) resolves the light value whatever the page theme
    is. */
 .packet-card,
-.doc-card,
+.demo-drop,
 .form-panel {
   --paper: #FFFFFF;
   --surface: #FAFAFA;
@@ -1021,6 +1021,9 @@ body {
    ============================================================ */
 .form-demo {
   margin: 44px 0 0;
+  /* The positioning context for the drop overlay, which
+     hovers over the form panel during the intro. */
+  position: relative;
 }
 
 .demo-scroller {
@@ -1139,18 +1142,6 @@ body {
 .paddle[disabled] {
   opacity: 0.38;
   cursor: default;
-}
-
-.doc-card {
-  background: var(--paper);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-button);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 262px;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 /* The document carousel: the real generated documents as
@@ -1287,77 +1278,34 @@ body {
   font-weight: 550;
 }
 
-/* The stage: the active document at full size, in a framed
-   area under the form. During the intro each document takes
-   the stage before flying down to the rail; afterwards the
-   stage shows whichever document is selected. The frame is
-   a fixed height, so the strip and the rail below never
-   shift as portrait pages and the landscape license trade
-   places on it. */
-.demo-stage {
+/* The drop overlay: during the intro (and on Replay) a
+   large copy of the document being read hovers over the
+   form panel, then drops into the group it fills. It is
+   absolutely positioned inside the demo, so it never
+   takes layout space; the script sets its position, size
+   and transform inline and hides it when the intro ends.
+   Outside the intro it does not exist on the page. */
+.demo-drop {
+  position: absolute;
+  z-index: 60;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 600px;
-  margin-top: 6px;
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-button);
-  overflow: hidden;
-}
-
-.stage-doc {
-  display: none;
   flex-direction: column;
   background: var(--paper);
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-button);
-  box-shadow: 0 12px 32px rgba(20, 16, 16, 0.14);
-}
-
-.stage-doc.on {
-  display: flex;
-  animation: stage-in 0.35s ease both;
-}
-
-@keyframes stage-in {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; }
-}
-
-/* While its copy is flying to the rail, the stage document
-   itself is hidden; the flight carries the eye. */
-.stage-doc.flown {
-  visibility: hidden;
-}
-
-.stage-doc-img {
-  display: block;
-  width: min(400px, 82vw);
-  height: auto;
-}
-
-.stage-doc--wide .stage-doc-img {
-  width: min(540px, 82vw);
-}
-
-.form-demo .stage-doc.hl {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
-}
-
-/* The flying copy of a stage document, mid-flight between
-   the stage and its rail slot. The script sets the geometry
-   (fixed position, size, transform) inline; this carries
-   only what every flight shares. */
-.demo-fly {
-  position: fixed;
-  z-index: 80;
-  margin: 0;
+  box-shadow: 0 24px 60px rgba(20, 16, 16, 0.28);
   pointer-events: none;
-  transform-origin: 0 0;
-  will-change: transform;
-  animation: none;
+  will-change: transform, opacity;
+}
+
+.demo-drop[hidden] {
+  display: none;
+}
+
+.demo-drop-img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* The rail: the four documents at about a fifth of the
@@ -1366,7 +1314,7 @@ body {
    sits proportionally wider than the portrait pages, and
    the captions shrink to match the smaller scale. */
 .demo-rail {
-  align-items: center;
+  align-items: flex-start;
 }
 
 .demo-rail .doc-slide-img {
@@ -1393,33 +1341,10 @@ body {
   line-height: 1.25;
 }
 
-/* On-load sequence: the source cards begin as reserved,
-   unseen slots and arrive one by one. Their values stay in
-   the markup throughout; root classes alone decide whether
-   each source's values have landed yet. */
-.form-demo.seq-armed .doc-card {
-  transition:
-    opacity 0.45s ease,
-    transform 0.45s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.form-demo.seq-armed .doc-card:not(.arrived) {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(16px);
-}
-
-.form-demo.seq-armed .doc-slide:not(.arrived) {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(16px) scale(0.94);
-}
-
-.form-demo.seq-armed .doc-slide.active:not(.arrived) {
-  transform: translateY(16px);
-}
+/* On-load sequence: the rail thumbnails are visible from
+   the start. The form's values stay in the markup
+   throughout; root classes alone decide whether each
+   source's values have landed yet. */
 
 .form-demo.seq-armed .fbox[data-src],
 .form-demo.seq-armed .abox,
@@ -1477,11 +1402,6 @@ body {
 .form-demo [data-src],
 .form-demo [data-doc] {
   cursor: pointer;
-}
-
-.form-demo .doc-card.hl {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
 }
 
 .form-demo .doc-slide.hl {
@@ -1647,8 +1567,6 @@ body {
   padding: 2px 0;
 }
 
-
-
 .doc-code {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1701,21 +1619,6 @@ body {
   color: var(--ink-muted);
   margin-top: auto;
   padding-top: 14px;
-}
-
-/* The miniature facsimile inside each source card. Desktop
-   cards are written documents already; the miniature only
-   exists where the card becomes a tile (max-width 640px,
-   below), where it replaces the text card wholesale. */
-.doc-mini {
-  display: none;
-}
-
-.demo-flow {
-  text-align: center;
-  font-size: 20px;
-  color: var(--ink-muted);
-  margin: 18px 0;
 }
 
 .form-panel {
@@ -2082,13 +1985,7 @@ body {
     transition: none;
   }
 
-  .form-demo.seq-armed .doc-card {
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-    transition: none;
-  }
-
+  
   .form-demo.seq-armed .doc-slide {
     opacity: 1;
     pointer-events: auto;
@@ -2096,11 +1993,7 @@ body {
     transition: none;
   }
 
-  .stage-doc.on {
-    animation: none;
-  }
-
-  .demo-fly {
+  .demo-drop {
     display: none;
   }
 
@@ -2286,57 +2179,6 @@ body {
 }
 
 @media (max-width: 640px) {
-  /* On mobile the sources become document tiles: A4-ratio
-     miniatures carrying each document's own colors, the way
-     the uploads he shared look. Facts hide; the name, the
-     authority and the tag carry the tile. */
-  .doc-card {
-    flex-basis: 158px;
-    aspect-ratio: 1 / 1.414;
-    padding: 12px;
-    overflow: hidden;
-  }
-
-  .doc-card .doc-facts,
-  .doc-card .doc-address {
-    display: none;
-  }
-
-  .doc-card .doc-name {
-    font-size: 14px;
-    min-height: 0;
-    margin-top: 8px;
-  }
-
-  .doc-card .doc-tag {
-    font-size: 8.5px;
-  }
-
-  .doc-card[data-doc="mxbc"] {
-    border: 2px solid #2F7D4F;
-    box-shadow: inset 0 0 0 3px #FFFFFF, inset 0 0 0 5px #2F7D4F;
-  }
-
-  .doc-card[data-doc="mxbc"] .doc-authority {
-    color: #2F7D4F;
-  }
-
-  .doc-card[data-doc="g28"] {
-    border-top: 9px solid #16161A;
-  }
-
-  .doc-card[data-doc="anum"] {
-    border-top: 9px solid #C7CDD4;
-  }
-
-  .doc-card[data-doc="dl-her"] {
-    background: linear-gradient(155deg, #D9EDF7 0%, #F6EFD3 55%, #F2D7C9 100%);
-  }
-
-  .doc-card[data-doc="dl-her"] .doc-authority {
-    color: #1D4E89;
-  }
-
   /* The form's groups collapse behind their heads; one open
      at a time, the first by default. */
   .form-rule {
@@ -2435,13 +2277,6 @@ body {
     font-size: 12.5px;
   }
 
-  /* The stage frame tracks the portrait document's height
-     at the width the column allows, so the frame stays
-     snug around the largest document it holds. */
-  .demo-stage {
-    height: calc(82vw * 1.2937 + 84px);
-  }
-
   .demo-rail .doc-slide-img {
     height: 96px;
   }
@@ -2513,430 +2348,3 @@ body {
   }
 }
 
-/* Facsimile tiles (mobile, third pass at Brandon's word):
-   the tiles are written, not drawn. Each card carries a
-   miniature of the document itself in real markup: micro
-   text with actual words at very small sizes, the bands,
-   checkbox squares, data grids and photo blocks the real
-   documents have. Paper documents keep the A4 ratio; the
-   driver license takes its true landscape ratio. The
-   desktop text children hide; the miniature replaces them. */
-@media (max-width: 640px) {
-  .doc-card .doc-authority,
-  .doc-card .doc-name,
-  .doc-card .doc-facts,
-  .doc-card .doc-address,
-  .doc-card .doc-tag,
-  .doc-card .doc-line {
-    display: none;
-  }
-
-  .doc-card {
-    position: relative;
-    padding: 0;
-  }
-
-  /* The bands now live inside the miniatures, so the slab
-     border-tops the first pass put on the cards come off. */
-  .doc-card[data-doc="g28"],
-  .doc-card[data-doc="anum"] {
-    border-top: 1px solid var(--hairline);
-  }
-
-  .doc-card[data-doc="dl-her"] {
-    flex-basis: 224px;
-    aspect-ratio: 1.586 / 1;
-  }
-
-  .doc-mini {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    text-align: left;
-  }
-
-  .mini-body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 7px 9px 8px;
-  }
-
-  .mini-row {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    padding: 1.6px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-    min-width: 0;
-  }
-
-  .mini-k {
-    flex: none;
-    font-size: 3.9px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-  }
-
-  .mini-v {
-    font-size: 5px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .mini-write {
-    font-size: 4.1px;
-    line-height: 1.55;
-    color: rgba(32, 26, 26, 0.5);
-    margin-top: 4px;
-  }
-
-  .mini-write.dark {
-    color: rgba(32, 26, 26, 0.62);
-  }
-
-  .mini-barcode {
-    display: inline-flex;
-    align-items: stretch;
-    gap: 1px;
-    height: 9px;
-  }
-
-  .mini-barcode span {
-    display: block;
-    background: #201A1A;
-  }
-
-  .mini-foot {
-    margin-top: auto;
-    padding-top: 5px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 6px;
-  }
-
-  .mini-foot-text {
-    font-size: 3.6px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--ink-muted);
-    white-space: nowrap;
-  }
-
-  /* Shared top band: black for the G-28, gray for the
-     notice, each with USCIS set in it. */
-  .mini-band {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 2px 6px;
-    padding: 6px 9px 5px;
-  }
-
-  .mini-band--black {
-    background: #16161A;
-    color: #FFFFFF;
-  }
-
-  .mini-band--gray {
-    background: #C7CDD4;
-    color: #201A1A;
-  }
-
-  .mini-band-name {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    line-height: 1;
-  }
-
-  .mini-band-form {
-    margin-left: auto;
-    font-size: 5px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-  }
-
-  .mini-band-sub {
-    flex-basis: 100%;
-    font-size: 3.7px;
-    letter-spacing: 0.04em;
-    opacity: 0.75;
-  }
-
-  /* The birth certificate: seal and national header over a
-     dark title bar, then the registry's labelled rows. The
-     green border and double frame stay on the card itself. */
-  .doc-card[data-doc="mxbc"] .doc-mini {
-    padding: 12px 11px 9px;
-  }
-
-  .mini-head {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .mini-seal {
-    position: relative;
-    flex: none;
-    width: 19px;
-    height: 19px;
-    border: 1.6px solid #2F7D4F;
-    border-radius: 50%;
-    box-shadow: inset 0 0 0 2px #FFFFFF, inset 0 0 0 3.4px rgba(47, 125, 79, 0.5);
-  }
-
-  .mini-seal::after {
-    content: "\2605";
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-size: 6.5px;
-    color: #2F7D4F;
-  }
-
-  .mini-head-text {
-    font-size: 5.6px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    line-height: 1.5;
-    color: #2F7D4F;
-  }
-
-  .mini-title {
-    margin-top: 6px;
-    background: #1F4D33;
-    color: #FFFFFF;
-    font-size: 6.4px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-align: center;
-    padding: 2.6px 0;
-  }
-
-  /* The G-28: form title, a section bar, checkbox squares,
-     the attorney's rows. */
-  .mini-doctitle {
-    font-size: 5.4px;
-    font-weight: 700;
-    line-height: 1.45;
-    text-align: center;
-    margin-bottom: 5px;
-  }
-
-  .mini-sect {
-    background: var(--panel);
-    font-size: 4.6px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 2.2px 4px;
-    margin-bottom: 4px;
-  }
-
-  .mini-check {
-    display: flex;
-    align-items: flex-start;
-    gap: 4px;
-    font-size: 4.4px;
-    line-height: 1.4;
-    margin: 2.5px 0;
-  }
-
-  .mini-chk {
-    flex: none;
-    width: 6px;
-    height: 6px;
-    margin-top: 0.5px;
-    border: 1.4px solid #201A1A;
-    background: #FFFFFF;
-    display: inline-grid;
-    place-items: center;
-    font-size: 5.5px;
-    line-height: 1;
-  }
-
-  .mini-blank {
-    flex: 1;
-    min-width: 40px;
-    height: 6px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
-  }
-
-  /* The I-797C: its signature is the bordered data grid
-     near the top, small boxes of case facts. */
-  .mini-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    border: 1px solid rgba(0, 0, 0, 0.38);
-    margin-bottom: 2px;
-  }
-
-  .mini-cell {
-    padding: 2.5px 3px;
-    border-right: 1px solid rgba(0, 0, 0, 0.18);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.18);
-    min-width: 0;
-  }
-
-  .mini-cell:nth-child(3n) {
-    border-right: 0;
-  }
-
-  .mini-cell:nth-child(n + 4) {
-    border-bottom: 0;
-  }
-
-  .mini-ck {
-    display: block;
-    font-size: 3.3px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    color: var(--ink-muted);
-  }
-
-  .mini-cv {
-    display: block;
-    font-size: 4.7px;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* The driver license: landscape, the script state name,
-     a photo block, the red license number, micro fields. */
-  .doc-mini--dl {
-    padding: 7px 9px 6px;
-  }
-
-  .mini-dl-head {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    padding-bottom: 3px;
-    border-bottom: 1px solid rgba(29, 78, 137, 0.35);
-  }
-
-  .mini-script {
-    font-family: Georgia, "Times New Roman", serif;
-    font-style: italic;
-    font-weight: 700;
-    font-size: 11px;
-    line-height: 1;
-    color: #C0272D;
-  }
-
-  .mini-dl-title {
-    font-size: 6.2px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    color: #1D4E89;
-  }
-
-  .mini-dl-usa {
-    margin-left: auto;
-    font-size: 4.5px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #1D4E89;
-  }
-
-  .mini-dl-body {
-    display: flex;
-    gap: 8px;
-    margin-top: 6px;
-  }
-
-  .mini-dl-left {
-    flex: none;
-    width: 44px;
-  }
-
-  .mini-photo {
-    width: 44px;
-    height: 53px;
-    background: linear-gradient(180deg, #B9CFE0 0%, #8FA9BE 100%);
-    border: 1px solid rgba(29, 78, 137, 0.4);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .mini-photo svg {
-    width: 36px;
-    height: 44px;
-    display: block;
-  }
-
-  .mini-sign {
-    font-family: Georgia, "Times New Roman", serif;
-    font-style: italic;
-    font-size: 5px;
-    color: rgba(32, 26, 26, 0.65);
-    text-align: center;
-    margin-top: 2px;
-  }
-
-  .mini-dl-fields {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .mini-dl-fields .mini-row {
-    padding: 1.1px 0;
-    border-bottom-color: rgba(29, 78, 137, 0.16);
-  }
-
-  .mini-dl-fields .mini-k {
-    color: rgba(29, 78, 137, 0.85);
-  }
-
-  .mini-dl-num {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 1px;
-  }
-
-  .mini-dl-no {
-    font-size: 6.5px;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    color: #C0272D;
-  }
-
-  .mini-star {
-    margin-left: auto;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: #E3B505;
-    color: #FFFFFF;
-    font-size: 6.5px;
-    display: inline-grid;
-    place-items: center;
-    line-height: 1;
-  }
-
-  .mini-dl-foot {
-    margin-top: auto;
-    padding-top: 3px;
-    border-top: 1px solid rgba(29, 78, 137, 0.25);
-    font-size: 3.3px;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-    color: rgba(32, 26, 26, 0.55);
-  }
-}

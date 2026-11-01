@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=30">
+<link rel="stylesheet" href="assets/styles.css?v=31">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -150,18 +150,20 @@
 })();
 </script>
 <script>
-/* Form demo: the form first, the documents beneath it. One
-   selection state drives everything: the stage (the active
-   document large), the extraction strip, the rail of small
-   slides, the dots, and the highlight on the form group the
-   active document feeds. Clicking a rail slide or a dot
-   selects it and brings it up on the stage; scrolling the
-   rail selects whichever document settles at the start.
-   When the form panel reaches the top of the screen, an
-   intro runs once: each document takes the stage at full
-   size, fills the values it owns, then flies down into its
-   slot on the rail; at the end the first document returns
-   to the stage. Any touch cancels to the end state. */
+/* Form demo: the form first, the documents in a rail
+   directly beneath it, the extraction strip under the
+   rail. One selection state drives everything: the strip,
+   the rail, the dots, and the highlight on the form group
+   the active document feeds. Clicking a rail slide or a
+   dot selects it; scrolling the rail selects whichever
+   document settles at the start. Selection never enlarges
+   a document: the large view exists only inside the
+   intro. When the form panel reaches the top of the
+   screen, an intro runs once: each document in turn
+   hovers large over the form as an overlay, then drops
+   into the group it fills while that group fills; when
+   the intro ends the overlay is gone and no space is
+   left for it. Any touch cancels to the end state. */
 (function () {
   var demo = document.querySelector(".form-demo");
   if (!demo) return;
@@ -171,14 +173,15 @@
   var panel = demo.querySelector(".form-panel");
   var scroller = demo.querySelector(".demo-sources");
   var slides = Array.prototype.slice.call(demo.querySelectorAll(".doc-slide"));
-  var stageDocs = Array.prototype.slice.call(demo.querySelectorAll(".stage-doc"));
   var dots = Array.prototype.slice.call(demo.querySelectorAll(".demo-dot"));
   var strips = Array.prototype.slice.call(demo.querySelectorAll(".demo-extract"));
   var prev = demo.querySelector(".paddle-prev");
   var next = demo.querySelector(".paddle-next");
   var replay = demo.querySelector(".demo-replay");
   var groups = Array.prototype.slice.call(demo.querySelectorAll(".fgroup"));
-  if (!panel || !scroller || slides.length !== 4 || stageDocs.length !== 4 || groups.length !== 4) return;
+  var drop = demo.querySelector(".demo-drop");
+  var dropImg = drop ? drop.querySelector(".demo-drop-img") : null;
+  if (!panel || !scroller || slides.length !== 4 || groups.length !== 4 || !drop || !dropImg) return;
 
   var sources = slides.map(function (s) { return s.getAttribute("data-doc"); });
   var groupsFor = {
@@ -192,8 +195,7 @@
   var timers = [];
   var running = false;
   var played = false;
-  var flyEl = null;
-  var STEP = 1700;
+  var STEP = 1600;
 
   slides.forEach(function (s) {
     demo.querySelectorAll('[data-src="' + s.getAttribute("data-doc") + '"]').forEach(function (el) {
@@ -217,9 +219,6 @@
   function slideFor(id) {
     return slides[sources.indexOf(id)];
   }
-  function stageFor(id) {
-    return stageDocs[sources.indexOf(id)];
-  }
   function scrollToSlide(id) {
     var s = slideFor(id);
     if (!s) return;
@@ -241,9 +240,6 @@
       var on = s.getAttribute("data-doc") === id;
       s.classList.toggle("active", on);
       s.setAttribute("aria-pressed", String(on));
-    });
-    stageDocs.forEach(function (d) {
-      d.classList.toggle("on", d.getAttribute("data-doc") === id);
     });
     dots.forEach(function (d) {
       d.classList.toggle("active", d.getAttribute("data-dot") === id);
@@ -272,61 +268,70 @@
       el.classList.toggle("hl", on);
     });
   }
-  function removeFly() {
-    if (flyEl) {
-      if (flyEl.parentNode) flyEl.parentNode.removeChild(flyEl);
-      flyEl = null;
-    }
-    stageDocs.forEach(function (d) { d.classList.remove("flown"); });
+
+  /* The drop overlay: one reusable element, filled from
+     the rail slide's own image and caption, positioned
+     absolutely over the form panel. It takes no layout
+     space and is removed from view the moment the intro
+     ends. */
+  function showDrop(id) {
+    var s = slideFor(id);
+    if (!s) return;
+    var img = s.querySelector("img");
+    var type = s.querySelector(".doc-slide-type");
+    var name = s.querySelector(".doc-slide-name");
+    dropImg.src = img ? img.src : "";
+    drop.querySelector(".doc-slide-type").textContent = type ? type.textContent : "";
+    drop.querySelector(".doc-slide-name").textContent = name ? name.textContent : "";
+    var pr = panel.getBoundingClientRect();
+    var fr = demo.getBoundingClientRect();
+    var w = pr.width * (id === "dl-her" ? 0.8 : (isMobile() ? 0.88 : 0.62));
+    drop.style.transition = "none";
+    drop.style.transform = "translateY(16px)";
+    drop.style.opacity = "0";
+    drop.style.width = w + "px";
+    drop.hidden = false;
+    var h = drop.offsetHeight;
+    drop.style.left = (pr.left - fr.left + (pr.width - w) / 2) + "px";
+    drop.style.top = (pr.top - fr.top + (pr.height - h) / 2) + "px";
+    void drop.offsetWidth;
+    drop.style.transition = "opacity 300ms ease, transform 300ms ease";
+    drop.style.transform = "translateY(0px)";
+    drop.style.opacity = "1";
   }
 
-  /* FLIP flight: a copy of the stage document, fixed at the
-     stage's own rect, transitions to its rail slot's rect.
-     The slot's real slide appears underneath it as it lands,
-     and the stage clears for the next document. */
-  function flyToRail(id) {
-    var sd = stageFor(id);
-    var sl = slideFor(id);
-    if (!sd || !sl) return;
-    var s = sd.getBoundingClientRect();
-    var d = sl.getBoundingClientRect();
-    if (!s.width || !d.width || reduced) {
-      sl.classList.add("arrived");
-      return;
-    }
-    var clone = sd.cloneNode(true);
-    clone.classList.add("demo-fly");
-    clone.classList.remove("hl");
-    clone.style.animation = "none";
-    clone.style.left = s.left + "px";
-    clone.style.top = s.top + "px";
-    clone.style.width = s.width + "px";
-    clone.style.height = s.height + "px";
-    document.body.appendChild(clone);
-    flyEl = clone;
-    sd.classList.add("flown");
-    var dx = d.left - s.left;
-    var dy = d.top - s.top;
-    var sx = d.width / s.width;
-    var sy = d.height / s.height;
-    void clone.offsetWidth;
-    clone.style.transition = "transform 580ms cubic-bezier(0.45, 0.02, 0.25, 1)";
-    clone.style.transform = "translate(" + dx + "px, " + dy + "px) scale(" + sx + ", " + sy + ")";
-    later(function () {
-      sl.classList.add("arrived");
-      sd.classList.remove("on");
-      removeFly();
-    }, 600);
+  /* The drop itself: the overlay travels to the centre of
+     the group its document fills and shrinks into it,
+     fading as it is absorbed. Rects are measured now, at
+     drop time, so accordion moves earlier in the step are
+     already settled. */
+  function dropInto(id) {
+    if (drop.hidden) return;
+    var group = (groupsFor[id] || [])[0];
+    if (!group) { hideDrop(); return; }
+    var o = drop.getBoundingClientRect();
+    var g = group.getBoundingClientRect();
+    if (!o.width || !g.width || !g.height) { hideDrop(); return; }
+    var dx = (g.left + g.width / 2) - (o.left + o.width / 2);
+    var dy = (g.top + g.height / 2) - (o.top + o.height / 2);
+    drop.style.transition = "transform 620ms cubic-bezier(0.45, 0.02, 0.25, 1), opacity 240ms ease 400ms";
+    drop.style.transform = "translate(" + dx + "px, " + dy + "px) scale(0.13)";
+    drop.style.opacity = "0";
+  }
+
+  function hideDrop() {
+    drop.hidden = true;
+    drop.style.transition = "none";
+    drop.style.transform = "";
+    drop.style.opacity = "";
   }
 
   function settle(returnToFirst) {
     clearTimers();
-    removeFly();
+    hideDrop();
     running = false;
     played = true;
     sources.forEach(function (id) {
-      var s = slideFor(id);
-      if (s) s.classList.add("arrived");
       demo.classList.add("filled-" + id);
       light(id, false);
       (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
@@ -343,32 +348,30 @@
     if (!running) return;
     setActive(id, { scroll: true, openGroup: true });
     var owned = groupsFor[id] || [];
+    owned.forEach(function (g) { g.classList.add("seq-lit"); });
+    light(id, true);
+    showDrop(id);
     if (isMobile() && id === "mxbc") {
       later(function () { if (running) openOnly(groups[2]); }, 450);
     }
-    owned.forEach(function (g) { g.classList.add("seq-lit"); });
-    light(id, true);
-    later(function () { demo.classList.add("filled-" + id); }, 500);
+    later(function () { if (running) dropInto(id); }, 480);
+    later(function () { demo.classList.add("filled-" + id); }, 560);
     later(function () {
       owned.forEach(function (g) { g.classList.remove("seq-lit"); });
       light(id, false);
-    }, 1120);
-    later(function () { if (running) flyToRail(id); }, 1080);
+    }, 1150);
+    later(function () { if (running) hideDrop(); }, 1300);
   }
   function startCycle() {
     if (reduced || !hasIO) return;
     clearTimers();
-    removeFly();
+    hideDrop();
     running = true;
     played = false;
     demo.classList.add("seq-armed", "seq-running");
     demo.classList.remove("seq-done");
     demo.querySelectorAll(".hl").forEach(function (el) { el.classList.remove("hl"); });
     sources.forEach(function (id) {
-      var s = slideFor(id);
-      if (s) s.classList.remove("arrived");
-      var sd = stageFor(id);
-      if (sd) sd.classList.remove("on");
       demo.classList.remove("filled-" + id);
       (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
     });
@@ -450,10 +453,6 @@
   setActive(sources[0], {});
 
   if (!reduced && hasIO) {
-    /* The stage waits empty until the intro brings the
-       first document up; the markup's default stage
-       document is the no-JS and reduced-motion state. */
-    stageDocs.forEach(function (d) { d.classList.remove("on"); });
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting && !played && !running) {
