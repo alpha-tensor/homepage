@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=24">
+<link rel="stylesheet" href="assets/styles.css?v=25">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -170,6 +170,10 @@
     var max = scroller.scrollWidth - scroller.clientWidth;
     prev.disabled = scroller.scrollLeft <= 2;
     next.disabled = scroller.scrollLeft >= max - 2;
+    var idx = Math.round(scroller.scrollLeft / step());
+    document.querySelectorAll(".demo-dot").forEach(function (dot, i) {
+      dot.classList.toggle("active", i === idx);
+    });
   }
   prev.addEventListener("click", function () {
     scroller.scrollBy({ left: -step(), behavior: "smooth" });

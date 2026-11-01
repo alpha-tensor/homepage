@@ -992,45 +992,65 @@ body {
   display: none;
 }
 
-/* Paddles, Apple's pattern: 36px circles that fade and
-   scale in on hover, only on devices that hover, and only
-   in a direction that can still scroll (script keeps the
-   disabled state honest). */
+/* The row's controls, in Mistral's style: a progress pill
+   of dots on the left (the current card is the elongated
+   one), two square buttons on the right, always visible,
+   dimmed when their direction cannot scroll. */
+.demo-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.demo-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  background: var(--panel);
+  border-radius: 999px;
+}
+
+.demo-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink);
+  opacity: 0.3;
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.demo-dot.active {
+  width: 18px;
+  opacity: 1;
+}
+
+.demo-paddles {
+  display: flex;
+  gap: 8px;
+}
+
 .paddle {
-  position: absolute;
-  top: 50%;
   width: 36px;
   height: 36px;
-  margin-top: -24px;
   display: grid;
   place-items: center;
   padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--panel);
+  border: 1px solid var(--hairline-soft);
+  border-radius: 6px;
+  color: var(--ink);
   cursor: pointer;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: transform 0.5s ease, opacity 0.7s cubic-bezier(0.15, 0, 0.2, 1) 0.1s;
-  pointer-events: none;
-  z-index: 3;
 }
 
-.paddle-prev {
-  left: 4px;
+.paddle:hover:not([disabled]) {
+  border-color: var(--hairline);
 }
 
-.paddle-next {
-  right: 4px;
-}
-
-@media (hover: hover) and (min-width: 861px) {
-  .demo-scroller:hover .paddle:not([disabled]) {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-  }
+.paddle[disabled] {
+  opacity: 0.38;
+  cursor: default;
 }
 
 .doc-card {
