@@ -9,125 +9,65 @@
   </script>
   <div class="demo-scroller">
   <div class="demo-controls">
-    <div class="demo-dots" aria-hidden="true"><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span></div>
+    <div class="demo-dots" role="group" aria-label="Choose a document"><button type="button" class="demo-dot active" data-dot="mxbc" aria-label="Show the birth certificate"></button><button type="button" class="demo-dot" data-dot="g28" aria-label="Show the G-28"></button><button type="button" class="demo-dot" data-dot="anum" aria-label="Show the notice of action"></button><button type="button" class="demo-dot" data-dot="dl-her" aria-label="Show the driver license"></button></div>
     <div class="demo-paddles">
       <button type="button" class="demo-replay" hidden>Replay</button>
-      <button type="button" class="paddle paddle-prev" aria-label="Scroll documents back" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M16.5 3.5L8 12l8.5 8.5"/></svg></button>
-      <button type="button" class="paddle paddle-next" aria-label="Scroll documents forward" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M7.5 3.5L16 12l-8.5 8.5"/></svg></button>
+      <button type="button" class="paddle paddle-prev" aria-label="Previous document" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M16.5 3.5L8 12l8.5 8.5"/></svg></button>
+      <button type="button" class="paddle paddle-next" aria-label="Next document" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M7.5 3.5L16 12l-8.5 8.5"/></svg></button>
     </div>
   </div>
-  <div class="demo-sources">
-    <div class="doc-card" data-doc="mxbc" tabindex="0">
-      <div class="doc-authority">Registro Civil &#183; México</div>
-      <div class="doc-name">Laura María Fernanda Itandehui</div>
-      <div class="doc-facts">
-        <div><span class="df-key">Fecha</span> 14/03/1992</div>
-        <div><span class="df-key">Lugar</span> Oaxaca de Juárez</div>
-      </div>
-      <div class="doc-line"></div>
-      <div class="doc-tag">Acta de Nacimiento &#183; Mexico</div>
-      <div class="doc-mini" aria-hidden="true">
-        <div class="mini-head">
-          <span class="mini-seal"></span>
-          <span class="mini-head-text">ESTADOS UNIDOS<br>MEXICANOS</span>
-        </div>
-        <div class="mini-title">ACTA DE NACIMIENTO</div>
-        <div class="mini-row"><span class="mini-k">NOMBRE</span><span class="mini-v">ITANDEHUI, LAURA MARÍA FERNANDA</span></div>
-        <div class="mini-row"><span class="mini-k">FECHA</span><span class="mini-v">14 / 03 / 1992</span></div>
-        <div class="mini-row"><span class="mini-k">LUGAR</span><span class="mini-v">OAXACA DE JUÁREZ, OAXACA</span></div>
-        <div class="mini-row"><span class="mini-k">SEXO</span><span class="mini-v">FEMENINO</span></div>
-        <div class="mini-row"><span class="mini-k">REGISTRO</span><span class="mini-v">LIBRO 04 &#183; ACTA 01234</span></div>
-        <div class="mini-write">Compareció el declarante y presentó a la menor, cuyos datos quedan asentados en esta oficialía.</div>
-        <div class="mini-write">Se extiende la presente copia certificada en Oaxaca de Juárez, a los catorce días del mes.</div>
-        <div class="mini-foot"><span class="mini-barcode"><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span></span><span class="mini-foot-text">REGISTRO CIVIL &#183; OAXACA</span></div>
-      </div>
-    </div>
-    <div class="doc-card" data-doc="g28" tabindex="0">
-      <div class="doc-authority">USCIS</div>
-      <div class="doc-name">Daniel R. Reyes</div>
-      <div class="doc-facts">
-        <div><span class="df-key">Bar No.</span> CA 214538</div>
-      </div>
-      <div class="doc-line"></div>
-      <div class="doc-tag">G-28 &#183; USCIS</div>
-      <div class="doc-mini" aria-hidden="true">
-        <div class="mini-band mini-band--black">
-          <span class="mini-band-name">USCIS</span>
-          <span class="mini-band-sub">U.S. Citizenship and Immigration Services</span>
-          <span class="mini-band-form">Form G-28</span>
-        </div>
-        <div class="mini-body">
-          <div class="mini-doctitle">Notice of Entry of Appearance as Attorney or Accredited Representative</div>
-          <div class="mini-sect">PART 1. INFORMATION ABOUT ATTORNEY</div>
-          <div class="mini-check"><span class="mini-chk on">&#10005;</span><span>Attorney or Accredited Representative</span></div>
-          <div class="mini-check"><span class="mini-chk"></span><span>I am an attorney eligible to practice law in the United States</span></div>
-          <div class="mini-row"><span class="mini-k">NAME</span><span class="mini-v">DANIEL R. REYES</span></div>
-          <div class="mini-row"><span class="mini-k">BAR NO.</span><span class="mini-v">CA 214538</span></div>
-          <div class="mini-row"><span class="mini-k">ADDRESS</span><span class="mini-v mini-blank"></span></div>
-          <div class="mini-write dark">To be completed by the attorney or accredited representative. Print or type in black ink.</div>
-        </div>
-      </div>
-    </div>
-    <div class="doc-card" data-doc="anum" tabindex="0">
-      <div class="doc-authority">USCIS</div>
-      <div class="doc-name">Laura María Fernanda Itandehui</div>
-      <div class="doc-facts">
-        <div><span class="df-key">A-Number</span> A123456789</div>
-      </div>
-      <div class="doc-line"></div>
-      <div class="doc-tag">I-797C &#183; Notice of Action</div>
-      <div class="doc-mini" aria-hidden="true">
-        <div class="mini-band mini-band--gray">
-          <span class="mini-band-name">USCIS</span>
-          <span class="mini-band-sub">U.S. Citizenship and Immigration Services</span>
-          <span class="mini-band-form">NOTICE OF ACTION</span>
-        </div>
-        <div class="mini-body">
-          <div class="mini-grid">
-            <div class="mini-cell"><span class="mini-ck">RECEIPT NUMBER</span><span class="mini-cv">IOE0912345678</span></div>
-            <div class="mini-cell"><span class="mini-ck">CASE TYPE</span><span class="mini-cv">I-130</span></div>
-            <div class="mini-cell"><span class="mini-ck">NOTICE TYPE</span><span class="mini-cv">RECEIPT</span></div>
-            <div class="mini-cell"><span class="mini-ck">PETITIONER</span><span class="mini-cv">ASHFORD, GERARD S</span></div>
-            <div class="mini-cell"><span class="mini-ck">BENEFICIARY</span><span class="mini-cv">ITANDEHUI, LAURA M F</span></div>
-            <div class="mini-cell"><span class="mini-ck">A-NUMBER</span><span class="mini-cv">A123456789</span></div>
-          </div>
-          <div class="mini-write dark">This notice is to advise you that we have received the application or petition listed above.</div>
-          <div class="mini-write dark">Please verify that your name and address are correct, and notify us of any change.</div>
-          <div class="mini-foot"><span class="mini-barcode"><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span></span><span class="mini-foot-text">PAGE 1 OF 1</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="doc-card" data-doc="dl-her" tabindex="0">
-      <div class="doc-authority">California &#183; DMV</div>
-      <div class="doc-name">Laura María Fernanda Itandehui</div>
-      <div class="doc-address">820 S Grand Ave<br>Apt 2104<br>Los Angeles, CA 90017</div>
-      <div class="doc-line"></div>
-      <div class="doc-tag">Driver license &#183; California</div>
-      <div class="doc-mini doc-mini--dl" aria-hidden="true">
-        <div class="mini-dl-head">
-          <span class="mini-script">California</span>
-          <span class="mini-dl-title">DRIVER LICENSE</span>
-          <span class="mini-dl-usa">USA</span>
-        </div>
-        <div class="mini-dl-body">
-          <div class="mini-dl-left">
-            <div class="mini-photo"><svg viewBox="0 0 40 48" aria-hidden="true"><circle cx="20" cy="15" r="8.5" fill="rgba(70, 95, 120, 0.55)"/><path d="M3 48 C5 33 13 27 20 27 C27 27 35 33 37 48 Z" fill="rgba(70, 95, 120, 0.55)"/></svg></div>
-            <div class="mini-sign">L. Itandehui</div>
-          </div>
-          <div class="mini-dl-fields">
-            <div class="mini-dl-num"><span class="mini-k">DL</span><span class="mini-dl-no">I1234567</span><span class="mini-star">&#9733;</span></div>
-            <div class="mini-row"><span class="mini-k">LN</span><span class="mini-v">ITANDEHUI</span></div>
-            <div class="mini-row"><span class="mini-k">FN</span><span class="mini-v">LAURA MARIA FERNANDA</span></div>
-            <div class="mini-row"><span class="mini-k">DOB</span><span class="mini-v">03/14/1992</span></div>
-            <div class="mini-row"><span class="mini-k">ADD</span><span class="mini-v">820 S GRAND AVE APT 2104</span></div>
-            <div class="mini-row"><span class="mini-k"></span><span class="mini-v">LOS ANGELES, CA 90017</span></div>
-            <div class="mini-row"><span class="mini-k">EXP</span><span class="mini-v">03/14/2030</span><span class="mini-k">CLASS</span><span class="mini-v">C</span><span class="mini-k">SEX</span><span class="mini-v">F</span></div>
-          </div>
-        </div>
-        <div class="mini-dl-foot">THIS LICENSE IS ISSUED AS A LICENSE TO DRIVE A MOTOR VEHICLE. IT DOES NOT ESTABLISH ELIGIBILITY FOR EMPLOYMENT.</div>
-      </div>
-    </div>
+  <div class="demo-sources" role="group" aria-label="Source documents">
+    <button type="button" class="doc-slide active" data-doc="mxbc" aria-pressed="true">
+      <img class="doc-slide-img" src="assets/doc-acta.jpg" alt="Acta de Nacimiento, Mexican birth certificate for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
+      <span class="doc-slide-cap"><span class="doc-slide-type">Acta de Nacimiento &#183; Mexico</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
+    </button>
+    <button type="button" class="doc-slide" data-doc="g28" aria-pressed="false">
+      <img class="doc-slide-img" src="assets/doc-g28.jpg" alt="Form G-28, notice of entry of appearance naming attorney Daniel R. Reyes. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
+      <span class="doc-slide-cap"><span class="doc-slide-type">Form G-28 &#183; USCIS</span><span class="doc-slide-name">Daniel R. Reyes</span></span>
+    </button>
+    <button type="button" class="doc-slide" data-doc="anum" aria-pressed="false">
+      <img class="doc-slide-img" src="assets/doc-i797c.jpg" alt="Form I-797C, notice of action for the I-130 petition. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
+      <span class="doc-slide-cap"><span class="doc-slide-type">I-797C &#183; Notice of Action</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
+    </button>
+    <button type="button" class="doc-slide doc-slide--wide" data-doc="dl-her" aria-pressed="false">
+      <img class="doc-slide-img" src="assets/doc-license.jpg" alt="California driver license for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="1000" height="631" loading="eager" decoding="async" draggable="false">
+      <span class="doc-slide-cap"><span class="doc-slide-type">Driver License &#183; California</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
+    </button>
   </div>
+  </div>
+
+  <div class="demo-extracts" aria-live="polite">
+    <div class="demo-extract" data-doc="mxbc">
+      <span class="extract-label">From this document</span>
+      <dl class="extract-list">
+        <div><dt>Full name</dt><dd data-src="mxbc" tabindex="0">Laura Mar&#237;a Fernanda Itandehui</dd></div>
+        <div><dt>Date of birth</dt><dd data-src="mxbc" tabindex="0">14/03/1992</dd></div>
+        <div><dt>Place of birth</dt><dd data-src="mxbc" tabindex="0">Oaxaca de Ju&#225;rez</dd></div>
+      </dl>
+    </div>
+    <div class="demo-extract" data-doc="g28" hidden>
+      <span class="extract-label">From this document</span>
+      <dl class="extract-list">
+        <div><dt>Attorney</dt><dd data-src="g28" tabindex="0">Daniel R. Reyes</dd></div>
+        <div><dt>Bar number</dt><dd data-src="g28" tabindex="0">CA 214538</dd></div>
+        <div><dt>Status</dt><dd data-src="g28" tabindex="0">G-28 attached</dd></div>
+      </dl>
+    </div>
+    <div class="demo-extract" data-doc="anum" hidden>
+      <span class="extract-label">From this document</span>
+      <dl class="extract-list">
+        <div><dt>A-Number</dt><dd data-src="anum" tabindex="0">A123456789</dd></div>
+        <div><dt>Receipt number</dt><dd data-src="anum" tabindex="0">IOE0912345678</dd></div>
+      </dl>
+    </div>
+    <div class="demo-extract" data-doc="dl-her" hidden>
+      <span class="extract-label">From this document</span>
+      <dl class="extract-list">
+        <div><dt>Street</dt><dd data-src="dl-her" tabindex="0">820 S Grand Ave</dd></div>
+        <div><dt>Apt.</dt><dd data-src="dl-her" tabindex="0">2104</dd></div>
+        <div><dt>City</dt><dd data-src="dl-her" tabindex="0">Los Angeles, CA 90017</dd></div>
+      </dl>
+    </div>
   </div>
 
   <div class="demo-flow" aria-hidden="true">&#8595;</div>
@@ -215,7 +155,7 @@
           </div>
           <div class="field f5">
             <label><span class="ino">6.b.</span>Apt., Ste., or Flr.</label>
-            <div class="chkrow chkrow--bare">
+            <div class="chkrow chkrow--bare chkrow--units">
               <span class="chk-unit" data-src="dl-her" tabindex="0"><span class="chk on">&#10005;</span> Apt.</span>
               <span class="chk-unit"><span class="chk"></span> Ste.</span>
               <span class="chk-unit"><span class="chk"></span> Flr.</span>

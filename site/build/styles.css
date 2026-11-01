@@ -876,6 +876,13 @@ button:focus-visible {
 .section-body {
   border-left: 1px solid var(--hairline-soft);
   padding-left: 48px;
+  /* Grid items refuse to shrink below their content's
+     min-content size by default, which lets the demo's
+     horizontal scroller stretch the whole column to the
+     width of its slides. Zeroing the minimum keeps the
+     column at the grid's width and the scrolling inside
+     the scroller, where it belongs. */
+  min-width: 0;
 }
 
 .section-body p {
@@ -1023,12 +1030,13 @@ body {
 .demo-sources {
   display: flex;
   flex-wrap: nowrap;
+  align-items: center;
   gap: 14px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  padding: 6px 26px 14px 6px;
-  margin: -6px -6px 0;
+  padding: 12px 26px 18px 6px;
+  margin: -12px -6px 0;
   scrollbar-width: none;
 }
 
@@ -1059,10 +1067,20 @@ body {
 .demo-dot {
   width: 6px;
   height: 6px;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
   border-radius: 999px;
   background: var(--ink);
   opacity: 0.3;
   transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.demo-dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  opacity: 1;
 }
 
 .demo-dot.active {
@@ -1135,6 +1153,140 @@ body {
   scroll-snap-stop: always;
 }
 
+/* The document carousel: the real generated documents as
+   slides, one always active. Inactive slides sit smaller
+   and dimmed beside it; each keeps the proportions of the
+   document itself, so the license stays landscape in a row
+   of portrait pages. Selection and scrolling are the same
+   state, kept in step by the demo script. */
+.doc-slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-button);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.5;
+  transform: scale(0.94);
+  transform-origin: left center;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.doc-slide.active {
+  opacity: 1;
+  transform: none;
+  border-color: var(--hairline-strong);
+  box-shadow: 0 12px 32px rgba(20, 16, 16, 0.14);
+}
+
+.doc-slide:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.doc-slide-img {
+  display: block;
+  width: min(400px, 84vw);
+  height: auto;
+}
+
+.doc-slide--wide .doc-slide-img {
+  width: min(540px, 84vw);
+}
+
+.doc-slide-cap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 9px 12px 10px;
+  border-top: 1px solid var(--hairline);
+}
+
+.doc-slide-type {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.doc-slide-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* The extraction strip: the facts the active document
+   contributes, in plain label and value rows. Exactly one
+   strip shows, the active document's. */
+.demo-extracts {
+  margin-top: 2px;
+}
+
+.demo-extract {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 30px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-button);
+  padding: 12px 16px;
+}
+
+.demo-extract[hidden] {
+  display: none;
+}
+
+.extract-label {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.extract-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 30px;
+  margin: 0;
+}
+
+.extract-list > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.extract-list dt {
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.extract-list dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 550;
+}
+
 /* On-load sequence: the source cards begin as reserved,
    unseen slots and arrive one by one. Their values stay in
    the markup throughout; root classes alone decide whether
@@ -1150,6 +1302,16 @@ body {
 .form-demo.seq-armed .doc-card:not(.arrived) {
   opacity: 0;
   pointer-events: none;
+  transform: translateY(16px);
+}
+
+.form-demo.seq-armed .doc-slide:not(.arrived) {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.94);
+}
+
+.form-demo.seq-armed .doc-slide.active:not(.arrived) {
   transform: translateY(16px);
 }
 
@@ -1187,7 +1349,8 @@ body {
   transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.form-demo .fgroup.seq-lit {
+.form-demo .fgroup.seq-lit,
+.form-demo .fgroup.sel-lit {
   background: #FDF0E1;
   box-shadow: inset 0 0 0 2px var(--accent);
 }
@@ -1211,6 +1374,11 @@ body {
 }
 
 .form-demo .doc-card.hl {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.form-demo .doc-slide.hl {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent);
 }
@@ -1333,10 +1501,36 @@ body {
 }
 
 .chkrow .fbox.apt-no {
-  margin-left: auto;
-  min-width: 76px;
   text-align: center;
-  background: #FFFFFF;
+}
+
+/* Field 6.b, at Brandon's word: the Apt. / Ste. / Flr.
+   options sit as one tight cluster, each in its own
+   bordered box in the form's checkbox treatment, and the
+   number field is a full sibling of the panel's other
+   value boxes, only wider. */
+.chkrow--units {
+  gap: 6px;
+}
+
+.chkrow--units .chk-unit {
+  border: 1px solid var(--hairline-strong);
+  background: var(--panel);
+  padding: 5px 6px;
+  gap: 6px;
+}
+
+.form-demo .chkrow--units .chk-unit.hl {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* The number takes the rest of the row, so the cluster
+   and the field stay on one line at the panel's width. */
+.chkrow--units .fbox.apt-no {
+  flex: 1 1 auto;
+  margin-left: 8px;
+  min-width: 104px;
 }
 
 /* The apartment row stands on its own, no gray box,
@@ -1347,10 +1541,7 @@ body {
   padding: 2px 0;
 }
 
-.chkrow--bare .fbox.apt-no {
-  min-width: 76px;
-  margin-left: 6px;
-}
+
 
 .doc-code {
   font-family: var(--font-mono);
@@ -2113,6 +2304,23 @@ body {
   .abox {
     width: 20px;
     height: 26px;
+  }
+
+  .doc-slide-cap {
+    padding: 7px 10px 8px;
+  }
+
+  .doc-slide-name {
+    font-size: 12.5px;
+  }
+
+  .demo-extract {
+    padding: 10px 12px;
+    gap: 6px 20px;
+  }
+
+  .chkrow--units .fbox.apt-no {
+    min-width: 96px;
   }
 }
 

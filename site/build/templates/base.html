@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=28">
+<link rel="stylesheet" href="assets/styles.css?v=29">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -59,13 +59,17 @@
     if (!id) return;
     demo.querySelectorAll('[data-doc="' + id + '"], [data-src="' + id + '"]').forEach(function (el) { el.classList.add("hl"); });
   }
+  function cycling() { return demo.classList.contains("seq-running"); }
   demo.querySelectorAll("[data-src], [data-doc]").forEach(function (el) {
     var id = el.getAttribute("data-src") || el.getAttribute("data-doc");
-    el.addEventListener("mouseenter", function () { if (!pinned) light(id); });
-    el.addEventListener("mouseleave", function () { if (!pinned) light(null); });
-    el.addEventListener("focus", function () { light(id); });
-    el.addEventListener("blur", function () { if (!pinned) light(null); });
+    el.addEventListener("mouseenter", function () { if (!pinned && !cycling()) light(id); });
+    el.addEventListener("mouseleave", function () { if (!pinned && !cycling()) light(null); });
+    el.addEventListener("focus", function () { if (!cycling()) light(id); });
+    el.addEventListener("blur", function () { if (!pinned && !cycling()) light(null); });
     el.addEventListener("click", function () {
+      /* Document slides select through the carousel script;
+         pinning is for values and extraction facts. */
+      if (el.classList.contains("doc-slide")) return;
       if (pinned === id) { pinned = null; light(null); }
       else { pinned = id; light(id); }
     });
@@ -141,97 +145,61 @@
       if (willOpen) setOpen(g, true);
     });
   });
-  document.querySelectorAll(".doc-card").forEach(function (card) {
-    card.addEventListener("click", function () {
-      var target = document.querySelector('.form-panel [data-src="' + card.dataset.doc + '"]');
-      if (!target) return;
-      var g = target.closest(".fgroup");
-      if (!g) return;
-      groups.forEach(function (o) { setOpen(o, o === g); });
-    });
-  });
+  /* Selecting a document opens its group on mobile; the
+     carousel script owns that now. */
 })();
 </script>
 <script>
-/* Source row paddles. One card per click, and the disabled
-   state tracks the scroll position, so a paddle only shows
-   (on hover, desktop) when its direction can still move. */
-(function () {
-  var scroller = document.querySelector(".demo-sources");
-  if (!scroller) return;
-  var prev = document.querySelector(".paddle-prev");
-  var next = document.querySelector(".paddle-next");
-  if (!prev || !next) return;
-  function step() {
-    var card = scroller.querySelector(".doc-card");
-    return card ? card.offsetWidth + 14 : 280;
-  }
-  function states() {
-    var max = scroller.scrollWidth - scroller.clientWidth;
-    prev.disabled = scroller.scrollLeft <= 2;
-    next.disabled = scroller.scrollLeft >= max - 2;
-    var idx = Math.round(scroller.scrollLeft / step());
-    document.querySelectorAll(".demo-dot").forEach(function (dot, i) {
-      dot.classList.toggle("active", i === idx);
-    });
-  }
-  prev.addEventListener("click", function () {
-    scroller.scrollBy({ left: -step(), behavior: "smooth" });
-  });
-  next.addEventListener("click", function () {
-    scroller.scrollBy({ left: step(), behavior: "smooth" });
-  });
-  scroller.addEventListener("scroll", states, { passive: true });
-  window.addEventListener("resize", states);
-  states();
-})();
-</script>
-<script>
-/* Form demo sequence. The filled form is the page's resting
-   state and stays in the markup; when motion is allowed this
-   arms an empty state, then lets each source document arrive
-   and fill the values it owns. Any card interaction hands
-   control straight back to the ordinary provenance demo. */
+/* Form demo carousel and fill cycle. One selection state
+   drives everything: the slides, the dots, the extraction
+   strip under the carousel, and the highlight on the form
+   group the active document feeds. Clicking a slide or a
+   dot selects it and scrolls it into place; scrolling the
+   carousel selects whichever document settles at the start.
+   When the demo scrolls into view, a cycle runs once: each
+   document activates in turn and fills the values it owns
+   (the filled form stays in the markup throughout), then
+   the selection returns to the first document. Any touch
+   cancels the cycle and hands over control. */
 (function () {
   var demo = document.querySelector(".form-demo");
   if (!demo) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  if (!("IntersectionObserver" in window)) return;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hasIO = "IntersectionObserver" in window;
 
-  var replay = demo.querySelector(".demo-replay");
   var scroller = demo.querySelector(".demo-sources");
+  var slides = Array.prototype.slice.call(demo.querySelectorAll(".doc-slide"));
+  var dots = Array.prototype.slice.call(demo.querySelectorAll(".demo-dot"));
+  var strips = Array.prototype.slice.call(demo.querySelectorAll(".demo-extract"));
+  var prev = demo.querySelector(".paddle-prev");
+  var next = demo.querySelector(".paddle-next");
+  var replay = demo.querySelector(".demo-replay");
   var groups = Array.prototype.slice.call(demo.querySelectorAll(".fgroup"));
-  if (!replay || !scroller || groups.length !== 4) return;
+  if (!scroller || slides.length !== 4 || groups.length !== 4) return;
 
-  var sources = ["mxbc", "g28", "anum", "dl-her"];
-  var cards = {};
-  var values = {};
+  var sources = slides.map(function (s) { return s.getAttribute("data-doc"); });
   var groupsFor = {
     "mxbc": [groups[1], groups[2]],
     "g28": [groups[0]],
     "anum": [groups[2]],
     "dl-her": [groups[3]]
   };
+  var active = sources[0];
+  var programmaticUntil = 0;
   var timers = [];
   var running = false;
   var played = false;
 
-  sources.forEach(function (id) {
-    cards[id] = demo.querySelector('[data-doc="' + id + '"]');
-    values[id] = Array.prototype.slice.call(demo.querySelectorAll('[data-src="' + id + '"]'));
-    values[id].forEach(function (el) {
+  slides.forEach(function (s) {
+    demo.querySelectorAll('[data-src="' + s.getAttribute("data-doc") + '"]').forEach(function (el) {
       el.querySelectorAll(".abox").forEach(function (box, j) {
         box.style.setProperty("--seq-delay", (j * 45) + "ms");
       });
     });
   });
 
-  function later(fn, ms) {
-    timers.push(window.setTimeout(fn, ms));
-  }
-  function clearTimers() {
-    timers.forEach(function (t) { window.clearTimeout(t); });
-    timers = [];
+  function isMobile() {
+    return window.matchMedia("(max-width: 640px)").matches;
   }
   function setOpen(group, open) {
     group.classList.toggle("open", open);
@@ -241,54 +209,82 @@
   function openOnly(group) {
     groups.forEach(function (g) { setOpen(g, g === group); });
   }
-  function isMobile() {
-    return window.matchMedia("(max-width: 640px)").matches;
+  function slideFor(id) {
+    return slides[sources.indexOf(id)];
   }
-  function bringCardIntoView(card) {
-    if (!card) return;
-    var cardRect = card.getBoundingClientRect();
-    var scrollerRect = scroller.getBoundingClientRect();
-    if (isMobile() || cardRect.left < scrollerRect.left || cardRect.right > scrollerRect.right) {
-      scroller.scrollTo({
-        left: Math.max(0, card.offsetLeft - 6),
-        behavior: "smooth"
-      });
+  function scrollToSlide(id) {
+    var s = slideFor(id);
+    if (!s) return;
+    programmaticUntil = Date.now() + 900;
+    scroller.scrollTo({
+      left: Math.max(0, s.offsetLeft - 6),
+      behavior: reduced ? "auto" : "smooth"
+    });
+  }
+  function updatePaddles() {
+    var i = sources.indexOf(active);
+    if (prev) prev.disabled = i <= 0;
+    if (next) next.disabled = i >= sources.length - 1;
+  }
+  function setActive(id, opts) {
+    opts = opts || {};
+    active = id;
+    slides.forEach(function (s) {
+      var on = s.getAttribute("data-doc") === id;
+      s.classList.toggle("active", on);
+      s.setAttribute("aria-pressed", String(on));
+    });
+    dots.forEach(function (d) {
+      d.classList.toggle("active", d.getAttribute("data-dot") === id);
+    });
+    strips.forEach(function (st) {
+      st.hidden = st.getAttribute("data-doc") !== id;
+    });
+    groups.forEach(function (g) { g.classList.remove("sel-lit"); });
+    (groupsFor[id] || []).forEach(function (g) { g.classList.add("sel-lit"); });
+    if (opts.openGroup && isMobile() && groupsFor[id] && groupsFor[id][0]) {
+      openOnly(groupsFor[id][0]);
     }
+    if (opts.scroll) scrollToSlide(id);
+    updatePaddles();
+  }
+
+  function later(fn, ms) {
+    timers.push(window.setTimeout(fn, ms));
+  }
+  function clearTimers() {
+    timers.forEach(function (t) { window.clearTimeout(t); });
+    timers = [];
   }
   function light(id, on) {
     demo.querySelectorAll('[data-doc="' + id + '"], [data-src="' + id + '"]').forEach(function (el) {
       el.classList.toggle("hl", on);
     });
   }
-  function finish() {
+  function finishCycle(returnToFirst) {
     if (!running && !demo.classList.contains("seq-running")) return;
     clearTimers();
     running = false;
     played = true;
     sources.forEach(function (id) {
-      if (cards[id]) cards[id].classList.add("arrived");
+      var s = slideFor(id);
+      if (s) s.classList.add("arrived");
       demo.classList.add("filled-" + id);
       light(id, false);
       (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
     });
     demo.classList.remove("seq-running");
     demo.classList.add("seq-done");
+    if (returnToFirst) setActive(sources[0], { scroll: true, openGroup: true });
   }
   function playStep(id) {
     if (!running) return;
-    var card = cards[id];
-    if (card) {
-      card.classList.add("arrived");
-      bringCardIntoView(card);
-    }
+    var slide = slideFor(id);
+    if (slide) slide.classList.add("arrived");
+    setActive(id, { scroll: true, openGroup: true });
     var owned = groupsFor[id] || [];
-    if (isMobile()) {
-      if (id === "mxbc") {
-        openOnly(groups[1]);
-        later(function () { if (running) openOnly(groups[2]); }, 420);
-      } else if (owned[0]) {
-        openOnly(owned[0]);
-      }
+    if (isMobile() && id === "mxbc") {
+      later(function () { if (running) openOnly(groups[2]); }, 420);
     }
     owned.forEach(function (g) { g.classList.add("seq-lit"); });
     light(id, true);
@@ -298,7 +294,8 @@
       light(id, false);
     }, 680);
   }
-  function start() {
+  function startCycle() {
+    if (reduced || !hasIO) return;
     clearTimers();
     running = true;
     played = false;
@@ -306,39 +303,91 @@
     demo.classList.remove("seq-done");
     demo.querySelectorAll(".hl").forEach(function (el) { el.classList.remove("hl"); });
     sources.forEach(function (id) {
-      if (cards[id]) cards[id].classList.remove("arrived");
+      var s = slideFor(id);
+      if (s) s.classList.remove("arrived");
       demo.classList.remove("filled-" + id);
       (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
     });
     if (isMobile()) openOnly(groups[0]);
+    programmaticUntil = Date.now() + 900;
     scroller.scrollTo({ left: 0, behavior: "smooth" });
     sources.forEach(function (id, i) {
       later(function () { playStep(id); }, i * 850);
     });
-    later(finish, sources.length * 850 + 250);
+    later(function () { finishCycle(true); }, sources.length * 850 + 500);
+  }
+  function userTakeover() {
+    if (running) finishCycle(false);
   }
 
-  demo.classList.add("seq-armed");
-  replay.hidden = false;
-  replay.addEventListener("click", function () { start(); });
-
-  function cancelFromCard(e) {
-    if (!running) return;
-    if (!e.target.closest(".doc-card")) return;
-    finish();
-  }
-  demo.addEventListener("mouseover", cancelFromCard, true);
-  demo.addEventListener("click", cancelFromCard, true);
-
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting && !played && !running) {
-        start();
-        io.unobserve(demo);
-      }
+  slides.forEach(function (s) {
+    s.addEventListener("click", function () {
+      userTakeover();
+      setActive(s.getAttribute("data-doc"), { scroll: true, openGroup: true });
     });
-  }, { threshold: 0.35 });
-  io.observe(demo);
+  });
+  dots.forEach(function (d) {
+    d.addEventListener("click", function () {
+      userTakeover();
+      setActive(d.getAttribute("data-dot"), { scroll: true, openGroup: true });
+    });
+  });
+  function stepBy(dir, focusSlide) {
+    userTakeover();
+    var i = sources.indexOf(active);
+    var j = Math.min(sources.length - 1, Math.max(0, i + dir));
+    setActive(sources[j], { scroll: true, openGroup: true });
+    if (focusSlide) {
+      var s = slideFor(active);
+      if (s) s.focus({ preventScroll: true });
+    }
+  }
+  if (prev) prev.addEventListener("click", function () { stepBy(-1, false); });
+  if (next) next.addEventListener("click", function () { stepBy(1, false); });
+  scroller.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); stepBy(1, true); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); stepBy(-1, true); }
+  });
+
+  var scrollSettle = null;
+  scroller.addEventListener("scroll", function () {
+    if (Date.now() < programmaticUntil) return;
+    window.clearTimeout(scrollSettle);
+    scrollSettle = window.setTimeout(function () {
+      var rect = scroller.getBoundingClientRect();
+      var best = 0;
+      var bestDiff = Infinity;
+      slides.forEach(function (s, i) {
+        var diff = Math.abs(s.getBoundingClientRect().left - rect.left - 6);
+        if (diff < bestDiff) { bestDiff = diff; best = i; }
+      });
+      if (sources[best] !== active) {
+        userTakeover();
+        setActive(sources[best], { openGroup: true });
+      }
+    }, 140);
+  }, { passive: true });
+  scroller.addEventListener("wheel", userTakeover, { passive: true });
+  scroller.addEventListener("touchstart", userTakeover, { passive: true });
+
+  if (replay) {
+    if (!reduced && hasIO) replay.hidden = false;
+    replay.addEventListener("click", function () { startCycle(); });
+  }
+
+  setActive(sources[0], {});
+
+  if (!reduced && hasIO) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !played && !running) {
+          startCycle();
+          io.unobserve(demo);
+        }
+      });
+    }, { threshold: 0.35 });
+    io.observe(demo);
+  }
 })();
 </script>
 <script>
