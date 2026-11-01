@@ -1278,15 +1278,17 @@ body {
 }
 
 /* The intro overlay: while the sequence runs (and on
-   Replay), a large copy of the document being read grows
-   out of its rail thumbnail and floats over the form
-   panel, image and caption bar together, an enlarged
-   twin of the rail slide, while the group it feeds fills
-   around it. It is absolutely positioned inside the demo,
-   so it never takes layout space; the script sets its
-   position, size and transform inline and hides it when
-   the intro ends. Outside the intro it does not exist on
-   the page. */
+   Replay), a large copy of the document being read
+   slides up and fades in over the form panel, image and
+   caption bar together, and holds there to be
+   identified; then it fades away, and only once it is
+   gone do the group it feeds light and fill. It is
+   absolutely positioned inside the demo, so it never
+   takes layout space; the script sets its position and
+   size inline and toggles the .ov-in class, and the
+   entrance and exit are pure CSS transitions (the exit
+   runs on the base rule's shorter timing). Outside the
+   intro it does not exist on the page. */
 .demo-overlay {
   position: absolute;
   z-index: 60;
@@ -1297,7 +1299,15 @@ body {
   border-radius: var(--radius-button);
   box-shadow: 0 24px 60px rgba(20, 16, 16, 0.28);
   pointer-events: none;
-  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.demo-overlay.ov-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 300ms ease, opacity 300ms ease;
 }
 
 .demo-overlay[hidden] {

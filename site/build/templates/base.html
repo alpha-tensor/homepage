@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=32">
+<link rel="stylesheet" href="assets/styles.css?v=33">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -159,12 +159,15 @@
    document settles at the start. Selection never enlarges
    a document: the large view exists only inside the
    intro. When the form panel reaches the top of the
-   screen, an intro runs once: each document in turn
-   grows out of its rail thumbnail into a large copy
-   floating over the form panel while the group it feeds
-   fills around it, then fades away where it hangs; when
-   the intro ends the overlay is gone and no space is
-   left for it. Any touch cancels to the end state. */
+   screen, an intro runs once, in two beats per document
+   so cause and effect stay separate: a large copy of the
+   document slides up over the form panel and holds there
+   to be identified, with nothing else on the page moving;
+   then it fades away completely, and only then does its
+   strip swap in, its thumbnail activate, and the group it
+   feeds light and fill. When the intro ends the overlay
+   is gone and no space is left for it. Any touch cancels
+   to the end state. */
 (function () {
   var demo = document.querySelector(".form-demo");
   if (!demo) return;
@@ -196,7 +199,7 @@
   var timers = [];
   var running = false;
   var played = false;
-  var STEP = 1800;
+  var STEP = 1300;
 
   slides.forEach(function (s) {
     demo.querySelectorAll('[data-src="' + s.getAttribute("data-doc") + '"]').forEach(function (el) {
@@ -271,14 +274,17 @@
   }
 
   /* The intro overlay: one reusable element, filled from
-     the rail slide's own image and caption. Per step it
-     grows out of the document's thumbnail into a large
-     copy floating over the form panel, hangs there while
-     the group it feeds fills around it, then fades away
-     where it hangs. It is positioned absolutely inside
-     the demo, so it takes no layout space, and it is
-     hidden again the moment the intro ends. */
-  function growOverlay(id) {
+     the rail slide's own image and caption. Per step it is
+     placed over the form panel (centred, its top just
+     under the panel's title band; a tall page may run past
+     the panel's bottom edge, and the demo figure is the
+     positioning context, so that is fine) and the .ov-in
+     class carries it up into place on CSS transitions
+     alone: no measuring of the thumbnail, no flight. It
+     is positioned absolutely inside the demo, so it takes
+     no layout space, and it is hidden again the moment
+     the intro ends. */
+  function showOverlay(id) {
     var s = slideFor(id);
     if (!s) return;
     var img = s.querySelector("img");
@@ -291,47 +297,29 @@
     var pr = panel.getBoundingClientRect();
     var head = panel.querySelector(".form-panel-head");
     var headH = head ? head.offsetHeight : 0;
-    var w = pr.width * (id === "dl-her" ? 0.78 : (isMobile() ? 0.88 : 0.6));
-    /* Resting geometry first: centred over the panel, its
-       top just under the panel's title band. A tall page
-       may run past the panel's bottom edge; the demo
-       figure is the positioning context, so that is fine. */
-    overlay.style.transition = "none";
+    var w = pr.width * (isMobile() ? 0.72 : (id === "dl-her" ? 0.6 : 0.45));
     overlay.style.left = (pr.left - fig.left + (pr.width - w) / 2) + "px";
     overlay.style.top = (pr.top - fig.top + headH + 10) + "px";
     overlay.style.width = w + "px";
-    overlay.style.opacity = "1";
-    overlay.style.transform = "";
     overlay.hidden = false;
-    /* Then the FLIP: measure the resting rect, offset the
-       overlay onto its thumbnail's rect, and let the
-       transition carry it up to size. Centres are matched,
-       so the scale runs about the shared centre. */
-    var t = overlay.getBoundingClientRect();
-    var r = s.getBoundingClientRect();
-    if (!t.width || !r.width) { hideOverlay(); return; }
-    var dx = (r.left + r.width / 2) - (t.left + t.width / 2);
-    var dy = (r.top + r.height / 2) - (t.top + t.height / 2);
-    overlay.style.transform = "translate(" + dx + "px, " + dy + "px) scale(" + (r.width / t.width) + ", " + (r.height / t.height) + ")";
+    /* The reflow separates the hidden state (transparent,
+       24px low) from the class, so the entrance transition
+       runs instead of snapping. */
     void overlay.offsetWidth;
-    overlay.style.transition = "transform 560ms cubic-bezier(0.45, 0.02, 0.25, 1)";
-    overlay.style.transform = "translate(0px, 0px) scale(1, 1)";
+    overlay.classList.add("ov-in");
   }
 
-  /* The overlay clears in place: a plain fade where it
-     hangs. It never shrinks into the form and never
-     flies back down to the rail. */
+  /* The overlay clears in place: the class comes off and
+     the base rule's shorter transition fades it where it
+     hangs. It never shrinks into the form and never flies
+     back down to the rail. */
   function fadeOverlay() {
-    if (overlay.hidden) return;
-    overlay.style.transition = "opacity 280ms ease";
-    overlay.style.opacity = "0";
+    overlay.classList.remove("ov-in");
   }
 
   function hideOverlay() {
     overlay.hidden = true;
-    overlay.style.transition = "none";
-    overlay.style.transform = "";
-    overlay.style.opacity = "";
+    overlay.classList.remove("ov-in");
     overlay.style.left = "";
     overlay.style.top = "";
     overlay.style.width = "";
@@ -357,23 +345,35 @@
   }
   function playStep(id) {
     if (!running) return;
-    setActive(id, { scroll: true, instant: true, openGroup: true });
-    var owned = groupsFor[id] || [];
-    owned.forEach(function (g) { g.classList.add("seq-lit"); });
-    light(id, true);
-    growOverlay(id);
-    if (isMobile() && id === "mxbc") {
-      later(function () { if (running) openOnly(groups[2]); }, 700);
-    }
-    /* The flight lands at about 560ms; the fill starts as
-       the document arrives at size, so the values land
-       while it hangs over the form. */
-    later(function () { if (running) demo.classList.add("filled-" + id); }, 560);
+    /* Beat one: the document alone. It slides up over the
+       form and holds there to be identified; the strip,
+       the groups and the rail all stay exactly as they
+       were, so the eye has one thing to look at. */
+    showOverlay(id);
+    /* Beat two: it fades away completely (the exit runs
+       200ms from the fade at 620ms, so by 850ms it is
+       gone) and is removed. */
+    later(function () { if (running) fadeOverlay(); }, 620);
+    /* Beat three: only once the document is gone, the
+       effect. The strip swaps to its facts, its thumbnail
+       activates, its group lights and its values land.
+       Cause first, then effect, never both at once. */
     later(function () {
-      owned.forEach(function (g) { g.classList.remove("seq-lit"); });
-      light(id, false);
-    }, 1500);
-    later(function () { if (running) fadeOverlay(); }, 1520);
+      if (!running) return;
+      hideOverlay();
+      setActive(id, { scroll: true, instant: true, openGroup: true });
+      var owned = groupsFor[id] || [];
+      owned.forEach(function (g) { g.classList.add("seq-lit"); });
+      light(id, true);
+      demo.classList.add("filled-" + id);
+      if (isMobile() && id === "mxbc") {
+        later(function () { if (running) openOnly(groups[2]); }, 320);
+      }
+      later(function () {
+        owned.forEach(function (g) { g.classList.remove("seq-lit"); });
+        light(id, false);
+      }, 440);
+    }, 850);
   }
   function startCycle() {
     if (reduced || !hasIO) return;
@@ -394,7 +394,7 @@
     sources.forEach(function (id, i) {
       later(function () { playStep(id); }, i * STEP);
     });
-    later(function () { finishCycle(true); }, sources.length * STEP + 350);
+    later(function () { finishCycle(true); }, sources.length * STEP + 200);
   }
   function userTakeover() {
     if (running) finishCycle(false);
