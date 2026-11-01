@@ -964,9 +964,15 @@ body {
 }
 
 .demo-sources {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: nowrap;
   gap: 14px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding: 6px 6px 14px;
+  margin: -6px -6px 0;
+  scrollbar-width: thin;
 }
 
 .doc-card {
@@ -976,6 +982,8 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
+  flex: 0 0 262px;
+  scroll-snap-align: start;
 }
 
 /* Documents are neutral. One highlight color, the brand
@@ -1727,13 +1735,13 @@ body {
     gap: 30px;
     padding: 40px var(--gutter) 44px;
   }
-
-  .demo-sources {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 640px) {
+  .doc-card {
+    flex-basis: 238px;
+  }
+
   .form-grid .field {
     grid-column: span 12;
   }
