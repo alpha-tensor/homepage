@@ -1072,7 +1072,33 @@ body {
 
 .demo-paddles {
   display: flex;
+  align-items: center;
   gap: 8px;
+}
+
+.demo-replay {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1;
+  margin-right: 4px;
+  padding: 7px 2px;
+}
+
+.demo-replay:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.demo-replay:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .paddle {
@@ -1107,6 +1133,63 @@ body {
   flex: 0 0 262px;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+/* On-load sequence: the source cards begin as reserved,
+   unseen slots and arrive one by one. Their values stay in
+   the markup throughout; root classes alone decide whether
+   each source's values have landed yet. */
+.form-demo.seq-armed .doc-card {
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-demo.seq-armed .doc-card:not(.arrived) {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px);
+}
+
+.form-demo.seq-armed .fbox[data-src],
+.form-demo.seq-armed .abox,
+.form-demo.seq-armed .chk-unit[data-src] .chk {
+  transition:
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Only the A-Number digits stagger, and only while the
+   sequence is running, so provenance hover stays instant
+   once the demo hands over control. */
+.form-demo.seq-running .abox {
+  transition-delay: var(--seq-delay, 0ms);
+}
+
+.form-demo.seq-armed:not(.filled-mxbc) .fbox[data-src="mxbc"],
+.form-demo.seq-armed:not(.filled-g28) .fbox[data-src="g28"],
+.form-demo.seq-armed:not(.filled-anum) .fbox[data-src="anum"],
+.form-demo.seq-armed:not(.filled-dl-her) .fbox[data-src="dl-her"],
+.form-demo.seq-armed:not(.filled-anum) .aboxes[data-src="anum"] .abox {
+  color: transparent;
+}
+
+.form-demo.seq-armed:not(.filled-g28) .chk-unit[data-src="g28"] .chk.on,
+.form-demo.seq-armed:not(.filled-dl-her) .chk-unit[data-src="dl-her"] .chk.on {
+  color: transparent;
+}
+
+.form-demo .fgroup {
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-demo .fgroup.seq-lit {
+  background: #FDF0E1;
+  box-shadow: inset 0 0 0 2px var(--accent);
 }
 
 /* Documents are neutral. One highlight color, the brand
@@ -1699,6 +1782,20 @@ body {
   .js-reveal .world-model {
     opacity: 1;
     transform: none;
+    transition: none;
+  }
+
+  .form-demo.seq-armed .doc-card {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    transition: none;
+  }
+
+  .form-demo.seq-armed .fbox[data-src],
+  .form-demo.seq-armed .aboxes[data-src="anum"] .abox,
+  .form-demo.seq-armed .chk-unit[data-src] .chk.on {
+    color: inherit;
     transition: none;
   }
 

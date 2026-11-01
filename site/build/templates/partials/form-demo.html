@@ -1,8 +1,17 @@
 <figure class="form-demo">
+  <script>
+  (function () {
+    var demo = document.currentScript && document.currentScript.parentElement;
+    if (!demo) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if ("IntersectionObserver" in window) demo.classList.add("seq-armed");
+  })();
+  </script>
   <div class="demo-scroller">
   <div class="demo-controls">
     <div class="demo-dots" aria-hidden="true"><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span></div>
     <div class="demo-paddles">
+      <button type="button" class="demo-replay" hidden>Replay</button>
       <button type="button" class="paddle paddle-prev" aria-label="Scroll documents back" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M16.5 3.5L8 12l8.5 8.5"/></svg></button>
       <button type="button" class="paddle paddle-next" aria-label="Scroll documents forward" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M7.5 3.5L16 12l-8.5 8.5"/></svg></button>
     </div>

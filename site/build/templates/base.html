@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=27">
+<link rel="stylesheet" href="assets/styles.css?v=28">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -184,6 +184,161 @@
   scroller.addEventListener("scroll", states, { passive: true });
   window.addEventListener("resize", states);
   states();
+})();
+</script>
+<script>
+/* Form demo sequence. The filled form is the page's resting
+   state and stays in the markup; when motion is allowed this
+   arms an empty state, then lets each source document arrive
+   and fill the values it owns. Any card interaction hands
+   control straight back to the ordinary provenance demo. */
+(function () {
+  var demo = document.querySelector(".form-demo");
+  if (!demo) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!("IntersectionObserver" in window)) return;
+
+  var replay = demo.querySelector(".demo-replay");
+  var scroller = demo.querySelector(".demo-sources");
+  var groups = Array.prototype.slice.call(demo.querySelectorAll(".fgroup"));
+  if (!replay || !scroller || groups.length !== 4) return;
+
+  var sources = ["mxbc", "g28", "anum", "dl-her"];
+  var cards = {};
+  var values = {};
+  var groupsFor = {
+    "mxbc": [groups[1], groups[2]],
+    "g28": [groups[0]],
+    "anum": [groups[2]],
+    "dl-her": [groups[3]]
+  };
+  var timers = [];
+  var running = false;
+  var played = false;
+
+  sources.forEach(function (id) {
+    cards[id] = demo.querySelector('[data-doc="' + id + '"]');
+    values[id] = Array.prototype.slice.call(demo.querySelectorAll('[data-src="' + id + '"]'));
+    values[id].forEach(function (el) {
+      el.querySelectorAll(".abox").forEach(function (box, j) {
+        box.style.setProperty("--seq-delay", (j * 45) + "ms");
+      });
+    });
+  });
+
+  function later(fn, ms) {
+    timers.push(window.setTimeout(fn, ms));
+  }
+  function clearTimers() {
+    timers.forEach(function (t) { window.clearTimeout(t); });
+    timers = [];
+  }
+  function setOpen(group, open) {
+    group.classList.toggle("open", open);
+    var head = group.querySelector(".fgroup-head");
+    if (head) head.setAttribute("aria-expanded", String(open));
+  }
+  function openOnly(group) {
+    groups.forEach(function (g) { setOpen(g, g === group); });
+  }
+  function isMobile() {
+    return window.matchMedia("(max-width: 640px)").matches;
+  }
+  function bringCardIntoView(card) {
+    if (!card) return;
+    var cardRect = card.getBoundingClientRect();
+    var scrollerRect = scroller.getBoundingClientRect();
+    if (isMobile() || cardRect.left < scrollerRect.left || cardRect.right > scrollerRect.right) {
+      scroller.scrollTo({
+        left: Math.max(0, card.offsetLeft - 6),
+        behavior: "smooth"
+      });
+    }
+  }
+  function light(id, on) {
+    demo.querySelectorAll('[data-doc="' + id + '"], [data-src="' + id + '"]').forEach(function (el) {
+      el.classList.toggle("hl", on);
+    });
+  }
+  function finish() {
+    if (!running && !demo.classList.contains("seq-running")) return;
+    clearTimers();
+    running = false;
+    played = true;
+    sources.forEach(function (id) {
+      if (cards[id]) cards[id].classList.add("arrived");
+      demo.classList.add("filled-" + id);
+      light(id, false);
+      (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
+    });
+    demo.classList.remove("seq-running");
+    demo.classList.add("seq-done");
+  }
+  function playStep(id) {
+    if (!running) return;
+    var card = cards[id];
+    if (card) {
+      card.classList.add("arrived");
+      bringCardIntoView(card);
+    }
+    var owned = groupsFor[id] || [];
+    if (isMobile()) {
+      if (id === "mxbc") {
+        openOnly(groups[1]);
+        later(function () { if (running) openOnly(groups[2]); }, 420);
+      } else if (owned[0]) {
+        openOnly(owned[0]);
+      }
+    }
+    owned.forEach(function (g) { g.classList.add("seq-lit"); });
+    light(id, true);
+    later(function () { demo.classList.add("filled-" + id); }, 190);
+    later(function () {
+      owned.forEach(function (g) { g.classList.remove("seq-lit"); });
+      light(id, false);
+    }, 680);
+  }
+  function start() {
+    clearTimers();
+    running = true;
+    played = false;
+    demo.classList.add("seq-armed", "seq-running");
+    demo.classList.remove("seq-done");
+    demo.querySelectorAll(".hl").forEach(function (el) { el.classList.remove("hl"); });
+    sources.forEach(function (id) {
+      if (cards[id]) cards[id].classList.remove("arrived");
+      demo.classList.remove("filled-" + id);
+      (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
+    });
+    if (isMobile()) openOnly(groups[0]);
+    scroller.scrollTo({ left: 0, behavior: "smooth" });
+    sources.forEach(function (id, i) {
+      later(function () { playStep(id); }, i * 850);
+    });
+    later(finish, sources.length * 850 + 250);
+  }
+
+  demo.classList.add("seq-armed");
+  replay.hidden = false;
+  replay.addEventListener("click", function () { start(); });
+
+  function cancelFromCard(e) {
+    if (!running) return;
+    if (!e.target.closest(".doc-card")) return;
+    finish();
+  }
+  demo.addEventListener("mouseover", cancelFromCard, true);
+  demo.addEventListener("click", cancelFromCard, true);
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !played && !running) {
+        start();
+        io.unobserve(demo);
+      }
+    });
+  }, { threshold: 0.35 });
+  io.observe(demo);
 })();
 </script>
 <script>
