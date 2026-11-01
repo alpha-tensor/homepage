@@ -82,6 +82,27 @@ html[data-theme="dark"] .packet-card {
   }
 }
 
+/* Documents stay paper in both themes. The packet card, the
+   source cards and the form panel re-declare the light
+   tokens inside their own scope, so every descendant that
+   reads a token (text, hairlines, the doc card's paper
+   ground) resolves the light value whatever the page theme
+   is. */
+.packet-card,
+.doc-card,
+.form-panel {
+  --paper: #FFFFFF;
+  --surface: #FAFAFA;
+  --panel: #F4F4F4;
+  --ink: #201A1A;
+  --ink-muted: rgba(32, 26, 26, 0.66);
+  --ink-strong: rgba(32, 26, 26, 0.85);
+  --hairline: rgba(0, 0, 0, 0.2);
+  --hairline-soft: rgba(0, 0, 0, 0.1);
+  --hairline-strong: rgba(0, 0, 0, 0.32);
+  color: #201A1A;
+}
+
 /* ============================================================
    BASE
    ============================================================ */
