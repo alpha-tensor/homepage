@@ -112,12 +112,21 @@ html[data-theme="dark"] .packet-card {
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* No elastic overscroll: the area past the page edge takes
+     the page's own color in both themes, the browser's
+     rubber-band chaining is off, and nothing may push the
+     page sideways. */
+  background: var(--paper);
+  overscroll-behavior: none;
 }
 
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
+  overscroll-behavior: none;
+  overflow-x: hidden;
+  overflow-x: clip;
   font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.65;
@@ -1212,6 +1221,7 @@ body {
   border: 1px solid var(--hairline);
   border-radius: var(--radius-card);
   overflow: hidden;
+  max-width: 840px;
 }
 
 .form-panel-head {
