@@ -224,8 +224,9 @@ button:focus-visible {
    in the www app): a circle behind the toggle scales to fill
    the screen and becomes the panel background. Its scale is
    measured in script from the toggle to the furthest corner.
-   The visible toggle face inverts: orange disc, white bars
-   closed; white disc, ink bars open. Motion values are the
+   The toggle face itself is monochrome, like Mistral's: no
+   disc, just white bars on the dark bar, rotating to a cross
+   over the ink panel when open. Motion values are the
    lab's: 820ms disc, 560ms content, the same ease.
    ============================================================ */
 .menu-toggle {
@@ -252,12 +253,7 @@ button:focus-visible {
   inset: 0;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--accent);
-  transition: background 560ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.site-header[data-open="true"] .menu-disc {
-  background: #FFFFFF;
+  background: transparent;
 }
 
 .icon-bar {
