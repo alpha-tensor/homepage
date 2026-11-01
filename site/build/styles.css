@@ -1287,6 +1287,112 @@ body {
   font-weight: 550;
 }
 
+/* The stage: the active document at full size, in a framed
+   area under the form. During the intro each document takes
+   the stage before flying down to the rail; afterwards the
+   stage shows whichever document is selected. The frame is
+   a fixed height, so the strip and the rail below never
+   shift as portrait pages and the landscape license trade
+   places on it. */
+.demo-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
+  margin-top: 6px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-button);
+  overflow: hidden;
+}
+
+.stage-doc {
+  display: none;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-button);
+  box-shadow: 0 12px 32px rgba(20, 16, 16, 0.14);
+}
+
+.stage-doc.on {
+  display: flex;
+  animation: stage-in 0.35s ease both;
+}
+
+@keyframes stage-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* While its copy is flying to the rail, the stage document
+   itself is hidden; the flight carries the eye. */
+.stage-doc.flown {
+  visibility: hidden;
+}
+
+.stage-doc-img {
+  display: block;
+  width: min(400px, 82vw);
+  height: auto;
+}
+
+.stage-doc--wide .stage-doc-img {
+  width: min(540px, 82vw);
+}
+
+.form-demo .stage-doc.hl {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* The flying copy of a stage document, mid-flight between
+   the stage and its rail slot. The script sets the geometry
+   (fixed position, size, transform) inline; this carries
+   only what every flight shares. */
+.demo-fly {
+  position: fixed;
+  z-index: 80;
+  margin: 0;
+  pointer-events: none;
+  transform-origin: 0 0;
+  will-change: transform;
+  animation: none;
+}
+
+/* The rail: the four documents at about a fifth of the
+   stage size, in the same scroll-snap scroller the carousel
+   always used. Thumbnails share one height, so the license
+   sits proportionally wider than the portrait pages, and
+   the captions shrink to match the smaller scale. */
+.demo-rail {
+  align-items: center;
+}
+
+.demo-rail .doc-slide-img {
+  width: auto;
+  height: 116px;
+}
+
+.demo-rail .doc-slide-cap {
+  padding: 6px 8px 7px;
+  max-width: 108px;
+}
+
+.demo-rail .doc-slide--wide .doc-slide-cap {
+  max-width: 200px;
+}
+
+.demo-rail .doc-slide-type {
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.demo-rail .doc-slide-name {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
 /* On-load sequence: the source cards begin as reserved,
    unseen slots and arrive one by one. Their values stay in
    the markup throughout; root classes alone decide whether
@@ -1983,6 +2089,21 @@ body {
     transition: none;
   }
 
+  .form-demo.seq-armed .doc-slide {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    transition: none;
+  }
+
+  .stage-doc.on {
+    animation: none;
+  }
+
+  .demo-fly {
+    display: none;
+  }
+
   .form-demo.seq-armed .fbox[data-src],
   .form-demo.seq-armed .aboxes[data-src="anum"] .abox,
   .form-demo.seq-armed .chk-unit[data-src] .chk.on {
@@ -2312,6 +2433,25 @@ body {
 
   .doc-slide-name {
     font-size: 12.5px;
+  }
+
+  /* The stage frame tracks the portrait document's height
+     at the width the column allows, so the frame stays
+     snug around the largest document it holds. */
+  .demo-stage {
+    height: calc(82vw * 1.2937 + 84px);
+  }
+
+  .demo-rail .doc-slide-img {
+    height: 96px;
+  }
+
+  .demo-rail .doc-slide-cap {
+    padding: 6px 8px 7px;
+  }
+
+  .demo-rail .doc-slide-name {
+    font-size: 11px;
   }
 
   .demo-extract {

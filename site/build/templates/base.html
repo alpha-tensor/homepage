@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=29">
+<link rel="stylesheet" href="assets/styles.css?v=30">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -150,32 +150,35 @@
 })();
 </script>
 <script>
-/* Form demo carousel and fill cycle. One selection state
-   drives everything: the slides, the dots, the extraction
-   strip under the carousel, and the highlight on the form
-   group the active document feeds. Clicking a slide or a
-   dot selects it and scrolls it into place; scrolling the
-   carousel selects whichever document settles at the start.
-   When the demo scrolls into view, a cycle runs once: each
-   document activates in turn and fills the values it owns
-   (the filled form stays in the markup throughout), then
-   the selection returns to the first document. Any touch
-   cancels the cycle and hands over control. */
+/* Form demo: the form first, the documents beneath it. One
+   selection state drives everything: the stage (the active
+   document large), the extraction strip, the rail of small
+   slides, the dots, and the highlight on the form group the
+   active document feeds. Clicking a rail slide or a dot
+   selects it and brings it up on the stage; scrolling the
+   rail selects whichever document settles at the start.
+   When the form panel reaches the top of the screen, an
+   intro runs once: each document takes the stage at full
+   size, fills the values it owns, then flies down into its
+   slot on the rail; at the end the first document returns
+   to the stage. Any touch cancels to the end state. */
 (function () {
   var demo = document.querySelector(".form-demo");
   if (!demo) return;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hasIO = "IntersectionObserver" in window;
 
+  var panel = demo.querySelector(".form-panel");
   var scroller = demo.querySelector(".demo-sources");
   var slides = Array.prototype.slice.call(demo.querySelectorAll(".doc-slide"));
+  var stageDocs = Array.prototype.slice.call(demo.querySelectorAll(".stage-doc"));
   var dots = Array.prototype.slice.call(demo.querySelectorAll(".demo-dot"));
   var strips = Array.prototype.slice.call(demo.querySelectorAll(".demo-extract"));
   var prev = demo.querySelector(".paddle-prev");
   var next = demo.querySelector(".paddle-next");
   var replay = demo.querySelector(".demo-replay");
   var groups = Array.prototype.slice.call(demo.querySelectorAll(".fgroup"));
-  if (!scroller || slides.length !== 4 || groups.length !== 4) return;
+  if (!panel || !scroller || slides.length !== 4 || stageDocs.length !== 4 || groups.length !== 4) return;
 
   var sources = slides.map(function (s) { return s.getAttribute("data-doc"); });
   var groupsFor = {
@@ -189,6 +192,8 @@
   var timers = [];
   var running = false;
   var played = false;
+  var flyEl = null;
+  var STEP = 1700;
 
   slides.forEach(function (s) {
     demo.querySelectorAll('[data-src="' + s.getAttribute("data-doc") + '"]').forEach(function (el) {
@@ -212,6 +217,9 @@
   function slideFor(id) {
     return slides[sources.indexOf(id)];
   }
+  function stageFor(id) {
+    return stageDocs[sources.indexOf(id)];
+  }
   function scrollToSlide(id) {
     var s = slideFor(id);
     if (!s) return;
@@ -233,6 +241,9 @@
       var on = s.getAttribute("data-doc") === id;
       s.classList.toggle("active", on);
       s.setAttribute("aria-pressed", String(on));
+    });
+    stageDocs.forEach(function (d) {
+      d.classList.toggle("on", d.getAttribute("data-doc") === id);
     });
     dots.forEach(function (d) {
       d.classList.toggle("active", d.getAttribute("data-dot") === id);
@@ -261,9 +272,56 @@
       el.classList.toggle("hl", on);
     });
   }
-  function finishCycle(returnToFirst) {
-    if (!running && !demo.classList.contains("seq-running")) return;
+  function removeFly() {
+    if (flyEl) {
+      if (flyEl.parentNode) flyEl.parentNode.removeChild(flyEl);
+      flyEl = null;
+    }
+    stageDocs.forEach(function (d) { d.classList.remove("flown"); });
+  }
+
+  /* FLIP flight: a copy of the stage document, fixed at the
+     stage's own rect, transitions to its rail slot's rect.
+     The slot's real slide appears underneath it as it lands,
+     and the stage clears for the next document. */
+  function flyToRail(id) {
+    var sd = stageFor(id);
+    var sl = slideFor(id);
+    if (!sd || !sl) return;
+    var s = sd.getBoundingClientRect();
+    var d = sl.getBoundingClientRect();
+    if (!s.width || !d.width || reduced) {
+      sl.classList.add("arrived");
+      return;
+    }
+    var clone = sd.cloneNode(true);
+    clone.classList.add("demo-fly");
+    clone.classList.remove("hl");
+    clone.style.animation = "none";
+    clone.style.left = s.left + "px";
+    clone.style.top = s.top + "px";
+    clone.style.width = s.width + "px";
+    clone.style.height = s.height + "px";
+    document.body.appendChild(clone);
+    flyEl = clone;
+    sd.classList.add("flown");
+    var dx = d.left - s.left;
+    var dy = d.top - s.top;
+    var sx = d.width / s.width;
+    var sy = d.height / s.height;
+    void clone.offsetWidth;
+    clone.style.transition = "transform 580ms cubic-bezier(0.45, 0.02, 0.25, 1)";
+    clone.style.transform = "translate(" + dx + "px, " + dy + "px) scale(" + sx + ", " + sy + ")";
+    later(function () {
+      sl.classList.add("arrived");
+      sd.classList.remove("on");
+      removeFly();
+    }, 600);
+  }
+
+  function settle(returnToFirst) {
     clearTimers();
+    removeFly();
     running = false;
     played = true;
     sources.forEach(function (id) {
@@ -275,28 +333,32 @@
     });
     demo.classList.remove("seq-running");
     demo.classList.add("seq-done");
-    if (returnToFirst) setActive(sources[0], { scroll: true, openGroup: true });
+    setActive(returnToFirst ? sources[0] : active, { scroll: returnToFirst, openGroup: returnToFirst });
+  }
+  function finishCycle(returnToFirst) {
+    if (!running && !demo.classList.contains("seq-running")) return;
+    settle(returnToFirst);
   }
   function playStep(id) {
     if (!running) return;
-    var slide = slideFor(id);
-    if (slide) slide.classList.add("arrived");
     setActive(id, { scroll: true, openGroup: true });
     var owned = groupsFor[id] || [];
     if (isMobile() && id === "mxbc") {
-      later(function () { if (running) openOnly(groups[2]); }, 420);
+      later(function () { if (running) openOnly(groups[2]); }, 450);
     }
     owned.forEach(function (g) { g.classList.add("seq-lit"); });
     light(id, true);
-    later(function () { demo.classList.add("filled-" + id); }, 190);
+    later(function () { demo.classList.add("filled-" + id); }, 500);
     later(function () {
       owned.forEach(function (g) { g.classList.remove("seq-lit"); });
       light(id, false);
-    }, 680);
+    }, 1120);
+    later(function () { if (running) flyToRail(id); }, 1080);
   }
   function startCycle() {
     if (reduced || !hasIO) return;
     clearTimers();
+    removeFly();
     running = true;
     played = false;
     demo.classList.add("seq-armed", "seq-running");
@@ -305,6 +367,8 @@
     sources.forEach(function (id) {
       var s = slideFor(id);
       if (s) s.classList.remove("arrived");
+      var sd = stageFor(id);
+      if (sd) sd.classList.remove("on");
       demo.classList.remove("filled-" + id);
       (groupsFor[id] || []).forEach(function (g) { g.classList.remove("seq-lit"); });
     });
@@ -312,13 +376,21 @@
     programmaticUntil = Date.now() + 900;
     scroller.scrollTo({ left: 0, behavior: "smooth" });
     sources.forEach(function (id, i) {
-      later(function () { playStep(id); }, i * 850);
+      later(function () { playStep(id); }, i * STEP);
     });
-    later(function () { finishCycle(true); }, sources.length * 850 + 500);
+    later(function () { finishCycle(true); }, sources.length * STEP + 350);
   }
   function userTakeover() {
     if (running) finishCycle(false);
   }
+
+  /* A click anywhere in the demo during the intro settles
+     it first (capture phase, so the click's own handler,
+     a selection, a pin or an accordion head, still runs on
+     the settled demo). */
+  demo.addEventListener("click", function () {
+    if (running) finishCycle(false);
+  }, true);
 
   slides.forEach(function (s) {
     s.addEventListener("click", function () {
@@ -378,15 +450,33 @@
   setActive(sources[0], {});
 
   if (!reduced && hasIO) {
+    /* The stage waits empty until the intro brings the
+       first document up; the markup's default stage
+       document is the no-JS and reduced-motion state. */
+    stageDocs.forEach(function (d) { d.classList.remove("on"); });
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting && !played && !running) {
           startCycle();
-          io.unobserve(demo);
+          io.disconnect();
         }
       });
-    }, { threshold: 0.35 });
-    io.observe(demo);
+    }, { rootMargin: "0px 0px -80% 0px", threshold: 0 });
+    io.observe(panel);
+    /* A jump that lands past the form (an anchor, a restored
+       scroll) never crosses the trigger band; settle instead
+       of leaving the demo armed and empty. */
+    var settleIfPast = function () {
+      if (played || running) return;
+      if (panel.getBoundingClientRect().bottom < 0) {
+        played = true;
+        io.disconnect();
+        settle(false);
+        window.removeEventListener("scroll", settleIfPast);
+      }
+    };
+    window.addEventListener("scroll", settleIfPast, { passive: true });
+    settleIfPast();
   }
 })();
 </script>
