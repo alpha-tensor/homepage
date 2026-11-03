@@ -1142,11 +1142,15 @@ body {
 }
 
 /* The document carousel: the real generated documents as
-   slides, one always active. Inactive slides sit smaller
-   and dimmed beside it; each keeps the proportions of the
-   document itself, so the license stays landscape in a row
-   of portrait pages. Selection and scrolling are the same
-   state, kept in step by the demo script. */
+   slides, one always active. On desktop, inactive slides
+   sit smaller and dimmed beside it; each keeps the
+   proportions of the document itself, so the license stays
+   landscape in a row of portrait pages. On mobile the rail
+   pages one full-width slot at a time, so dimming has no
+   job there: the slide in view is the document being read
+   and it renders at full opacity, active or not. Selection
+   and scrolling are the same state, kept in step by the
+   demo script. */
 .doc-slide {
   flex: 0 0 auto;
   scroll-snap-align: start;
@@ -1161,14 +1165,19 @@ body {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  opacity: 0.5;
-  transform: scale(0.94);
   transform-origin: left center;
   transition:
     opacity 0.35s ease,
     transform 0.35s ease,
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+@media (min-width: 641px) {
+  .doc-slide {
+    opacity: 0.5;
+    transform: scale(0.94);
+  }
 }
 
 .doc-slide.active {
@@ -2351,6 +2360,7 @@ body {
     width: 100%;
     aspect-ratio: 1 / 1.414;
     background: #FFFFFF;
+    opacity: 1;
     transform: none;
   }
 

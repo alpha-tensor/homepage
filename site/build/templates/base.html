@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=34">
+<link rel="stylesheet" href="assets/styles.css?v=35">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -228,11 +228,26 @@
   function scrollToSlide(id, instant) {
     var s = slideFor(id);
     if (!s) return;
+    var target = Math.max(0, s.offsetLeft - 6);
     programmaticUntil = Date.now() + 900;
     scroller.scrollTo({
-      left: Math.max(0, s.offsetLeft - 6),
+      left: target,
       behavior: (reduced || instant) ? "auto" : "smooth"
     });
+    /* A programmatic jump inside a mandatory-snap scroller
+       can be dropped or snapped back on mobile browsers,
+       which would leave the rail showing one document while
+       the selection, the strip and the form have moved on
+       to another. If the rail is not where this selection
+       put it shortly after, put it there again; the
+       correction only fires while this slide is still the
+       active one, so it never fights the user. */
+    window.setTimeout(function () {
+      if (active === id && Math.abs(scroller.scrollLeft - target) > 4) {
+        programmaticUntil = Date.now() + 900;
+        scroller.scrollTo({ left: target, behavior: "auto" });
+      }
+    }, 180);
   }
   function updatePaddles() {
     var i = sources.indexOf(active);
@@ -444,6 +459,13 @@
     if (Date.now() < programmaticUntil) return;
     window.clearTimeout(scrollSettle);
     scrollSettle = window.setTimeout(function () {
+      /* While the intro is running the cycle owns the rail:
+         its own programmatic advances must not be read as
+         the user taking over, or a late settle event on a
+         mobile browser ends the intro mid-document. Genuine
+         user input still settles it, through the click,
+         wheel and touch handlers. */
+      if (running) return;
       var rect = scroller.getBoundingClientRect();
       var best = 0;
       var bestDiff = Infinity;

@@ -4,7 +4,7 @@
 Usage:
     python3 build.py
 
-Reads the corpus in ../corpus/ (01-home.md ... 05-history.md),
+Reads the corpus in ../site-corpus/ (01-home.md ... 05-history.md),
 renders each page through the templates in templates/, and writes
 static HTML into dist/ and the stylesheet into dist/assets/. Deterministic: no timestamps,
 no network, no state. Requires the Python `markdown` package
@@ -152,24 +152,19 @@ def build():
 
     footer = render(footer_tpl, {"cta_url": CTA_URL})
 
-    for src, output, _label, eyebrow, kind in PAGES:
-        text = (CORPUS / src).read_text(encoding="utf-8")
-        headline, subhead, lead, sections = parse_page(text)
-        if headline is None or subhead is None:
-            raise SystemExit(f"{src}: missing H1 headline or H2 subhead")
-
-        rendered_sections = []
+    def render_sections(sections, with_demo):
+        rendered = []
         for s in sections:
             body = render_blocks(s["blocks"], cta_tpl)
             if (
-                kind == "home"
+                with_demo
                 and section_slug(s["title"])
                 == "section--one-fact-every-format-the-form-asks-for"
             ):
                 body += "\n" + form_demo_tpl
             if section_slug(s["title"]) == "section--talk-to-us":
                 body = talk_cat_tpl + "\n" + body
-            rendered_sections.append(
+            rendered.append(
                 render(
                     section_tpl,
                     {
@@ -179,7 +174,15 @@ def build():
                     },
                 ).strip()
             )
-        sections_html = "\n".join(rendered_sections)
+        return "\n".join(rendered)
+
+    for src, output, _label, eyebrow, kind in PAGES:
+        text = (CORPUS / src).read_text(encoding="utf-8")
+        headline, subhead, lead, sections = parse_page(text)
+        if headline is None or subhead is None:
+            raise SystemExit(f"{src}: missing H1 headline or H2 subhead")
+
+        sections_html = render_sections(sections, kind == "home")
         lead_html = render_blocks(lead, cta_tpl)
 
         if kind == "home":
@@ -226,6 +229,41 @@ def build():
         )
         (DIST / output).write_text(page, encoding="utf-8")
         print(f"built {output} from {src}")
+
+    # /yc: the product demonstration page linked from the YC
+    # application. Built like an article page, but deliberately
+    # not in PAGES, so it stays out of the site navigation. Its
+    # demonstration section reuses the homepage form demo
+    # partial unchanged, world model included.
+    yc_text = (CORPUS / "07-yc.md").read_text(encoding="utf-8")
+    yc_headline, yc_subhead, yc_lead, yc_sections = parse_page(yc_text)
+    if yc_headline is None or yc_subhead is None:
+        raise SystemExit("07-yc.md: missing H1 headline or H2 subhead")
+    yc_content = render(
+        article_tpl,
+        {
+            "eyebrow": "Product demonstration",
+            "headline": html.escape(yc_headline),
+            "subhead": html.escape(yc_subhead),
+            "lead_html": render_blocks(yc_lead, cta_tpl),
+            "sections": render_sections(yc_sections, True),
+        },
+    )
+    yc_nav = render(nav_tpl, {"nav_items": nav_items(""), "cta_url": CTA_URL})
+    yc_page = render(
+        base,
+        {
+            "title": html.escape(
+                "{} \u2014 Alpha Tensor".format(yc_headline), quote=True
+            ),
+            "meta_description": meta_description(yc_subhead),
+            "nav": yc_nav,
+            "content": yc_content,
+            "footer": footer,
+        },
+    )
+    (DIST / "yc.html").write_text(yc_page, encoding="utf-8")
+    print("built yc.html from 07-yc.md")
 
     assets_dir = DIST / "assets"
     assets_dir.mkdir(parents=True, exist_ok=True)
