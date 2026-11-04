@@ -520,7 +520,24 @@ button:focus-visible {
   text-align: left;
 }
 
+/* Waves background (React Bits port, static/hero-waves.js).
+   Absolute behind the hero content, never takes pointer events,
+   the effect listens on window. */
+.hero-waves {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-waves__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .hero-grid {
+  position: relative;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 56px;
