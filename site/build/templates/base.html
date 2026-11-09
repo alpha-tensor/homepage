@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=37">
+<link rel="stylesheet" href="assets/styles.css?v=38">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -48,7 +48,7 @@
       if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
     });
   }, { threshold: 0.1 });
-  document.querySelectorAll(".section, .form-demo, .world-model").forEach(function (el) { io.observe(el); });
+  document.querySelectorAll(".section, .form-demo").forEach(function (el) { io.observe(el); });
 })();
 
 /* Demo provenance: hover or tap a value to light its source. */
@@ -70,7 +70,7 @@
     el.addEventListener("blur", function () { if (!pinned && !cycling()) light(null); });
     el.addEventListener("click", function () {
       /* Document slides select through the carousel script;
-         pinning is for values and extraction facts. */
+         pinning is for the form values. */
       if (el.classList.contains("doc-slide")) return;
       if (pinned === id) { pinned = null; light(null); }
       else { pinned = id; light(id); }
@@ -152,26 +152,25 @@
 })();
 </script>
 <script>
-/* Form demo: the form first, the extraction strip
-   directly under it, then the documents in a rail. One
-   selection state drives everything: the strip, the
-   rail, the dots, and the highlight on the form group
-   the active document feeds. Clicking a rail slide or a
-   dot selects it; scrolling the rail selects whichever
-   document settles at the start. Selection never enlarges
-   a document: the large view exists only inside the
-   intro. When the form panel reaches the top of the
-   screen, an intro runs once, in two beats per document
-   so cause and effect stay separate: a large copy of the
-   document slides up over the form panel and holds there
-   to be identified, with nothing else on the page moving;
-   then it fades away completely, and only then does its
-   strip swap in, its thumbnail activate, and the group it
-   feeds light and fill. When the intro ends the overlay
-   is gone and no space is left for it. Any touch cancels
-   to the end state. On mobile there is no overlay at
-   all: each step goes straight to the strip swap, the
-   group light and the fill, in place. */
+/* Form demo: the form first, then the documents in a
+   rail under it. One selection state drives everything:
+   the rail, the dots, and the highlight on the form
+   group the active document feeds. Clicking a rail
+   slide or a dot selects it; scrolling the rail selects
+   whichever document settles at the start. Selection
+   never enlarges a document: the large view exists only
+   inside the intro. When the form panel reaches the top
+   of the screen, an intro runs once, in two beats per
+   document so cause and effect stay separate: a large
+   copy of the document slides up over the form panel
+   and holds there to be identified, with nothing else
+   on the page moving; then it fades away completely,
+   and only then does its thumbnail activate and the
+   group it feeds light and fill. When the intro ends
+   the overlay is gone and no space is left for it. Any
+   touch cancels to the end state. On mobile there is no
+   overlay at all: each step goes straight to the group
+   light and the fill, in place. */
 (function () {
   var demo = document.querySelector(".form-demo");
   if (!demo) return;
@@ -182,7 +181,6 @@
   var scroller = demo.querySelector(".demo-sources");
   var slides = Array.prototype.slice.call(demo.querySelectorAll(".doc-slide"));
   var dots = Array.prototype.slice.call(demo.querySelectorAll(".demo-dot"));
-  var strips = Array.prototype.slice.call(demo.querySelectorAll(".demo-extract"));
   var prev = demo.querySelector(".paddle-prev");
   var next = demo.querySelector(".paddle-next");
   var replay = demo.querySelector(".demo-replay");
@@ -200,6 +198,7 @@
   };
   var active = sources[0];
   var programmaticUntil = 0;
+  var lastTapSelectAt = 0;
   var timers = [];
   var running = false;
   var played = false;
@@ -258,6 +257,7 @@
   }
   function setActive(id, opts) {
     opts = opts || {};
+    if (opts.fromTap) lastTapSelectAt = Date.now();
     active = id;
     slides.forEach(function (s) {
       var on = s.getAttribute("data-doc") === id;
@@ -266,9 +266,6 @@
     });
     dots.forEach(function (d) {
       d.classList.toggle("active", d.getAttribute("data-dot") === id);
-    });
-    strips.forEach(function (st) {
-      st.hidden = st.getAttribute("data-doc") !== id;
     });
     groups.forEach(function (g) { g.classList.remove("sel-lit"); });
     (groupsFor[id] || []).forEach(function (g) { g.classList.add("sel-lit"); });
@@ -358,10 +355,10 @@
     if (!running && !demo.classList.contains("seq-running")) return;
     settle(returnToFirst);
   }
-  /* The effect beat, shared by both widths: the strip
-     swaps to the document's facts, its thumbnail
-     activates, the group it feeds lights and its values
-     land. On mobile this is the whole step. On desktop
+  /* The effect beat, shared by both widths: the
+     document's thumbnail activates, the group it feeds
+     lights and its values land. On mobile this is the
+     whole step. On desktop
      it runs only once the overlay document is gone, so
      cause and effect stay separate in time. */
   function fillStep(id) {
@@ -436,20 +433,20 @@
   slides.forEach(function (s) {
     s.addEventListener("click", function () {
       userTakeover();
-      setActive(s.getAttribute("data-doc"), { scroll: true, openGroup: true });
+      setActive(s.getAttribute("data-doc"), { scroll: true, openGroup: true, fromTap: true });
     });
   });
   dots.forEach(function (d) {
     d.addEventListener("click", function () {
       userTakeover();
-      setActive(d.getAttribute("data-dot"), { scroll: true, openGroup: true });
+      setActive(d.getAttribute("data-dot"), { scroll: true, openGroup: true, fromTap: true });
     });
   });
   function stepBy(dir, focusSlide) {
     userTakeover();
     var i = sources.indexOf(active);
     var j = Math.min(sources.length - 1, Math.max(0, i + dir));
-    setActive(sources[j], { scroll: true, openGroup: true });
+    setActive(sources[j], { scroll: true, openGroup: true, fromTap: true });
     if (focusSlide) {
       var s = slideFor(active);
       if (s) s.focus({ preventScroll: true });
@@ -463,9 +460,16 @@
   });
 
   var scrollSettle = null;
-  scroller.addEventListener("scroll", function () {
-    if (Date.now() < programmaticUntil) return;
-    window.clearTimeout(scrollSettle);
+  function onScrollSettle() {
+    /* A programmatic scroll still in flight defers the
+       settle instead of dropping it: dropping it left a
+       dead zone where a drag right after a programmatic
+       scroll (the intro settling, a tap) never selected
+       anything at all. */
+    if (Date.now() < programmaticUntil) {
+      scrollSettle = window.setTimeout(onScrollSettle, programmaticUntil - Date.now() + 60);
+      return;
+    }
     scrollSettle = window.setTimeout(function () {
       /* While the intro is running the cycle owns the rail:
          its own programmatic advances must not be read as
@@ -474,18 +478,36 @@
          user input still settles it, through the click,
          wheel and touch handlers. */
       if (running) return;
+      /* A tap selection is sticky: the smooth scroll it
+         triggers must not be read back as a scroll
+         selection, because the last documents can never
+         reach the start of the rail, so the settle would
+         crown a different document and undo the tap. */
+      if (Date.now() - lastTapSelectAt < 1500) return;
       var rect = scroller.getBoundingClientRect();
-      var best = 0;
+      var best = -1;
       var bestDiff = Infinity;
       slides.forEach(function (s, i) {
-        var diff = Math.abs(s.getBoundingClientRect().left - rect.left - 6);
-        if (diff < bestDiff) { bestDiff = diff; best = i; }
+        /* The document at the start is the first one whose
+           left edge has not scrolled past the start. An
+           absolute distance also crowned slides already
+           scrolled past the start, and the last document
+           can never reach the start at all, so a tap on it
+           flipped the selection back to an earlier
+           document once the scroll settled. */
+        var diff = s.getBoundingClientRect().left - rect.left - 6;
+        if (diff >= -2 && diff < bestDiff) { bestDiff = diff; best = i; }
       });
+      if (best < 0) best = sources.length - 1;
       if (sources[best] !== active) {
         userTakeover();
         setActive(sources[best], { openGroup: true });
       }
     }, 140);
+  }
+  scroller.addEventListener("scroll", function () {
+    window.clearTimeout(scrollSettle);
+    onScrollSettle();
   }, { passive: true });
   scroller.addEventListener("wheel", userTakeover, { passive: true });
   scroller.addEventListener("touchstart", userTakeover, { passive: true });

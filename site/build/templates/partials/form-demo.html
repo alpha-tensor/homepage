@@ -131,40 +131,6 @@
     <img class="demo-overlay-img" alt="" draggable="false">
   </div>
 
-  <div class="demo-extracts" aria-live="polite">
-    <div class="demo-extract" data-doc="mxbc">
-      <span class="extract-label">From this document</span>
-      <dl class="extract-list">
-        <div><dt>Full name</dt><dd data-src="mxbc" tabindex="0">Laura Mar&#237;a Fernanda Itandehui</dd></div>
-        <div><dt>Date of birth</dt><dd data-src="mxbc" tabindex="0">14/03/1992</dd></div>
-        <div><dt>Place of birth</dt><dd data-src="mxbc" tabindex="0">Oaxaca de Ju&#225;rez</dd></div>
-      </dl>
-    </div>
-    <div class="demo-extract" data-doc="g28" hidden>
-      <span class="extract-label">From this document</span>
-      <dl class="extract-list">
-        <div><dt>Attorney</dt><dd data-src="g28" tabindex="0">Daniel R. Reyes</dd></div>
-        <div><dt>Bar number</dt><dd data-src="g28" tabindex="0">CA 214538</dd></div>
-        <div><dt>Status</dt><dd data-src="g28" tabindex="0">G-28 attached</dd></div>
-      </dl>
-    </div>
-    <div class="demo-extract" data-doc="anum" hidden>
-      <span class="extract-label">From this document</span>
-      <dl class="extract-list">
-        <div><dt>A-Number</dt><dd data-src="anum" tabindex="0">A123456789</dd></div>
-        <div><dt>Receipt number</dt><dd data-src="anum" tabindex="0">IOE0912345678</dd></div>
-      </dl>
-    </div>
-    <div class="demo-extract" data-doc="dl-her" hidden>
-      <span class="extract-label">From this document</span>
-      <dl class="extract-list">
-        <div><dt>Street</dt><dd data-src="dl-her" tabindex="0">820 S Grand Ave</dd></div>
-        <div><dt>Apt.</dt><dd data-src="dl-her" tabindex="0">2104</dd></div>
-        <div><dt>City</dt><dd data-src="dl-her" tabindex="0">Los Angeles, CA 90017</dd></div>
-      </dl>
-    </div>
-  </div>
-
   <div class="demo-scroller">
   <div class="demo-controls">
     <div class="demo-dots" role="group" aria-label="Choose a document"><button type="button" class="demo-dot active" data-dot="mxbc" aria-label="Show the birth certificate"></button><button type="button" class="demo-dot" data-dot="g28" aria-label="Show the G-28"></button><button type="button" class="demo-dot" data-dot="anum" aria-label="Show the notice of action"></button><button type="button" class="demo-dot" data-dot="dl-her" aria-label="Show the driver license"></button></div>
@@ -190,57 +156,4 @@
   </div>
   </div>
 
-  <figcaption class="demo-caption">The same facts, collected once from the documents above, decomposed into exactly the fields the form asks for: a middle initial taken from the first of her middle names, an age calculated from the birth certificate. Hover or tap any value to see the document it came from. All names and values are samples.</figcaption>
 </figure>
-
-<div class="world-model">
-  <p class="wm-intro">The world of the case changes with every document that arrives. The form follows the facts.</p>
-
-  <div class="wm-steps">
-    <div class="wm-step">
-      <div class="wm-doc">
-        <div class="doc-code">MXBC ADDED</div>
-        <div class="doc-name">Laura Itandehui</div>
-        <div class="doc-line"></div>
-        <div class="doc-line short"></div>
-      </div>
-      <div class="wm-state">
-        <div class="wm-row"><span class="wm-key">Marital status</span><span class="wm-val">Single</span></div>
-        <div class="wm-row"><span class="wm-key">Household</span><span class="wm-val">1 person</span></div>
-        <div class="wm-row"><span class="wm-key">Form carries</span><span class="wm-val">Beneficiary alone</span></div>
-      </div>
-    </div>
-
-    <div class="wm-arrow" aria-hidden="true">&#8594;</div>
-
-    <div class="wm-step">
-      <div class="wm-doc">
-        <div class="doc-code">MARRIAGE CERTIFICATE ADDED</div>
-        <div class="doc-name">Ashford &#183; Itandehui</div>
-        <div class="doc-line"></div>
-        <div class="doc-line short"></div>
-      </div>
-      <div class="wm-state">
-        <div class="wm-row"><span class="wm-key">Marital status</span><span class="wm-val changed">Married</span></div>
-        <div class="wm-row"><span class="wm-key">Household</span><span class="wm-val changed">2 people</span></div>
-        <div class="wm-row"><span class="wm-key">Form carries</span><span class="wm-val changed">Petitioner section appears, pre-filled</span></div>
-      </div>
-    </div>
-
-    <div class="wm-arrow" aria-hidden="true">&#8594;</div>
-
-    <div class="wm-step">
-      <div class="wm-doc">
-        <div class="doc-code">USABC ADDED</div>
-        <div class="doc-name">Child of the couple</div>
-        <div class="doc-line"></div>
-        <div class="doc-line short"></div>
-      </div>
-      <div class="wm-state">
-        <div class="wm-row"><span class="wm-key">Marital status</span><span class="wm-val">Married</span></div>
-        <div class="wm-row"><span class="wm-key">Household</span><span class="wm-val changed">3 people</span></div>
-        <div class="wm-row"><span class="wm-key">Form carries</span><span class="wm-val changed">Child added to the case record and the household count, flagged for the attorney to place</span></div>
-      </div>
-    </div>
-  </div>
-</div>
