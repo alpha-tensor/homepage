@@ -1,4 +1,5 @@
-/* Hero waves background, homepage only.
+/* Waves background for the page bands: the homepage hero
+ * and the subpage title bands, one canvas per page.
  *
  * Vanilla port of the Waves background from React Bits
  * (github.com/DavidHDev/react-bits, src/content/Backgrounds/Waves,

@@ -521,7 +521,8 @@ button:focus-visible {
 }
 
 /* Waves background (React Bits port, static/hero-waves.js).
-   Absolute behind the hero content, never takes pointer events,
+   Absolute behind the band content, in the homepage hero and
+   in the subpage title bands; never takes pointer events,
    the effect listens on window. */
 .hero-waves {
   position: absolute;
@@ -823,6 +824,14 @@ button:focus-visible {
   margin-left: -50vw;
   padding: 64px max(var(--gutter), calc(50vw - 616px)) 56px;
   border-bottom: 1px solid var(--hairline-strong);
+}
+
+/* The title band carries the same waves background as the
+   homepage hero, so every page opens in the same register.
+   The band's content sits above the canvas, the same way
+   the hero grid sits above its own. */
+.page-head > :not(.hero-waves) {
+  position: relative;
 }
 
 .page-title {
@@ -2130,7 +2139,7 @@ body {
   }
 
   .page-head {
-    padding: 52px 0 4px;
+    padding: 52px var(--gutter) 44px;
   }
 
   .lede {
