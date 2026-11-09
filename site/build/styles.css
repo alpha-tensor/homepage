@@ -1219,29 +1219,6 @@ body {
   width: min(540px, 84vw);
 }
 
-.doc-slide-cap {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  padding: 9px 12px 10px;
-  border-top: 1px solid var(--hairline);
-}
-
-.doc-slide-type {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 500;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
-
-.doc-slide-name {
-  font-size: 13.5px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
 /* The extraction strip: the facts the active document
    contributes, in plain label and value rows. Exactly one
    strip shows, the active document's. */
@@ -1303,8 +1280,8 @@ body {
 
 /* The intro overlay: while the sequence runs (and on
    Replay), a large copy of the document being read
-   slides up and fades in over the form panel, image and
-   caption bar together, and holds there to be
+   slides up and fades in over the form panel, the
+   document image alone, and holds there to be
    identified; then it fades away, and only once it is
    gone do the group it feeds light and fill. It is
    absolutely positioned inside the demo, so it never
@@ -1344,37 +1321,34 @@ body {
   height: auto;
 }
 
-/* The rail: the four documents at about a fifth of the
-   stage size, in the same scroll-snap scroller the carousel
-   always used. Thumbnails share one height, so the license
-   sits proportionally wider than the portrait pages, and
-   the captions shrink to match the smaller scale. */
+/* The rail: the four documents as uniform A4 slots, in
+   the same scroll-snap scroller the carousel always
+   used. Every slot is the same size at every width; the
+   document image scales to fit inside it on white, so
+   the landscape license sits centred with white above
+   and below while the portrait pages fill the slot. No
+   captions or names under the previews, on desktop or
+   mobile; the document alone. */
 .demo-rail {
   align-items: flex-start;
 }
 
+.demo-rail .doc-slide {
+  width: 108px;
+  aspect-ratio: 1 / 1.414;
+  background: #FFFFFF;
+  opacity: 1;
+  transform: none;
+  overflow: hidden;
+}
+
 .demo-rail .doc-slide-img {
-  width: auto;
-  height: 116px;
-}
-
-.demo-rail .doc-slide-cap {
-  padding: 6px 8px 7px;
-  max-width: 108px;
-}
-
-.demo-rail .doc-slide--wide .doc-slide-cap {
-  max-width: 200px;
-}
-
-.demo-rail .doc-slide-type {
-  font-size: 8px;
-  letter-spacing: 1px;
-}
-
-.demo-rail .doc-slide-name {
-  font-size: 11px;
-  line-height: 1.25;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  background: #FFFFFF;
 }
 
 /* On-load sequence: the rail thumbnails are visible from
@@ -2305,26 +2279,6 @@ body {
     height: 26px;
   }
 
-  .doc-slide-cap {
-    padding: 7px 10px 8px;
-  }
-
-  .doc-slide-name {
-    font-size: 12.5px;
-  }
-
-  .demo-rail .doc-slide-img {
-    height: 96px;
-  }
-
-  .demo-rail .doc-slide-cap {
-    padding: 6px 8px 7px;
-  }
-
-  .demo-rail .doc-slide-name {
-    font-size: 11px;
-  }
-
   .demo-extract {
     padding: 10px 12px;
     gap: 6px 20px;
@@ -2334,68 +2288,16 @@ body {
     min-width: 96px;
   }
 
-  /* Mobile demo order: the evidence rail rides above the
-     form, so a thumb scrolling through the documents does
-     not shove the form around; the extraction strip sits
-     below the form, never between rail and form. CSS order
-     only: the DOM keeps form, strip, rail, and focus and
-     reading order still follow the DOM. */
-  .form-demo {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .demo-scroller {
-    order: 1;
-  }
-
-  .form-panel {
-    order: 2;
-  }
-
-  .demo-extracts {
-    order: 3;
-  }
-
-  .demo-caption {
-    order: 4;
-  }
-
-  /* Uniform evidence slots: every document gets the same
-     A4 slot, the full width of the rail's container and
-     1.414 times as tall, and the snap scroller pages one
-     slot at a time. Horizontal padding and margins come
-     off the scroller so the slot is exactly the visible
-     container width, flush with the form below it. */
-  .demo-sources {
-    padding: 12px 0 18px;
-    margin: -12px 0 0;
-  }
-
-  .demo-rail .doc-slide {
-    flex: 0 0 100%;
-    width: 100%;
-    aspect-ratio: 1 / 1.414;
-    background: #FFFFFF;
-    opacity: 1;
-    transform: none;
-  }
-
-  /* The document itself spans the slot's width, centred,
-     on the slot's white ground: a landscape license sits
-     mid-slot with white above and below, portrait pages
-     fill the slot nearly edge to edge. No captions under
-     the previews on mobile; the item alone. */
-  .demo-rail .doc-slide-img {
-    flex: 1 1 auto;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    object-fit: contain;
-    background: #FFFFFF;
-  }
-
-  .demo-rail .doc-slide-cap {
+  /* Mobile demo: the desktop layout, unchanged. The form
+     first, the extraction strip under it, then the
+     controls and the rail in the same uniform A4 slots.
+     No separate mobile layout and no mobile reorder. The
+     one mobile difference is the intro: the overlay
+     never appears here, and the sequence goes straight
+     to the highlight and the fill in place, which the
+     demo script handles by width. The form groups keep
+     their toggle heads above. */
+  .demo-overlay {
     display: none;
   }
 }

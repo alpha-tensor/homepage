@@ -121,13 +121,14 @@
 
   <!-- The intro overlay: during the intro (and only then)
        a large copy of the document being read slides up
-       over the form panel, image and caption bar together,
+       over the form panel, the document image alone,
        holds to be identified, then fades away; only then
        does the group it feeds light and fill. The script
-       fills it per document; it never takes layout space. -->
+       fills it per document; it never takes layout space.
+       Desktop only: on mobile the intro skips the overlay
+       and goes straight to the highlight and the fill. -->
   <div class="demo-overlay" hidden aria-hidden="true">
     <img class="demo-overlay-img" alt="" draggable="false">
-    <span class="doc-slide-cap"><span class="doc-slide-type"></span><span class="doc-slide-name"></span></span>
   </div>
 
   <div class="demo-extracts" aria-live="polite">
@@ -176,19 +177,15 @@
   <div class="demo-sources demo-rail" role="group" aria-label="Source documents">
     <button type="button" class="doc-slide active" data-doc="mxbc" aria-pressed="true">
       <img class="doc-slide-img" src="assets/doc-acta.jpg" alt="Acta de Nacimiento, Mexican birth certificate for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">Acta de Nacimiento &#183; Mexico</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
     </button>
     <button type="button" class="doc-slide" data-doc="g28" aria-pressed="false">
       <img class="doc-slide-img" src="assets/doc-g28.jpg" alt="Form G-28, notice of entry of appearance naming attorney Daniel R. Reyes. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">Form G-28 &#183; USCIS</span><span class="doc-slide-name">Daniel R. Reyes</span></span>
     </button>
     <button type="button" class="doc-slide" data-doc="anum" aria-pressed="false">
       <img class="doc-slide-img" src="assets/doc-i797c.jpg" alt="Form I-797C, notice of action for the I-130 petition. Sample document." width="773" height="1000" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">I-797C &#183; Notice of Action</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
     </button>
     <button type="button" class="doc-slide doc-slide--wide" data-doc="dl-her" aria-pressed="false">
       <img class="doc-slide-img" src="assets/doc-license.jpg" alt="California driver license for Laura Mar&#237;a Fernanda Itandehui. Sample document." width="1000" height="631" loading="eager" decoding="async" draggable="false">
-      <span class="doc-slide-cap"><span class="doc-slide-type">Driver License &#183; California</span><span class="doc-slide-name">Laura Mar&#237;a Fernanda Itandehui</span></span>
     </button>
   </div>
   </div>
