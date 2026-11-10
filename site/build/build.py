@@ -108,6 +108,11 @@ def section_slug(title):
 def nav_items(active_output):
     items = []
     for _src, output, label, _eyebrow, _kind in PAGES:
+        # No Home item: the wordmark already links to
+        # index.html, in the desktop nav and the mobile menu
+        # alike, since both render from this one list.
+        if output == "index.html":
+            continue
         if output == active_output:
             attrs = ' class="active" aria-current="page"'
         else:
@@ -225,6 +230,9 @@ def build():
                     "subhead": html.escape(subhead),
                     "lead_html": lead_html,
                     "sections": sections_html,
+                    "page_class": (
+                        "page--editorial" if output == "history.html" else ""
+                    ),
                 },
             )
             title = "{} \u2014 Alpha Tensor".format(headline)
@@ -260,6 +268,7 @@ def build():
             "subhead": html.escape(yc_subhead),
             "lead_html": render_blocks(yc_lead, cta_tpl),
             "sections": render_sections(yc_sections, True),
+            "page_class": "",
         },
     )
     yc_nav = render(nav_tpl, {"nav_items": nav_items(""), "cta_url": CTA_URL})
@@ -299,6 +308,7 @@ def build():
             "lead_html": talk_cat_tpl
             + '\n<p><a href="index.html">Return to the home page</a></p>',
             "sections": "",
+            "page_class": "",
         },
     )
     nav = render(nav_tpl, {"nav_items": nav_items(""), "cta_url": CTA_URL})
