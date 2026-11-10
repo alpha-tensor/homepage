@@ -12,6 +12,8 @@ We configure Alpha Tensor to the firm's rules, and the firm approves them. Nothi
 
 Every route leads into the same fact base. The client's documents. A completed form from an existing case, or an export from another system, imported whole. And, for what is left, a short intake the firm sends the client as a link.
 
+Documents that arrive at one of the firm's locations are prepared at another and reviewed at a third, and nothing about the case changes as it moves. One fact base, one set of rules, one source trail.
+
 The order matters. The forms behind a packet carry hundreds of questions, and the documents answer most of them before anyone is asked anything: names, dates, numbers, and addresses, read from IDs, birth certificates, and prior filings. A completed G-28 counts the same way: feed one in and its facts move into every form that needs them.
 
 What remains is the questions no document can answer, the facts only the person knows. Those, and only those, are what the intake asks, in plain language, each one asked once and used everywhere it belongs. The client never faces a stack of blank government forms, and never re-answers a question their own documents already settled.

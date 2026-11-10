@@ -20,6 +20,8 @@ A name in full here, a middle initial there. An A-number in one field, or letter
 
 **Review.** Your attorneys review the finished packet and decide the filing. Judgment stays with the firm.
 
+One firm, three locations, one standard. Documents arrive at one location, the packet is prepared at another, and an attorney reviews at a third. The rules, the facts, and the source trail are the same in all three, so a case never has to be rebuilt when it moves.
+
 ### Built AI-first, and built now
 
 Built AI-first, and built now. The thousand small judgment calls inside a packet, which form, which field, what is missing, can finally be made by software, with people checking the ones that count.

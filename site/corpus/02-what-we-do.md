@@ -8,7 +8,7 @@ Alpha Tensor answers that question first, then does the preparation work that fo
 
 ### 1. Determination
 
-We work out which process and which packet fit the case. We do this under rules the firm sets and approves. The firm decides how it practices. We apply its rules consistently, case after case, and we show our reasoning so staff can check it.
+We work out which process and which packet fit the case. We do this under rules the firm sets and approves. The firm decides how it practices. We apply its rules consistently, case after case and location after location, and we show our reasoning so staff can check it.
 
 Determination is not a guess, and it is not a generic checklist. It is the firm's own case selection, applied before any form is touched.
 
