@@ -152,10 +152,21 @@ def build():
 
     footer = render(footer_tpl, {"cta_url": CTA_URL})
 
-    def render_sections(sections, with_demo):
+    founder_figure = (
+        '<figure class="founder-figure">'
+        '<img src="assets/brandon-moody.jpg" '
+        'alt="Brandon Moody, founder of Alpha Tensor" '
+        'width="720" height="900">'
+        "<figcaption>Brandon Moody, founder</figcaption>"
+        "</figure>"
+    )
+
+    def render_sections(sections, with_demo, with_founder=False):
         rendered = []
-        for s in sections:
+        for i, s in enumerate(sections):
             body = render_blocks(s["blocks"], cta_tpl)
+            if with_founder and i == 0:
+                body = founder_figure + "\n" + body
             if (
                 with_demo
                 and section_slug(s["title"])
@@ -182,7 +193,9 @@ def build():
         if headline is None or subhead is None:
             raise SystemExit(f"{src}: missing H1 headline or H2 subhead")
 
-        sections_html = render_sections(sections, kind == "home")
+        sections_html = render_sections(
+            sections, kind == "home", output == "history.html"
+        )
         lead_html = render_blocks(lead, cta_tpl)
 
         if kind == "home":
