@@ -987,6 +987,38 @@ button:focus-visible {
   border-top: none;
 }
 
+/* The first section on an article page follows the page head,
+   whose own bottom rule already separates it. A second rule
+   there, stacked on the section margin and padding, reads as
+   a stray line in dead space, so the first section carries no
+   rule and takes less air. The History page keeps its larger
+   editorial spacing; it loses the rule like the others. */
+.page .sections > .section:first-child {
+  border-top: none;
+  margin-top: 48px;
+  padding-top: 0;
+}
+
+.page.page--editorial .sections > .section:first-child {
+  margin-top: 104px;
+  padding-top: 72px;
+}
+
+/* Recorded walkthrough embed (the /yc page): a plain 16:9
+   frame in the section body column, ruled like the rest of
+   the page. */
+.video-frame {
+  border: 1px solid var(--hairline-soft);
+  aspect-ratio: 16 / 9;
+}
+
+.video-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 /* Each step ruled like a row of the grid. */
 .section--the-work-in-order .section-body > p {
   border-top: 1px solid var(--hairline-soft);
