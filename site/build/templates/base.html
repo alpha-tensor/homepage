@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=42">
+<link rel="stylesheet" href="assets/styles.css?v=43">
 <link rel="icon" type="image/svg+xml" href="assets/alpha-tensor-mark-orange-fill.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -122,6 +122,40 @@
     if (e.key === "Escape" && open) { setOpen(false); toggle.focus(); }
   });
   window.addEventListener("resize", function () { if (open) measure(); });
+})();
+</script>
+<script>
+/* Header on scroll: sticky, but it gets out of the way.
+   Scrolling down past the first stretch of page slides
+   it up and off; any scroll back up brings it straight
+   back, and it is always there at the top of the page.
+   It never hides while the mobile menu is open, and
+   under reduced motion it simply stays put. A keyboard
+   focus landing inside it brings it back too. */
+(function () {
+  var header = document.querySelector(".site-header");
+  if (!header) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var lastY = Math.max(0, window.scrollY || 0);
+  var queued = false;
+  function show() { header.classList.remove("header--hidden"); }
+  function hide() { header.classList.add("header--hidden"); }
+  function update() {
+    queued = false;
+    var y = Math.max(0, window.scrollY || 0);
+    if (header.getAttribute("data-open") === "true" || y <= 8) {
+      show();
+    } else if (y > lastY + 6 && y > 140) {
+      hide();
+    } else if (y < lastY - 6) {
+      show();
+    }
+    lastY = y;
+  }
+  window.addEventListener("scroll", function () {
+    if (!queued) { queued = true; window.requestAnimationFrame(update); }
+  }, { passive: true });
+  header.addEventListener("focusin", show);
 })();
 </script>
 <script>

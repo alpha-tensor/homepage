@@ -205,8 +205,28 @@ button:focus-visible {
 .site-header {
   background: var(--header-bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 60;
+  transition:
+    transform 320ms ease,
+    visibility 0s linear 0s;
+}
+
+/* Scroll away, scroll back: the header slides up out of
+   view while the reader moves down the page and returns
+   on the first move back up, so the page gets the full
+   viewport in between. The hidden state also leaves the
+   tab order once the slide finishes. The scroll script
+   in base.html owns the class; it never hides the header
+   while the mobile menu is open, near the top of the
+   page, or under reduced motion. */
+.site-header.header--hidden {
+  transform: translateY(-101%);
+  visibility: hidden;
+  transition:
+    transform 320ms ease,
+    visibility 0s linear 320ms;
 }
 
 .site-header .wordmark {
